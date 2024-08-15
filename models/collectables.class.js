@@ -8,6 +8,6 @@ class Collectable extends MovableObject {
         super();
         this.loadImages(this.IMAGES_COIN);
         this.currentImage = 0;
-        this.playAnimation(this.IMAGES_COIN); // Animation der Münzen
+        this.playAnimation(this.IMAGES_COIN); 
     }
 }
