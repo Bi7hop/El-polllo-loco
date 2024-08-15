@@ -6,14 +6,17 @@ class World {
     keyboard;
     camera_x = 0;
     statusBar = new StatusBar();
-    ThrowableObjects = [];
+    throwableObjects = []; 
+    coins = []; 
+    coinCount = 7; 
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.draw();
         this.setWorld();
+        this.generateCoins(this.coinCount); 
+        this.draw();
         this.run();
     }
 
@@ -21,58 +24,67 @@ class World {
         this.character.world = this;
     }
 
+    generateCoins(count) {
+        for (let i = 0; i < count; i++) { 
+            let coin = new Coins();
+            this.coins.push(coin);
+        }
+    }
+
     run() {
         setInterval(() => {
             this.checkCollisions();
-            this.checkThrowObjects();
+            this.checkThrowObjects(); 
         }, 200);
     }
 
     checkThrowObjects() {
-        if(this.keyboard.D) {
+        if (this.keyboard.D) {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-            this.ThrowableObjects.push(bottle);
+            this.throwableObjects.push(bottle);
         }
     }
-    
-
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if( this.character.isColliding(enemy) ) {
-              this.character.hit();
+            if (this.character.isColliding(enemy)) {
+                this.character.hit();
                 this.statusBar.setPercentage(this.character.energy);
+            }
+        });
+
+        this.coins.forEach((coin, index) => {
+            if (this.character.isColliding(coin)) {
+                this.coins.splice(index, 1); 
                 
             }
-        })
+        });
     }
 
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
 
         this.ctx.translate(-this.camera_x, 0);
-        // -------- Space for fixed objects -----------------
+        // -------- Platz für feste Objekte -----------------
         this.addToMap(this.statusBar);
         this.ctx.translate(this.camera_x, 0);
-
 
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.ThrowableObjects);
+        this.addObjectsToMap(this.throwableObjects);
+        this.addObjectsToMap(this.coins);
 
-        
         this.ctx.translate(-this.camera_x, 0);
         let self = this;
-        requestAnimationFrame(function() {
+        requestAnimationFrame(function () {
             self.draw();
         });
-
     }
-    
+
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
@@ -80,7 +92,7 @@ class World {
     }
 
     addToMap(mo) {
-        if(mo.otherDirection) {
+        if (mo.otherDirection) {
             this.flipImage(mo);
         }
 
@@ -103,5 +115,4 @@ class World {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
-
-}
+} 
