@@ -76,15 +76,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const musicLabel = document.getElementById('musicLabel');
     
     musicSlider.addEventListener('input', function() {
+        backgroundMusic.pause();
+        
         if (musicSlider.value == 1) {
-            backgroundMusic.pause();
             backgroundMusic = track1;
             musicLabel.textContent = 'Cultura en Cada Verso';
         } else {
-            backgroundMusic.pause();
             backgroundMusic = track2;
-            musicLabel.textContent = 'Cruisin Down the Bario';
+            musicLabel.textContent = 'Cruisin Down the Barrio';
         }
+    
+        backgroundMusic.loop = true;  // Sicherstellen, dass die Schleifenwiedergabe aktiviert ist
+        
         if (musicPlaying) {
             backgroundMusic.play();
         }
