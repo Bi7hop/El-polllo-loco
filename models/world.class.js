@@ -25,6 +25,25 @@ class World {
         this.run();
     }
 
+    reset() {
+        this.character = new Character();
+        this.level = level1;
+        this.camera_x = 0;
+        this.statusBar = new StatusBar();
+        this.statusCoins = new StatusCoins();
+        this.statusBottle = new StatusBottle();
+        this.throwableObjects = [];
+        this.coins = [];
+        this.bottles = [];
+        this.generateCoins(this.coinCount);
+        this.generateBottles(this.bottleCount);
+        this.setWorld();
+
+        this.draw();
+        this.run();
+    }
+
+
     setWorld() {
         this.character.world = this;
     }

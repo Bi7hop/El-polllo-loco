@@ -8,12 +8,9 @@
     <link rel="icon" type="image/x-icon" href="img/epl_icon.ico">
     <title>El Pollo Loco</title>
 
-    
     <!-- Basis-Klassen -->
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/movable-object.class.js"></script>
-
-    <!-- Spezifische Objekte und ihre Abhängigkeiten -->
     <script src="./models/collectables.class.js"></script>
     <script src="./models/character.class.js"></script>
     <script src="./models/chicken.class.js"></script>
@@ -21,7 +18,6 @@
     <script src="./models/throwable-object.class.js"></script>
     <script src="./models/coins.class.js"></script>
     <script src="./models/bottles.class.js"></script>
-    
     <script src="./models/endboss.class.js"></script>
     <script src="./models/cloud.class.js"></script>
     <script src="./models/background-object.class.js"></script>
@@ -40,11 +36,25 @@
 
     <!-- Spiel-Initialisierung -->
     <script src="./js/game.js"></script>
+    <script src="./js/startscreen.js"></script>
 </head>
-<body onload="init()">
-    <div class="container">
+<body>
+    <div id="startscreen" class="container">
         <h1>El Pollo Loco</h1>
+        <button id="startButton" class="game-button">Start Game</button>
+        <button id="instructionsButton" class="game-button">Instructions</button>
+    </div>
+    <div id="gameContainer" class="container" style="display:none;">
         <canvas id="canvas" width="720" height="480"></canvas>
+        <button id="backToStartButton" class="game-button">Back to Start</button>
+    </div>
+    <div id="instructions" class="container" style="display:none;">
+        <h2>Instructions</h2>
+            <p>Use the arrow keys to move your character.</p>
+            <p>Press the spacebar to jump.</p>
+            <p>Press "D" to throw bottles.</p>
+            <p>Avoid enemies and collect coins to score points.</p>
+        <button id="backButton" class="game-button">Back</button>
     </div>
 </body>
 </html>
