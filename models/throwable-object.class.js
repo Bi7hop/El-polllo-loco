@@ -13,15 +13,14 @@ class ThrowableObject extends MovableObject {
         ];
         this.currentImageIndex = 0;
         this.loadImage(this.imagesRotation[this.currentImageIndex]);
-        this.throw();
         this.animateRotation();
     }
 
-    throw() {
+    throw(direction) {
         this.speedY = 30;
         this.applyGravity();
         setInterval(() => {
-            this.x += 10;
+            this.x += direction;
         }, 25);
     }
 
@@ -32,7 +31,6 @@ class ThrowableObject extends MovableObject {
                 this.currentImageIndex = 0;
             }
             this.loadImage(this.imagesRotation[this.currentImageIndex]);
-        }, 100);  
+        }, 100);
     }
 }
- 

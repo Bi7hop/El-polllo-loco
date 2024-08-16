@@ -75,16 +75,26 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D && this.character.bottlesCollected > 0) { 
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-            this.throwableObjects.push(bottle);
-            this.character.bottlesCollected--; 
+        if (this.keyboard.D && this.character.bottlesCollected > 0) {
+            let bottleX = this.character.x + 100;
+            let bottleY = this.character.y + 100;
+            let throwDirection = 10; 
     
-           
+            if (this.character.otherDirection) { 
+                bottleX = this.character.x - 50; 
+                throwDirection = -10; 
+            }
+    
+            let bottle = new ThrowableObject(bottleX, bottleY);
+            bottle.throw(throwDirection);
+            this.throwableObjects.push(bottle);
+            this.character.bottlesCollected--;
+    
             let collectedPercentage = (this.character.bottlesCollected / this.bottleCount) * 100;
-            this.statusBottle.setPercentage(collectedPercentage); 
+            this.statusBottle.setPercentage(collectedPercentage);
         }
     }
+    
     
 
     checkCollisions() {
