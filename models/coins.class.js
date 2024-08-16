@@ -3,7 +3,7 @@ class Coins extends Collectable {
     width = 80;
     height = 80;
 
-
+ 
     IMAGES_COIN = [
         'img/8_coin/coin_1.png',
         'img/8_coin/coin_2.png'
