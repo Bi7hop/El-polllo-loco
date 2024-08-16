@@ -6,16 +6,19 @@ class World {
     keyboard;
     camera_x = 0;
     statusBar = new StatusBar();
-    throwableObjects = []; 
-    coins = []; 
-    coinCount = 7; 
+    throwableObjects = [];
+    coins = [];
+    bottles = []; 
+    coinCount = 7;
+    bottleCount = 5; 
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.setWorld();
-        this.generateCoins(this.coinCount); 
+        this.generateCoins(this.coinCount);
+        this.generateBottles(this.bottleCount); 
         this.draw();
         this.run();
     }
@@ -25,16 +28,47 @@ class World {
     }
 
     generateCoins(count) {
-        for (let i = 0; i < count; i++) { 
-            let coin = new Coins();
+        for (let i = 0; i < count; i++) {
+            let coin;
+            let validPosition = false;
+            
+            while (!validPosition) {
+                coin = new Coins();
+                validPosition = this.isValidPosition(coin, this.coins);
+            }
+
             this.coins.push(coin);
         }
     }
 
-    run() {
+    generateBottles(count) {
+        for (let i = 0; i < count; i++) {
+            let bottle;
+            let validPosition = false;
+            
+            while (!validPosition) {
+                bottle = new Bottle();
+                validPosition = this.isValidPosition(bottle, this.bottles);
+            }
+
+            this.bottles.push(bottle);
+        }
+    }
+
+    isValidPosition(newItem, existingItems) {
+        for (let item of existingItems) {
+            const distance = Math.hypot(newItem.x - item.x, newItem.y - item.y);
+            if (distance < 80)  { 
+                return false;
+            }
+        }
+        return true;
+    }
+
+     run() {
         setInterval(() => {
             this.checkCollisions();
-            this.checkThrowObjects(); 
+            this.checkThrowObjects();
         }, 200);
     }
 
@@ -55,8 +89,13 @@ class World {
 
         this.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
-                this.coins.splice(index, 1); 
-                
+                this.coins.splice(index, 1);
+            }
+        });
+
+        this.bottles.forEach((bottle, index) => { 
+            if (this.character.isColliding(bottle)) {
+                this.bottles.splice(index, 1);
             }
         });
     }
@@ -77,6 +116,7 @@ class World {
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.coins);
+        this.addObjectsToMap(this.bottles); 
 
         this.ctx.translate(-this.camera_x, 0);
         let self = this;
@@ -115,4 +155,4 @@ class World {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
-} 
+}
