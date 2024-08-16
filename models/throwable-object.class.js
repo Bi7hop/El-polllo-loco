@@ -32,6 +32,7 @@ class ThrowableObject extends MovableObject {
                 this.currentImageIndex = 0;
             }
             this.loadImage(this.imagesRotation[this.currentImageIndex]);
-        }, 100);  // Wechsel das Bild alle 100ms (du kannst den Wert anpassen)
+        }, 100);  
     }
 }
+ 
