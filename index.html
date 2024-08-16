@@ -9,6 +9,7 @@
     <title>El Pollo Loco</title>
 
     <!-- Basis-Klassen -->
+    <script src="./models/sounds.class.js"></script>
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/movable-object.class.js"></script>
     <script src="./models/collectables.class.js"></script>
@@ -44,6 +45,11 @@
         <button id="startButton" class="game-button">Start Game</button>
         <button id="instructionsButton" class="game-button">Instructions</button>
         <button id="musicToggleButtonStart" class="game-button">Music On</button> 
+
+        <!-- Slider zur Musikauswahl -->
+        <label for="musicSlider">Select Music:</label>
+        <input type="range" id="musicSlider" min="1" max="2" value="1">
+        <span id="musicLabel">Track 1</span>
     </div>
     <div id="gameContainer" class="container" style="display:none;">
         <canvas id="canvas" width="720" height="480"></canvas>

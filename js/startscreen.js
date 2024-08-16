@@ -1,10 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     let world;
-    const backgroundMusic = new Audio('audio/Cultura en Cada Verso.mp3'); 
-    backgroundMusic.loop = true; 
-    backgroundMusic.volume = 0.3; 
-
     let musicPlaying = false;
+
+    // Zwei Musiktracks
+    const track1 = new Audio('audio/Cultura en Cada Verso.mp3');
+    const track2 = new Audio('audio/Cruisin\' the Barrio.mp3');
+    let backgroundMusic = track1; // Standardmäßig Track 1
+
+    track1.loop = true;
+    track2.loop = true;
+    track1.volume = 0.3;
+    track2.volume = 0.3;
 
     function init() {
         const keyboard = new Keyboard();
@@ -51,12 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('backToStartButton').addEventListener('click', function() {
+        if (world && world.character) {
+            world.character.stopAllSounds();  // Stoppe alle Sounds des Charakters
+        }
         document.getElementById('gameContainer').style.display = 'none';
         document.getElementById('startscreen').style.display = 'flex';
-        
-        if (world) {
-            world.reset();
-        }
     });
 
     document.addEventListener('keydown', function(event) {
@@ -64,6 +69,25 @@ document.addEventListener('DOMContentLoaded', function() {
             if (world && world.character.isOnGround()) { 
                 world.character.jump(); 
             }
+        }
+    });
+
+    // Slider-Logik für Musikauswahl
+    const musicSlider = document.getElementById('musicSlider');
+    const musicLabel = document.getElementById('musicLabel');
+    
+    musicSlider.addEventListener('input', function() {
+        if (musicSlider.value == 1) {
+            backgroundMusic.pause();
+            backgroundMusic = track1;
+            musicLabel.textContent = 'Track 1';
+        } else {
+            backgroundMusic.pause();
+            backgroundMusic = track2;
+            musicLabel.textContent = 'Track 2';
+        }
+        if (musicPlaying) {
+            backgroundMusic.play();
         }
     });
 });
