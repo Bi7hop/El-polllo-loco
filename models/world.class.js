@@ -6,6 +6,7 @@ class World {
     keyboard;
     camera_x = 0;
     statusBar = new StatusBar();
+    statusCoins = new StatusCoins();
     throwableObjects = [];
     coins = [];
     bottles = []; 
@@ -90,6 +91,8 @@ class World {
         this.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 this.coins.splice(index, 1);
+                let collectedPercentage = ((this.coinCount - this.coins.length) / this.coinCount) * 100;
+                this.statusCoins.setPercentage(collectedPercentage); // Update Coin-Statusbar
             }
         });
 
@@ -109,6 +112,7 @@ class World {
         this.ctx.translate(-this.camera_x, 0);
         // -------- Platz für feste Objekte -----------------
         this.addToMap(this.statusBar);
+        this.addToMap(this.statusCoins);
         this.ctx.translate(this.camera_x, 0);
 
         this.addToMap(this.character);
