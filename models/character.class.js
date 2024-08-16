@@ -1,5 +1,6 @@
 class Character extends MovableObject {
 
+    bottlesCollected = 0;
     height = 300;
     y = 30;
     speed = 10;

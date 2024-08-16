@@ -75,11 +75,17 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D) {
+        if (this.keyboard.D && this.character.bottlesCollected > 0) { 
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwableObjects.push(bottle);
+            this.character.bottlesCollected--; 
+    
+           
+            let collectedPercentage = (this.character.bottlesCollected / this.bottleCount) * 100;
+            this.statusBottle.setPercentage(collectedPercentage); 
         }
     }
+    
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
@@ -93,15 +99,18 @@ class World {
             if (this.character.isColliding(coin)) {
                 this.coins.splice(index, 1);
                 let collectedPercentage = ((this.coinCount - this.coins.length) / this.coinCount) * 100;
-                this.statusCoins.setPercentage(collectedPercentage); // Update Coin-Statusbar
+                this.statusCoins.setPercentage(collectedPercentage); 
             }
         });
 
         this.bottles.forEach((bottle, index) => { 
             if (this.character.isColliding(bottle)) {
                 this.bottles.splice(index, 1);
-                let collectedPercentage = ((this.bottleCount - this.bottles.length) / this.bottleCount) * 100;
-                this.statusBottle.setPercentage(collectedPercentage); // Update Bottle-Statusbar
+                this.character.bottlesCollected++; 
+    
+               
+                let collectedPercentage = (this.character.bottlesCollected / this.bottleCount) * 100;
+                this.statusBottle.setPercentage(collectedPercentage); 
             }
         });
     }
