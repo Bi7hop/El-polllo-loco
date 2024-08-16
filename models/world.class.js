@@ -144,7 +144,7 @@ class World {
         });
     }
 
-    draw() {
+   draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.translate(this.camera_x, 0);
@@ -162,9 +162,14 @@ class World {
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.coins);
-        this.addObjectsToMap(this.bottles); 
+
+        this.bottles.forEach(bottle => {
+            bottle.animate(); 
+            this.addToMap(bottle);  
+        });
 
         this.ctx.translate(-this.camera_x, 0);
+
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
