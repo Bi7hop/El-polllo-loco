@@ -62,12 +62,12 @@ class MovableObject extends DrawableObject {
     }
 
     moveLeft() {
-            this.x -= this.speed;
-            this.otherDirection = true;
-            
-            setInterval(() => {
-        }, 1000 / 60);
+        this.x -= this.speed;
+        if (this instanceof Character) {
+            this.otherDirection = true; 
+        }
     }
+    
 
     jump() {
         this.speedY = 30;  
