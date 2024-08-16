@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let world;
     let musicPlaying = false;
 
-    // Zwei Musiktracks
+
     const track1 = new Audio('audio/Cultura en Cada Verso.mp3');
     const track2 = new Audio('audio/Cruisin\' the Barrio.mp3');
-    let backgroundMusic = track1; // Standardmäßig Track 1
+    let backgroundMusic = track1;
 
     track1.loop = true;
     track2.loop = true;
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('backToStartButton').addEventListener('click', function() {
         if (world && world.character) {
-            world.character.stopAllSounds();  // Stoppe alle Sounds des Charakters
+            world.character.stopAllSounds();  
         }
         document.getElementById('gameContainer').style.display = 'none';
         document.getElementById('startscreen').style.display = 'flex';
@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Slider-Logik für Musikauswahl
     const musicSlider = document.getElementById('musicSlider');
     const musicLabel = document.getElementById('musicLabel');
     
@@ -80,11 +79,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (musicSlider.value == 1) {
             backgroundMusic.pause();
             backgroundMusic = track1;
-            musicLabel.textContent = 'Track 1';
+            musicLabel.textContent = 'Cultura en Cada Verso';
         } else {
             backgroundMusic.pause();
             backgroundMusic = track2;
-            musicLabel.textContent = 'Track 2';
+            musicLabel.textContent = 'Cruisin Down the Bario';
         }
         if (musicPlaying) {
             backgroundMusic.play();
