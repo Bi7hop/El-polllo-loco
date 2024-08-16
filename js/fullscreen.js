@@ -4,16 +4,16 @@ const fullscreenButton = document.getElementById('fullscreenButton');
 fullscreenButton.addEventListener('click', () => {
     if (gameCanvas.requestFullscreen) {
         gameCanvas.requestFullscreen();
-    } else if (gameCanvas.mozRequestFullScreen) { // Firefox
+    } else if (gameCanvas.mozRequestFullScreen) { 
         gameCanvas.mozRequestFullScreen();
-    } else if (gameCanvas.webkitRequestFullscreen) { // Chrome, Safari and Opera
+    } else if (gameCanvas.webkitRequestFullscreen) { 
         gameCanvas.webkitRequestFullscreen();
-    } else if (gameCanvas.msRequestFullscreen) { // IE/Edge
+    } else if (gameCanvas.msRequestFullscreen) {
         gameCanvas.msRequestFullscreen();
     }
 });
 
-// Optional: Handling fullscreen changes
+
 document.addEventListener('fullscreenchange', () => {
     console.log('Fullscreen mode changed');
 });

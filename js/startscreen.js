@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
             musicLabel.textContent = 'Cruisin Down the Barrio';
         }
     
-        backgroundMusic.loop = true;  // Sicherstellen, dass die Schleifenwiedergabe aktiviert ist
+        backgroundMusic.loop = true;  
         
         if (musicPlaying) {
             backgroundMusic.play();
