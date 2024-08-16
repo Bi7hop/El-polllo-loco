@@ -1,7 +1,7 @@
 class Coins extends Collectable {
 
-    width = 80;
-    height = 80;
+    width = 130;
+    height = 130;
 
  
     IMAGES_COIN = [
