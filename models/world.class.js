@@ -59,8 +59,8 @@ class World {
 
     isValidPosition(newItem, existingItems) {
         for (let item of existingItems) {
-            const distance = Math.hypot(newItem.x - item.x, newItem.y - item.y);
-            if (distance < 80)  { 
+            const distance = Math.abs(newItem.x - item.x); 
+            if (distance < 100) { 
                 return false;
             }
         }
