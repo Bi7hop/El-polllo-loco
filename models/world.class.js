@@ -7,6 +7,7 @@ class World {
     camera_x = 0;
     statusBar = new StatusBar();
     statusCoins = new StatusCoins();
+    statusBottle = new StatusBottle();
     throwableObjects = [];
     coins = [];
     bottles = []; 
@@ -99,6 +100,8 @@ class World {
         this.bottles.forEach((bottle, index) => { 
             if (this.character.isColliding(bottle)) {
                 this.bottles.splice(index, 1);
+                let collectedPercentage = ((this.bottleCount - this.bottles.length) / this.bottleCount) * 100;
+                this.statusBottle.setPercentage(collectedPercentage); // Update Bottle-Statusbar
             }
         });
     }
@@ -113,6 +116,7 @@ class World {
         // -------- Platz für feste Objekte -----------------
         this.addToMap(this.statusBar);
         this.addToMap(this.statusCoins);
+        this.addToMap(this.statusBottle);
         this.ctx.translate(this.camera_x, 0);
 
         this.addToMap(this.character);

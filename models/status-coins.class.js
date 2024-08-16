@@ -13,11 +13,11 @@ class StatusCoins extends DrawableObject {
     constructor() {
         super();
         this.loadImages(this.IMAGES);
-        this.x = 30;  // Die Position kannst du anpassen, je nach Bedarf
-        this.y = 40;  // Direkt unter der Health-Bar
+        this.x = 30;  
+        this.y = 40;  
         this.width = 200;
-        this.height = 60;
-        this.setPercentage(0);  // Anfangswert ist 0, da noch keine Münzen gesammelt wurden
+        this.height = 50;
+        this.setPercentage(0);  
     }
 
     setPercentage(percentage) {
