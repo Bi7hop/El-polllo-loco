@@ -41,8 +41,10 @@ class Character extends MovableObject {
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png'
     ];
+    
     world;
     walking_sound = new Audio('audio/walking.mp3');
+    jump_sound = new Audio('audio/jump.mp3'); 
     
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
@@ -98,5 +100,6 @@ class Character extends MovableObject {
  
     jump() {
         this.speedY = 30;
+        this.jump_sound.play(); 
     }
 }
