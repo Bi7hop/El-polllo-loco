@@ -38,6 +38,7 @@
     <!-- Spiel-Initialisierung -->
     <script src="./js/game.js"></script>
     <script src="./js/startscreen.js"></script>
+   
 </head>
 <body>
     <div id="startscreen" class="container">
@@ -46,7 +47,6 @@
         <button id="instructionsButton" class="game-button">Instructions</button>
         <button id="musicToggleButtonStart" class="game-button">Music On</button> 
 
-        <!-- Slider zur Musikauswahl -->
         <label for="musicSlider">Select Music:</label>
         <input type="range" id="musicSlider" min="1" max="2" value="1">
         <span id="musicLabel">Track 1</span>
@@ -55,6 +55,8 @@
         <canvas id="canvas" width="720" height="480"></canvas>
         <button id="backToStartButton" class="game-button">Back to Start</button>
         <button id="musicToggleButtonGame" class="game-button">Music On</button>
+        <!-- Fullscreen Button -->
+        <button id="fullscreenButton" class="game-button">Fullscreen Modus</button>
     </div>
     <div id="instructions" class="container" style="display:none;">
         <h2>Instructions</h2>
@@ -64,5 +66,6 @@
             <p>Avoid enemies and collect coins to score points.</p>
         <button id="backButton" class="game-button">Back</button>
     </div>
+    <script src="./js/fullscreen.js"></script>
 </body>
 </html>
