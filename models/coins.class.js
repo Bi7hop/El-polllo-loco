@@ -14,7 +14,7 @@ class Coins extends Collectable {
         this.loadImages(this.IMAGES_COIN); 
         this.playAnimation(this.IMAGES_COIN);
         this.x = Math.random() * 2000;
-        this.y = Math.random() * 400;
+        this.y = Math.random() * 200;
     }
 }
  
