@@ -118,8 +118,11 @@ class World {
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
+            if (this.character.hitFromAbove(enemy) && !enemy.isDead()) {
+                enemy.die(); 
+                this.character.speedY = 20; 
+            } else if (this.character.isColliding(enemy) && !enemy.isDead()) {
+                this.character.hit(); 
                 this.statusBar.setPercentage(this.character.energy);
             }
         });

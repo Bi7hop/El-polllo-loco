@@ -24,12 +24,26 @@ class MovableObject extends DrawableObject {
         } 
     }
 
-    isColliding (mo) {
-        return  this.x + this.width > mo.x &&
-            this.y + this.height > mo.y &&
-            this.x < mo.x &&
-            this.y < mo.y + mo.height;
-}
+    isOnGround() {
+        return this.y >= 130; 
+    }
+
+    hitFromAbove(mo) {
+        const minFallDistance = 20; 
+        const overlapX = this.x + this.width * 0.8 > mo.x && this.x + this.width * 0.2 < mo.x + mo.width;
+        const hitY = this.y + this.height <= mo.y + mo.height / 2;
+        const withinFallRange = this.y + this.height >= mo.y - minFallDistance;
+
+        return this.speedY < 0 && overlapX && hitY && withinFallRange;
+    }
+
+    isColliding(mo) {
+        const buffer = 15; 
+        const overlapX = this.x + this.width - buffer > mo.x && this.x + buffer < mo.x + mo.width;
+        const overlapY = this.y + this.height - buffer > mo.y && this.y + buffer < mo.y + mo.height;
+        return overlapX && overlapY;
+    }
+
     hit() {
         this.energy -= 5;
         if (this.energy < 0) {
