@@ -8,6 +8,7 @@ class World {
     statusBar = new StatusBar();
     statusCoins = new StatusCoins();
     statusBottle = new StatusBottle();
+    endbossStatusBar = new EndbossStatusBar(); 
     throwableObjects = [];
     coins = [];
     bottles = []; 
@@ -22,6 +23,7 @@ class World {
         this.setWorld();
         this.generateCoins(this.coinCount);
         this.generateBottles(this.bottleCount); 
+        this.endbossStatusBar.setWorld(this); 
         this.draw();
         this.run();
     }
@@ -33,12 +35,14 @@ class World {
         this.statusBar = new StatusBar();
         this.statusCoins = new StatusCoins();
         this.statusBottle = new StatusBottle();
+        this.endbossStatusBar = new EndbossStatusBar(); 
         this.throwableObjects = [];
         this.coins = [];
         this.bottles = [];
         this.generateCoins(this.coinCount);
         this.generateBottles(this.bottleCount);
         this.setWorld();
+        this.endbossStatusBar.setWorld(this); 
         this.draw();
         this.run();
     }
@@ -119,12 +123,23 @@ class World {
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if (this.character.hitFromAbove(enemy) && !enemy.isDead()) {
-                enemy.die();
-                this.character.speedY = Math.max(this.character.speedY, 20); 
-            } else if (this.character.isColliding(enemy) && !enemy.isDead()) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
+            if (enemy instanceof Endboss) { 
+                if (this.character.hitFromAbove(enemy) && !enemy.isDead()) {
+                    enemy.die();
+                    this.character.speedY = Math.max(this.character.speedY, 20); 
+                } else if (this.character.isColliding(enemy) && !enemy.isDead()) {
+                    this.character.hit();
+                    this.statusBar.setPercentage(this.character.energy);
+                    this.endbossStatusBar.setPercentage(enemy.energy); 
+                }
+            } else {
+                if (this.character.hitFromAbove(enemy) && !enemy.isDead()) {
+                    enemy.die();
+                    this.character.speedY = Math.max(this.character.speedY, 20); 
+                } else if (this.character.isColliding(enemy) && !enemy.isDead()) {
+                    this.character.hit();
+                    this.statusBar.setPercentage(this.character.energy);
+                }
             }
         });
 
@@ -159,6 +174,11 @@ class World {
             this.addToMap(this.statusBar);
             this.addToMap(this.statusCoins);
             this.addToMap(this.statusBottle);
+            
+            if (this.isEndbossVisible()) {
+                this.addToMap(this.endbossStatusBar);
+            }
+
             this.ctx.translate(this.camera_x, 0);
 
             this.addToMap(this.character);
@@ -179,6 +199,17 @@ class World {
                 self.draw();
             });
         }
+    }
+
+    isEndbossVisible() {
+        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
+        if (endboss) {
+            const endbossX = endboss.x;
+            const cameraStart = -this.camera_x;
+            const cameraEnd = -this.camera_x + this.canvas.width;
+            return endbossX >= cameraStart && endbossX <= cameraEnd;
+        }
+        return false;
     }
 
     gameOver() {
