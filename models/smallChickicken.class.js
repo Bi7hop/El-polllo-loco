@@ -1,4 +1,5 @@
 class SmallChicken extends MovableObject {
+    static SPAWNED_POSITIONS = [];
     y = 370;
     height = 50;
     width = 50;
@@ -15,9 +16,26 @@ class SmallChicken extends MovableObject {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
 
-        this.x = 300 + Math.random() * 400;
-        this.speed = 0.2 + Math.random() * 0.3;
+        const minDistance = 80;
+        const maxDistance = 250;
+        let validPosition = false;
 
+        while (!validPosition) {
+            this.x = 900 + Math.random() * 400;
+            validPosition = true;
+
+            for (let pos of SmallChicken.SPAWNED_POSITIONS) {
+                let randomDistance = minDistance + Math.random() * (maxDistance - minDistance);
+                if (Math.abs(this.x - pos) < randomDistance) {
+                    validPosition = false;
+                    break;
+                }
+            }
+        }
+
+        SmallChicken.SPAWNED_POSITIONS.push(this.x);
+        this.speed = 0.2 + Math.random() * 0.3;
+        this.deathSound = new Audio('audio/chicken.mp3');
         this.applyGravity();
         this.animate();
     }
@@ -28,7 +46,6 @@ class SmallChicken extends MovableObject {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             }
-            // Verhindert das Schweben in der Luft
             if (this.y > 370) {
                 this.y = 370;
                 this.speedY = 0;
@@ -40,6 +57,7 @@ class SmallChicken extends MovableObject {
         this.energy = 0;
         this.speed = 0;
         this.loadImage(this.IMAGE_DEAD);
+        this.deathSound.play();
     }
 
     animate() {
