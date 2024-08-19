@@ -111,6 +111,8 @@ class World {
     
             let collectedPercentage = (this.character.bottlesCollected / this.bottleCount) * 100;
             this.statusBottle.setPercentage(collectedPercentage);
+            
+            this.keyboard.D = false; 
         }
     }
     
