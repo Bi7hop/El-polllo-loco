@@ -86,11 +86,11 @@ class World {
         return true;
     }
 
-     run() {
+    run() {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
-        }, 200);
+        }, 50);
     }
 
     checkThrowObjects() {
@@ -119,10 +119,10 @@ class World {
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (this.character.hitFromAbove(enemy) && !enemy.isDead()) {
-                enemy.die(); 
-                this.character.speedY = 20; 
+                enemy.die();
+                this.character.speedY = Math.max(this.character.speedY, 20); 
             } else if (this.character.isColliding(enemy) && !enemy.isDead()) {
-                this.character.hit(); 
+                this.character.hit();
                 this.statusBar.setPercentage(this.character.energy);
             }
         });

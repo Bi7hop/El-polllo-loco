@@ -29,21 +29,19 @@ class MovableObject extends DrawableObject {
     }
 
     hitFromAbove(mo) {
-        const minFallDistance = 20; 
-        const overlapX = this.x + this.width * 0.8 > mo.x && this.x + this.width * 0.2 < mo.x + mo.width;
-        const hitY = this.y + this.height <= mo.y + mo.height / 2;
-        const withinFallRange = this.y + this.height >= mo.y - minFallDistance;
+        const overlapX = this.x + this.width * 0.9 > mo.x && this.x + this.width * 0.1 < mo.x + mo.width;
+        const hitY = this.y + this.height <= mo.y + mo.height / 3;
+        const withinFallRange = this.y + this.height >= mo.y;
 
         return this.speedY < 0 && overlapX && hitY && withinFallRange;
     }
 
     isColliding(mo) {
-        const buffer = 15; 
+        const buffer = 10;
         const overlapX = this.x + this.width - buffer > mo.x && this.x + buffer < mo.x + mo.width;
         const overlapY = this.y + this.height - buffer > mo.y && this.y + buffer < mo.y + mo.height;
         return overlapX && overlapY;
     }
-
     hit() {
         this.energy -= 5;
         if (this.energy < 0) {
