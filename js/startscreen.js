@@ -58,18 +58,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('backToStartButton').addEventListener('click', function() {
         if (world && world.character) {
-            world.character.stopAllSounds();  // Stoppt alle Sounds, die mit dem Charakter verbunden sind
+            world.character.stopAllSounds();  
             
             if (world.character.gameOverSound && !world.character.gameOverSound.paused) {
-                world.character.gameOverSound.pause(); // Stoppt den Game Over Sound
-                world.character.gameOverSound.currentTime = 0; // Setzt den Sound auf den Anfang zurück
+                world.character.gameOverSound.pause(); 
+                world.character.gameOverSound.currentTime = 0; 
             }
         }
         
         if (backgroundMusic && !backgroundMusic.paused) {
-            backgroundMusic.pause(); // Stoppe die Hintergrundmusik
-            backgroundMusic.currentTime = 0; // Setze die Musik auf den Anfang zurück
-            musicPlaying = false; // Setze den Zustand der Musik auf "nicht spielend"
+            backgroundMusic.pause(); 
+            backgroundMusic.currentTime = 0; 
+            musicPlaying = false; 
         }
     
         document.getElementById('gameContainer').style.display = 'none';
