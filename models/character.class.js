@@ -60,7 +60,7 @@ class Character extends MovableObject {
     walking_sound = new Audio('audio/walking.mp3');
     jump_sound = new Audio('audio/jump.mp3');
     snoring_sound = new Audio('audio/schnarchen.mp3'); 
-    idleTimeout = 3000; 
+    idleTimeout = 10000; 
     lastActionTime = 0;
     idleSoundPlayed = false;
     idleFrameCounter = 0;  
