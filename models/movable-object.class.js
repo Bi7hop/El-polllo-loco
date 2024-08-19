@@ -6,7 +6,6 @@ class MovableObject extends DrawableObject {
     energy = 100;
     lastHit = 0;
 
-
     applyGravity() {
         setInterval(() => {
             if(this.isAboveGround() || this.speedY > 0) {
@@ -42,6 +41,7 @@ class MovableObject extends DrawableObject {
         const overlapY = this.y + this.height - buffer > mo.y && this.y + buffer < mo.y + mo.height;
         return overlapX && overlapY;
     }
+
     hit() {
         this.energy -= 5;
         if (this.energy < 0) {
@@ -69,8 +69,8 @@ class MovableObject extends DrawableObject {
     }
 
     moveRight() {
-            this.x += this.speed;
-            this.otherDirection = false;
+        this.x += this.speed;
+        this.otherDirection = false;
     }
 
     moveLeft() {

@@ -13,6 +13,7 @@ class World {
     bottles = []; 
     coinCount = 7;
     bottleCount = 5; 
+    gameIsOver = false; 
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -38,11 +39,9 @@ class World {
         this.generateCoins(this.coinCount);
         this.generateBottles(this.bottleCount);
         this.setWorld();
-
         this.draw();
         this.run();
     }
-
 
     setWorld() {
         this.character.world = this;
@@ -87,9 +86,11 @@ class World {
     }
 
     run() {
-        setInterval(() => {
-            this.checkCollisions();
-            this.checkThrowObjects();
+        this.gameLoop = setInterval(() => {
+            if (!this.gameIsOver) {
+                this.checkCollisions();
+                this.checkThrowObjects();
+            }
         }, 50);
     }
 
@@ -115,8 +116,6 @@ class World {
             this.keyboard.D = false; 
         }
     }
-    
-    
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
@@ -149,38 +148,61 @@ class World {
         });
     }
 
-   draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    draw() {
+        if (!this.gameIsOver) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.level.backgroundObjects);
+            this.ctx.translate(this.camera_x, 0);
+            this.addObjectsToMap(this.level.backgroundObjects);
 
-        this.ctx.translate(-this.camera_x, 0);
-        // -------- Platz für feste Objekte -----------------
-        this.addToMap(this.statusBar);
-        this.addToMap(this.statusCoins);
-        this.addToMap(this.statusBottle);
-        this.ctx.translate(this.camera_x, 0);
+            this.ctx.translate(-this.camera_x, 0);
+            this.addToMap(this.statusBar);
+            this.addToMap(this.statusCoins);
+            this.addToMap(this.statusBottle);
+            this.ctx.translate(this.camera_x, 0);
 
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.level.enemies);
-        this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.throwableObjects);
-        this.addObjectsToMap(this.coins);
+            this.addToMap(this.character);
+            this.addObjectsToMap(this.level.enemies);
+            this.addObjectsToMap(this.level.clouds);
+            this.addObjectsToMap(this.throwableObjects);
+            this.addObjectsToMap(this.coins);
 
-        this.bottles.forEach(bottle => {
-            bottle.animate(); 
-            this.addToMap(bottle);  
-        });
+            this.bottles.forEach(bottle => {
+                bottle.animate(); 
+                this.addToMap(bottle);  
+            });
 
-        this.ctx.translate(-this.camera_x, 0);
+            this.ctx.translate(-this.camera_x, 0);
 
-        let self = this;
-        requestAnimationFrame(function () {
-            self.draw();
-        });
+            let self = this;
+            requestAnimationFrame(function () {
+                self.draw();
+            });
+        }
     }
 
+    gameOver() {
+        this.gameIsOver = true; 
+        clearInterval(this.gameLoop); 
+    
+        this.character.gameOverSound.play();
+    
+        const img = new Image();
+        img.src = this.character.gameOverImage;
+        img.onload = () => {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'; 
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+            const desiredWidth = 720;
+            const desiredHeight = 480;
+    
+            const xPosition = (this.canvas.width - desiredWidth) / 2;
+            const yPosition = (this.canvas.height - desiredHeight) / 2;
+    
+            this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
+        };
+    }
+    
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);

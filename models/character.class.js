@@ -64,6 +64,9 @@ class Character extends MovableObject {
     lastActionTime = 0;
     idleSoundPlayed = false;
     idleFrameCounter = 0;  
+    deathAnimationPlayed = false; 
+    gameOverImage = 'img/9_intro_outro_screens/game_over/you lost.png'; 
+    gameOverSound = new Audio('audio/gameover.mp3');
 
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
@@ -78,11 +81,11 @@ class Character extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
+        this.animationInterval = setInterval(() => {
             this.handleMovementAndSounds();
         }, 1000 / 60);
 
-        setInterval(() => {
+        this.animationInterval2 = setInterval(() => {
             this.updateAnimations();
         }, 50);
     }
@@ -91,7 +94,7 @@ class Character extends MovableObject {
         let currentTime = new Date().getTime();
         let timeSinceLastAction = currentTime - this.lastActionTime;
         let isMoving = false;
-
+    
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();
             this.otherDirection = false;
@@ -105,26 +108,33 @@ class Character extends MovableObject {
         } else {
             this.stopWalkingSound(); 
         }
-
+    
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump(); 
             isMoving = true;
         }
-
+    
         if (isMoving) {
             this.updateLastActionTime(); 
         }
-
-        if (timeSinceLastAction > this.idleTimeout && !isMoving) {
+    
+        if (timeSinceLastAction > this.idleTimeout && !isMoving && !this.isDead()) {
             this.playIdleAnimation();
         }
-
+    
         this.world.camera_x = -this.x + 100;
     }
+    
 
     updateAnimations() {
         if (this.isDead()) {
-            this.playAnimation(this.IMAGES_DEAD);
+            if (!this.deathAnimationPlayed) { 
+                this.playAnimation(this.IMAGES_DEAD);
+                this.deathAnimationPlayed = true; 
+                setTimeout(() => {
+                    this.world.gameOver(); 
+                }, 500); 
+            }
         } else if (this.isHurt()) {
             this.playAnimation(this.IMAGES_HURT);
         } else if (this.isAboveGround()) {
@@ -146,11 +156,11 @@ class Character extends MovableObject {
     }
 
     playIdleAnimation() {
-        if (!this.idleSoundPlayed) {
+        if (!this.idleSoundPlayed && !this.isDead()) {
             this.snoring_sound.play(); 
             this.idleSoundPlayed = true; 
         }
-
+    
         this.idleFrameCounter++;
         if (this.idleFrameCounter % 10 === 0) {  
             this.playAnimation(this.IMAGES_IDLE);
