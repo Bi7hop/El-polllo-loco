@@ -26,6 +26,7 @@ class World {
         this.endbossStatusBar.setWorld(this); 
         this.draw();
         this.run();
+        this.endbossEncountered = false; 
     }
 
     reset() {
@@ -213,13 +214,24 @@ class World {
         }
     }
 
+    playEndbossSound() {
+        const endbossSound = new Audio('audio/round1.mp3');
+        endbossSound.play();
+    }
+
     isEndbossVisible() {
         const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
         if (endboss) {
             const endbossX = endboss.x;
             const cameraStart = -this.camera_x;
             const cameraEnd = -this.camera_x + this.canvas.width;
-            return endbossX >= cameraStart && endbossX <= cameraEnd;
+            if (endbossX >= cameraStart && endbossX <= cameraEnd) {
+                if (!this.endbossEncountered) {
+                    this.playEndbossSound();
+                    this.endbossEncountered = true;
+                }
+                return true;
+            }
         }
         return false;
     }
