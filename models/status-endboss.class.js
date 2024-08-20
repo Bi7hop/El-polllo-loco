@@ -12,11 +12,18 @@ class EndbossStatusBar extends StatusBar {
         super();
         this.x = 0;
         this.y = 0;
+        this.loadImages(this.IMAGES);
     }
 
     setWorld(world) {
         this.world = world;
         this.canvasWidth = world.canvas.width;
         this.x = this.canvasWidth - 230;
+    }
+
+    draw(ctx) {
+        if (this.img && this.img.complete) {  
+            super.draw(ctx);
+        }
     }
 }

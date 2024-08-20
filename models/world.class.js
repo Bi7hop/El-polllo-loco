@@ -123,7 +123,20 @@ class World {
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if (enemy instanceof Endboss) { 
+            if (enemy instanceof Endboss) {
+                let hitObjectIndex = null;
+                this.throwableObjects.forEach((obj, index) => {
+                    if (enemy.isHitBy(obj)) {
+                        hitObjectIndex = index;
+                        enemy.hit(); 
+                        this.endbossStatusBar.setPercentage(enemy.energy);
+                    }
+                });
+
+                if (hitObjectIndex !== null) {
+                    this.throwableObjects.splice(hitObjectIndex, 1);
+                }
+
                 if (this.character.hitFromAbove(enemy) && !enemy.isDead()) {
                     enemy.die();
                     this.character.speedY = Math.max(this.character.speedY, 20); 
@@ -156,7 +169,6 @@ class World {
                 this.bottles.splice(index, 1);
                 this.character.bottlesCollected++; 
     
-               
                 let collectedPercentage = (this.character.bottlesCollected / this.bottleCount) * 100;
                 this.statusBottle.setPercentage(collectedPercentage); 
             }
@@ -176,7 +188,7 @@ class World {
             this.addToMap(this.statusBottle);
             
             if (this.isEndbossVisible()) {
-                this.addToMap(this.endbossStatusBar);
+                this.addToMap(this.endbossStatusBar); 
             }
 
             this.ctx.translate(this.camera_x, 0);
