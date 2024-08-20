@@ -15,7 +15,7 @@ class Bottle extends Collectable {
         this.y = 370;
 
         this.currentImage = 0;
-        this.img = this.imageCache[this.IMAGES_BOTTLE[this.currentImage]]; // Setze das erste Bild
+        this.img = this.imageCache[this.IMAGES_BOTTLE[this.currentImage]]; 
         this.lastAnimationTime = Date.now(); 
     }
 
