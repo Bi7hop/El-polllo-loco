@@ -4,13 +4,24 @@ class Endboss extends MovableObject {
     y = -2;
     energy = 100;
     isDead = false;
+    speed = 5;
+    moveDistance = 400;
+    initialX = 2500;
+    moving = true;
 
     hitboxes = [
-        { xOffset: 100, yOffset: 0, width: 100, height: 100 }, 
-        { xOffset: 50, yOffset: 100, width: 200, height: 350 } 
+        { xOffset: 100, yOffset: 0, width: 100, height: 100 },
+        { xOffset: 50, yOffset: 100, width: 200, height: 350 }
     ];
 
     IMAGES_WALKING = [
+        'img/4_enemie_boss_chicken/1_walk/G1.png',
+        'img/4_enemie_boss_chicken/1_walk/G2.png',
+        'img/4_enemie_boss_chicken/1_walk/G3.png',
+        'img/4_enemie_boss_chicken/1_walk/G4.png'
+    ];
+
+    IMAGES_ALERT = [
         'img/4_enemie_boss_chicken/2_alert/G5.png',
         'img/4_enemie_boss_chicken/2_alert/G6.png',
         'img/4_enemie_boss_chicken/2_alert/G7.png',
@@ -27,23 +38,29 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
+    hitSound = new Audio('audio/chicken.mp3');
+    deathSound = new Audio('audio/deathsound.mp3');
+
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_ALERT);
         this.loadImages(this.IMAGES_DEAD);
-        this.x = 2500;
+        this.x = this.initialX; 
         this.animate();
     }
 
     hit() {
-        this.energy -= 20; 
+        this.energy -= 20;
+        this.hitSound.play(); 
         if (this.energy <= 0 && !this.isDead) {
-            this.die(); 
+            this.die();
         }
     }
 
     die() {
         this.isDead = true;
+        this.deathSound.play(); 
         this.playDeathAnimation();
     }
 
@@ -75,8 +92,27 @@ class Endboss extends MovableObject {
     animate() {
         setInterval(() => {
             if (!this.isDead) {
-                this.playAnimation(this.IMAGES_WALKING);
+                if (this.moving) {
+                    this.playAnimation(this.IMAGES_WALKING);
+                    this.moveLeftAtEndOfMap();
+                } else {
+                    this.playAnimation(this.IMAGES_ALERT);
+                }
             }
         }, 150);
+
+        setInterval(() => {
+            this.moving = !this.moving; 
+        }, 3000); 
+    }
+
+    moveLeftAtEndOfMap() {
+        if (this.x > this.initialX - this.moveDistance) {
+            this.moveLeft();
+        }
+    }
+
+    moveLeft() {
+        this.x -= this.speed;
     }
 }
