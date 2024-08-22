@@ -4,10 +4,11 @@ class Endboss extends MovableObject {
     y = -2;
     energy = 100;
     isDead = false;
-    speed = 5; // Geschwindigkeit des Endbosses
+    speed = 5;
     moveDistance = 400;
     initialX = 2500;
     moving = true;
+    speedIncrease = 5; 
 
     hitboxes = [
         { xOffset: 100, yOffset: 0, width: 100, height: 100 },
@@ -55,7 +56,13 @@ class Endboss extends MovableObject {
         this.hitSound.play(); 
         if (this.energy <= 0 && !this.isDead) {
             this.die();
+        } else {
+            this.increaseSpeed();
         }
+    }
+
+    increaseSpeed() {
+        this.speed += this.speedIncrease;  
     }
 
     die() {
@@ -93,14 +100,11 @@ class Endboss extends MovableObject {
         const characterX = this.world.character.x;
         
         if (characterX < this.x) {
-            this.moveLeft();  // Bewegt den Endboss nach links
+            this.moveLeft();  
         } else if (characterX > this.x) {
-            this.moveRight();  // Bewegt den Endboss nach rechts
+            this.moveRight();  
         }
-
-        // Debugging-Info: Die aktuelle Position des Endbosses anzeigen
-        console.log(`Endboss position: x = ${this.x}, y = ${this.y}`);
-    }
+ }
 
     moveRight() {
         this.x += this.speed;
@@ -112,11 +116,11 @@ class Endboss extends MovableObject {
 
     animate() {
         setInterval(() => {
-            if (!this.isDead && this.world) {  // Überprüfen, ob world gesetzt ist
+            if (!this.isDead && this.world) { 
                 if (this.world.isEndbossVisible()) {
-                    this.followCharacter();  // Endboss folgt dem Charakter, wenn sichtbar
+                    this.followCharacter();  
                 } else if (this.moving) {
-                    this.moveLeftAtEndOfMap();  // Bewegt den Endboss nach links, falls nicht sichtbar
+                    this.moveLeftAtEndOfMap(); 
                 }
                 this.playAnimation(this.IMAGES_WALKING);
             }
