@@ -28,6 +28,13 @@ class World {
         this.draw();
         this.run();
         this.endbossEncountered = false;
+
+        // Hier wird der World-Verweis dem Endboss hinzugefügt
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss) {
+                enemy.world = this;  // Setze die Referenz auf die aktuelle World-Instanz
+            }
+        });
     }
 
     reset() {
@@ -177,7 +184,6 @@ class World {
             }
         });
     }
-    
 
     draw() {
         if (!this.gameIsOver) {

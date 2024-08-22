@@ -4,7 +4,7 @@ class Endboss extends MovableObject {
     y = -2;
     energy = 100;
     isDead = false;
-    speed = 5;
+    speed = 5; // Geschwindigkeit des Endbosses
     moveDistance = 400;
     initialX = 2500;
     moving = true;
@@ -46,7 +46,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_ALERT);
         this.loadImages(this.IMAGES_DEAD);
-        this.x = this.initialX; 
+        this.x = this.initialX;
         this.animate();
     }
 
@@ -89,30 +89,47 @@ class Endboss extends MovableObject {
         });
     }
 
+    followCharacter() {
+        const characterX = this.world.character.x;
+        
+        if (characterX < this.x) {
+            this.moveLeft();  // Bewegt den Endboss nach links
+        } else if (characterX > this.x) {
+            this.moveRight();  // Bewegt den Endboss nach rechts
+        }
+
+        // Debugging-Info: Die aktuelle Position des Endbosses anzeigen
+        console.log(`Endboss position: x = ${this.x}, y = ${this.y}`);
+    }
+
+    moveRight() {
+        this.x += this.speed;
+    }
+
+    moveLeft() {
+        this.x -= this.speed;
+    }
+
     animate() {
         setInterval(() => {
-            if (!this.isDead) {
-                if (this.moving) {
-                    this.playAnimation(this.IMAGES_WALKING);
-                    this.moveLeftAtEndOfMap();
-                } else {
-                    this.playAnimation(this.IMAGES_ALERT);
+            if (!this.isDead && this.world) {  // Überprüfen, ob world gesetzt ist
+                if (this.world.isEndbossVisible()) {
+                    this.followCharacter();  // Endboss folgt dem Charakter, wenn sichtbar
+                } else if (this.moving) {
+                    this.moveLeftAtEndOfMap();  // Bewegt den Endboss nach links, falls nicht sichtbar
                 }
+                this.playAnimation(this.IMAGES_WALKING);
             }
         }, 150);
 
         setInterval(() => {
             this.moving = !this.moving; 
-        }, 3000); 
+        }, 3000);
     }
 
     moveLeftAtEndOfMap() {
         if (this.x > this.initialX - this.moveDistance) {
             this.moveLeft();
         }
-    }
-
-    moveLeft() {
-        this.x -= this.speed;
     }
 }
