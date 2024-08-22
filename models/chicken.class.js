@@ -37,12 +37,17 @@ class Chicken extends MovableObject {
         this.animate();
     }
 
+    isHitBy(throwableObject) {
+        return throwableObject instanceof ThrowableObject && this.isColliding(throwableObject);
+    }
+
     die() {
         this.energy = 0;
         this.speed = 0;
         this.loadImage(this.IMAGE_DEAD);
         this.deathSound.play();
     }
+
 
     animate() {
         setInterval(() => {

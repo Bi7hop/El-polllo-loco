@@ -53,6 +53,10 @@ class SmallChicken extends MovableObject {
         }, 1000 / 25);
     }
 
+    isHitBy(throwableObject) {
+        return throwableObject instanceof ThrowableObject && this.isColliding(throwableObject);
+    }
+
     die() {
         this.energy = 0;
         this.speed = 0;
