@@ -48,6 +48,9 @@ class Chicken extends MovableObject {
         this.deathSound.play();
     }
 
+    isDead() {
+        return this.energy === 0;
+    }
 
     animate() {
         setInterval(() => {

@@ -133,6 +133,10 @@ class World {
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
+            if (typeof enemy.isDead === 'function' && enemy.isDead()) {
+                return; 
+            }
+    
             let hitObjectIndex = null;
             this.throwableObjects.forEach((obj, index) => {
                 if (enemy.isHitBy(obj)) {
@@ -154,13 +158,18 @@ class World {
                 this.throwableObjects.splice(hitObjectIndex, 1);
             }
     
-            if (this.character.hitFromAbove(enemy) && !enemy.isDead()) {
-                enemy.die();
+            if (this.character.hitFromAbove(enemy)) {
+                if (typeof enemy.die === 'function') {
+                    enemy.die(); 
+                }
                 this.character.speedY = Math.max(this.character.speedY, 20);
-            } else if (this.character.isColliding(enemy) && !enemy.isDead()) {
+            } else if (this.character.isColliding(enemy)) {
                 this.character.hit();
                 this.statusBar.setPercentage(this.character.energy);
+    
                 if (enemy instanceof Endboss) {
+                    this.character.hit();
+                    this.statusBar.setPercentage(this.character.energy);
                     this.endbossStatusBar.setPercentage(enemy.energy);
                 }
             }
@@ -184,7 +193,7 @@ class World {
             }
         });
     }
-
+    
     draw() {
         if (!this.gameIsOver) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
