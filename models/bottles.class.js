@@ -21,7 +21,7 @@ class Bottle extends Collectable {
     }
 
     animate() {
-        if (!this.collected) { // Nur animieren, wenn die Flasche nicht eingesammelt wurde
+        if (!this.collected) { 
             let now = Date.now();
             if (now - this.lastAnimationTime > 500) { 
                 this.currentImage = (this.currentImage + 1) % this.IMAGES_BOTTLE.length;
@@ -33,7 +33,7 @@ class Bottle extends Collectable {
 
     collect() {
         this.collected = true;
-        this.x = -100; // Verstecke die Flasche außerhalb des sichtbaren Bereichs
+        this.x = -100; 
         this.y = -100;
     }
 }
