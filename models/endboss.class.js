@@ -6,7 +6,7 @@ class Endboss extends MovableObject {
     isDead = false;
     speed = 5;
     moveDistance = 400;
-    initialX = 2500;
+    initialX = 3500;
     moving = true;
     speedIncrease = 5; 
 
