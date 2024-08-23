@@ -187,8 +187,17 @@ class World {
             if (this.character.isColliding(bottle) && !bottle.collected) {
                 bottle.collect();
                 this.collectedBottles++; 
+                this.respawnBottle(bottle); 
             }
         });
+    }
+
+    respawnBottle(bottle) {
+        setTimeout(() => {
+            bottle.x = Math.random() * 2000; 
+            bottle.y = 370; 
+            bottle.collected = false; 
+        }, Math.random() * 5000 + 5000); 
     }
 
     draw() {
