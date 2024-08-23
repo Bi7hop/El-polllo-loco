@@ -197,7 +197,7 @@ class World {
             bottle.x = Math.random() * 2000; 
             bottle.y = 370; 
             bottle.collected = false; 
-        }, Math.random() * 5000 + 5000); 
+        }, Math.random() * 7000 + 5000); 
     }
 
     draw() {
