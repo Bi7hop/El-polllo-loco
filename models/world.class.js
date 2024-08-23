@@ -187,17 +187,21 @@ class World {
             if (this.character.isColliding(bottle) && !bottle.collected) {
                 bottle.collect();
                 this.collectedBottles++; 
-                this.respawnBottle(bottle); 
+                this.respawnBottle(bottle);
             }
         });
     }
 
     respawnBottle(bottle) {
-        setTimeout(() => {
-            bottle.x = Math.random() * 2000; 
-            bottle.y = 370; 
-            bottle.collected = false; 
-        }, Math.random() * 7000 + 5000); 
+        const respawnChance = Math.random(); 
+
+        if (respawnChance < 0.5) { 
+            setTimeout(() => {
+                bottle.x = Math.random() * 2000; 
+                bottle.y = 370; 
+                bottle.collected = false; 
+            }, Math.random() * 5000 + 5000); 
+        }
     }
 
     draw() {
@@ -265,7 +269,7 @@ class World {
         const spacing = 20; 
 
         for (let i = 0; i < this.collectedCoins; i++) {
-            this.ctx.drawImage(this.coinImage, startX + i * spacing, startY, 60, 60); 
+            this.ctx.drawImage(this.coinImage, startX + i * spacing, startY, 60, 60);
         }
     }
 
