@@ -265,7 +265,7 @@ class World {
         const spacing = 20; 
 
         for (let i = 0; i < this.collectedCoins; i++) {
-            this.ctx.drawImage(this.coinImage, startX + i * spacing, startY, 60, 60); // Zeichnet die Münzen nebeneinander
+            this.ctx.drawImage(this.coinImage, startX + i * spacing, startY, 60, 60); 
         }
     }
 
