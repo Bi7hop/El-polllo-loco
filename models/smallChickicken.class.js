@@ -11,6 +11,7 @@ class SmallChicken extends MovableObject {
     ];
     IMAGE_DEAD = 'img/3_enemies_chicken/chicken_small/2_dead/dead.png';
     acceleration = 5;
+    removeAfterDeath = false;
 
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
@@ -62,10 +63,21 @@ class SmallChicken extends MovableObject {
         this.speed = 0;
         this.loadImage(this.IMAGE_DEAD);
         this.deathSound.play();
+        this.scheduleRemoval();  
     }
 
     isDead() {
         return this.energy === 0;
+    }
+
+    isRemovable() {
+        return this.removeAfterDeath;
+    }
+
+    scheduleRemoval() {
+        setTimeout(() => {
+            this.removeAfterDeath = true;
+        }, 3000); 
     }
 
     animate() {

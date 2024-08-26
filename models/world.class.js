@@ -108,6 +108,7 @@ class World {
             if (!this.gameIsOver) {
                 this.checkCollisions();
                 this.checkThrowObjects();
+                this.removeDeadEnemies();  
             }
         }, 50);
     }
@@ -189,6 +190,15 @@ class World {
                 this.collectedBottles++; 
                 this.respawnBottle(bottle);
             }
+        });
+    }
+
+    removeDeadEnemies() {
+        this.level.enemies = this.level.enemies.filter(enemy => {
+            if (typeof enemy.isDead === 'function' && enemy.isDead() && enemy.isRemovable()) {
+                return false;
+            }
+            return true;
         });
     }
 
