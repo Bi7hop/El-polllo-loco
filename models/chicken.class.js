@@ -14,15 +14,17 @@ class Chicken extends MovableObject {
     constructor() {
         super().loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
         this.loadImages(this.IMAGES_WALKING);
-
+    
         const minDistance = 100;
         const maxDistance = 300;
+        const maxAttempts = 100; 
+        let attempts = 0;
         let validPosition = false;
-
-        while (!validPosition) {
+    
+        while (!validPosition && attempts < maxAttempts) {
             this.x = 1000 + Math.random() * 500;
             validPosition = true;
-
+    
             for (let pos of Chicken.SPAWNED_POSITIONS) {
                 let randomDistance = minDistance + Math.random() * (maxDistance - minDistance);
                 if (Math.abs(this.x - pos) < randomDistance) {
@@ -30,13 +32,19 @@ class Chicken extends MovableObject {
                     break;
                 }
             }
+            attempts++;
         }
-
+    
+        if (!validPosition) {
+            this.x = 1000 + Math.random() * 500;
+        }
+    
         Chicken.SPAWNED_POSITIONS.push(this.x);
         this.speed = 0.175 + Math.random() * 0.25;
         this.deathSound = new Audio('audio/chicken.mp3');
         this.animate();
     }
+    
 
     isHitBy(throwableObject) {
         return throwableObject instanceof ThrowableObject && this.isColliding(throwableObject);

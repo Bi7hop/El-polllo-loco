@@ -16,15 +16,17 @@ class SmallChicken extends MovableObject {
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
-
+    
         const minDistance = 80;
         const maxDistance = 250;
+        const maxAttempts = 100; 
+        let attempts = 0;
         let validPosition = false;
-
-        while (!validPosition) {
+    
+        while (!validPosition && attempts < maxAttempts) {
             this.x = 900 + Math.random() * 400;
             validPosition = true;
-
+    
             for (let pos of SmallChicken.SPAWNED_POSITIONS) {
                 let randomDistance = minDistance + Math.random() * (maxDistance - minDistance);
                 if (Math.abs(this.x - pos) < randomDistance) {
@@ -32,14 +34,20 @@ class SmallChicken extends MovableObject {
                     break;
                 }
             }
+            attempts++;
         }
-
+    
+        if (!validPosition) {
+            this.x = 900 + Math.random() * 400;
+        }
+    
         SmallChicken.SPAWNED_POSITIONS.push(this.x);
         this.speed = 0.2 + Math.random() * 0.3;
         this.deathSound = new Audio('audio/chicken.mp3');
         this.applyGravity();
         this.animate();
     }
+    
 
     applyGravity() {
         setInterval(() => {
