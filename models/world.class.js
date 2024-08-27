@@ -138,28 +138,28 @@ class World {
             if (typeof enemy.isDead === 'function' && enemy.isDead()) {
                 return; 
             }
-
+    
             let hitObjectIndex = null;
             this.throwableObjects.forEach((obj, index) => {
                 if (enemy.isHitBy(obj)) {
                     hitObjectIndex = index;
                     enemy.hit();
-
+    
                     if (enemy instanceof Chicken || enemy instanceof SmallChicken) {
                         enemy.die(); 
                     } else if (enemy instanceof Endboss) {
                         this.endbossStatusBar.setPercentage(enemy.energy);
                     }
-
+    
                     let splash = new SplashAnimation(obj.x, obj.y);
                     this.splashAnimations.push(splash);
                 }
             });
-
+    
             if (hitObjectIndex !== null) {
                 this.throwableObjects.splice(hitObjectIndex, 1);
             }
-
+    
             if (this.character.hitFromAbove(enemy)) {
                 if (typeof enemy.die === 'function') {
                     enemy.die(); 
@@ -168,7 +168,7 @@ class World {
             } else if (this.character.isColliding(enemy)) {
                 this.character.hit();
                 this.statusBar.setPercentage(this.character.energy);
-
+    
                 if (enemy instanceof Endboss) {
                     this.character.hit();
                     this.statusBar.setPercentage(this.character.energy);
@@ -176,14 +176,14 @@ class World {
                 }
             }
         });
-
+    
         this.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 this.coins.splice(index, 1);
                 this.collectedCoins++; 
             }
         });
-
+    
         this.bottles.forEach((bottle) => {
             if (this.character.isColliding(bottle) && !bottle.collected) {
                 bottle.collect();
@@ -192,7 +192,7 @@ class World {
             }
         });
     }
-
+    
     removeDeadEnemies() {
         const initialEnemyCount = this.level.enemies.length;
 
