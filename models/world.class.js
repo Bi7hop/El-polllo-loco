@@ -194,12 +194,53 @@ class World {
     }
 
     removeDeadEnemies() {
+        const initialEnemyCount = this.level.enemies.length;
+
         this.level.enemies = this.level.enemies.filter(enemy => {
             if (typeof enemy.isDead === 'function' && enemy.isDead() && enemy.isRemovable()) {
                 return false;
             }
             return true;
         });
+
+        if (this.level.enemies.length < initialEnemyCount) {
+            this.spawnNewEnemies(initialEnemyCount - this.level.enemies.length);
+        }
+    }
+
+    spawnNewEnemies(count) {
+        const characterX = this.character.x;
+        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
+        const endbossX = endboss ? endboss.x : this.character.x + 2000; 
+
+        for (let i = 0; i < count; i++) {
+            let newEnemy;
+            let validPosition = false;
+            let attempts = 0;
+            const maxAttempts = 100;
+
+            while (!validPosition && attempts < maxAttempts) {
+                const enemyType = Math.random() < 0.5 ? Chicken : SmallChicken;
+                newEnemy = new enemyType();
+                newEnemy.x = characterX + 300 + Math.random() * (endbossX - characterX - 600); // Spawn rechts vom Charakter, links vom Endboss
+                validPosition = this.isValidSpawnPosition(newEnemy, this.level.enemies);
+                attempts++;
+            }
+
+            if (validPosition) {
+                this.level.enemies.push(newEnemy);
+            }
+        }
+    }
+
+    isValidSpawnPosition(newEnemy, existingEnemies) {
+        for (let enemy of existingEnemies) {
+            const distance = Math.abs(newEnemy.x - enemy.x);
+            if (distance < 150) {
+                return false;
+            }
+        }
+        return true;
     }
 
     respawnBottle(bottle) {
