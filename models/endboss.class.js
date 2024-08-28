@@ -11,7 +11,7 @@ class Endboss extends MovableObject {
     speedIncrease = 5;
 
     currentState = 'walking'; 
-    currentAnimationInterval = null; // Neue Variable zum Speichern des aktuellen Animationsintervalls
+    currentAnimationInterval = null; 
 
     hitboxes = [
         { xOffset: 100, yOffset: 0, width: 100, height: 100 },
@@ -92,7 +92,7 @@ class Endboss extends MovableObject {
     }
 
     playHurtAnimation() {
-        this.clearCurrentAnimation(); // Beendet die aktuelle Animation
+        this.clearCurrentAnimation(); 
 
         let animationIndex = 0;
         this.currentAnimationInterval = setInterval(() => {
@@ -108,7 +108,7 @@ class Endboss extends MovableObject {
     }
 
     playAttackAnimation() {
-        this.clearCurrentAnimation(); // Beendet die aktuelle Animation
+        this.clearCurrentAnimation(); 
 
         let animationIndex = 0;
         this.currentAnimationInterval = setInterval(() => {
@@ -131,7 +131,7 @@ class Endboss extends MovableObject {
     }
 
     playDeathAnimation() {
-        this.clearCurrentAnimation(); // Beendet die aktuelle Animation
+        this.clearCurrentAnimation(); 
 
         let animationIndex = 0;
         this.currentAnimationInterval = setInterval(() => {
