@@ -139,7 +139,7 @@ class Endboss extends MovableObject {
             } else {
                 this.clearCurrentAnimation();
                 this.moving = false; 
-                this.world.showVictoryScreen(); // Endscreen für den Sieg anzeigen
+                this.world.showVictoryScreen(); 
             }
         }, 200);
     }
