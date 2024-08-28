@@ -8,7 +8,9 @@ class Endboss extends MovableObject {
     moveDistance = 400;
     initialX = 3500;
     moving = true;
-    speedIncrease = 5; 
+    speedIncrease = 5;
+
+    currentState = 'walking'; 
 
     hitboxes = [
         { xOffset: 100, yOffset: 0, width: 100, height: 100 },
@@ -33,6 +35,23 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/2_alert/G12.png'
     ];
 
+    IMAGES_ATTACK = [
+        'img/4_enemie_boss_chicken/3_attack/G13.png',
+        'img/4_enemie_boss_chicken/3_attack/G14.png',
+        'img/4_enemie_boss_chicken/3_attack/G15.png',
+        'img/4_enemie_boss_chicken/3_attack/G16.png',
+        'img/4_enemie_boss_chicken/3_attack/G17.png',
+        'img/4_enemie_boss_chicken/3_attack/G18.png',
+        'img/4_enemie_boss_chicken/3_attack/G19.png',
+        'img/4_enemie_boss_chicken/3_attack/G20.png'
+    ];
+
+    IMAGES_HURT = [
+        'img/4_enemie_boss_chicken/4_hurt/G21.png',
+        'img/4_enemie_boss_chicken/4_hurt/G22.png',
+        'img/4_enemie_boss_chicken/4_hurt/G23.png'
+    ];
+
     IMAGES_DEAD = [
         'img/4_enemie_boss_chicken/5_dead/G24.png',
         'img/4_enemie_boss_chicken/5_dead/G25.png',
@@ -46,6 +65,8 @@ class Endboss extends MovableObject {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_ALERT);
+        this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
         this.x = this.initialX;
         this.animate();
@@ -57,12 +78,36 @@ class Endboss extends MovableObject {
         if (this.energy <= 0 && !this.isDead) {
             this.die();
         } else {
-            this.increaseSpeed();
+            this.currentState = 'hurt'; 
+            this.playHurtAnimation(); 
         }
     }
 
-    increaseSpeed() {
-        this.speed += this.speedIncrease;  
+    playHurtAnimation() {
+        let animationIndex = 0;
+        const hurtAnimationInterval = setInterval(() => {
+            if (animationIndex < this.IMAGES_HURT.length) {
+                this.img = this.imageCache[this.IMAGES_HURT[animationIndex]];
+                animationIndex++;
+            } else {
+                clearInterval(hurtAnimationInterval);
+                this.currentState = 'attack'; 
+                this.playAttackAnimation();
+            }
+        }, 100);
+    }
+
+    playAttackAnimation() {
+        let animationIndex = 0;
+        const attackAnimationInterval = setInterval(() => {
+            if (animationIndex < this.IMAGES_ATTACK.length) {
+                this.img = this.imageCache[this.IMAGES_ATTACK[animationIndex]];
+                animationIndex++;
+            } else {
+                clearInterval(attackAnimationInterval);
+                this.currentState = 'walking';
+            }
+        }, 100);
     }
 
     die() {
@@ -98,13 +143,13 @@ class Endboss extends MovableObject {
 
     followCharacter() {
         const characterX = this.world.character.x;
-        
+
         if (characterX < this.x) {
-            this.moveLeft();  
+            this.moveLeft();
         } else if (characterX > this.x) {
-            this.moveRight();  
+            this.moveRight();
         }
- }
+    }
 
     moveRight() {
         this.x += this.speed;
@@ -117,18 +162,18 @@ class Endboss extends MovableObject {
     animate() {
         setInterval(() => {
             if (!this.isDead && this.world) { 
-                if (this.world.isEndbossVisible()) {
-                    this.followCharacter();  
-                } else if (this.moving) {
-                    this.moveLeftAtEndOfMap(); 
+                switch (this.currentState) {
+                    case 'walking':
+                        this.playAnimation(this.IMAGES_WALKING);
+                        this.followCharacter();
+                        break;
+                    case 'hurt':
+                        break;
+                    case 'attack':
+                        break;
                 }
-                this.playAnimation(this.IMAGES_WALKING);
             }
         }, 150);
-
-        setInterval(() => {
-            this.moving = !this.moving; 
-        }, 3000);
     }
 
     moveLeftAtEndOfMap() {
