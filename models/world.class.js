@@ -346,6 +346,34 @@ class World {
         return false;
     }
 
+    showVictoryScreen() {  
+        this.gameIsOver = true; 
+        clearInterval(this.gameLoop);
+
+        const img = new Image();
+        img.src = 'img/9_intro_outro_screens/win/won_1.png'; 
+
+        img.onload = () => {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+            const desiredWidth = 380; 
+            const desiredHeight = 220; 
+
+            const xPosition = (this.canvas.width - desiredWidth) / 2;
+            const yPosition = (this.canvas.height - desiredHeight) / 2;
+
+            this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
+        };
+
+        this.playVictorySound(); 
+    }
+
+    playVictorySound() {
+        const victorySound = new Audio('audio/win.mp3'); 
+        victorySound.play();
+    }
+
     gameOver() {
         this.gameIsOver = true;
         clearInterval(this.gameLoop);
@@ -367,7 +395,7 @@ class World {
             this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
         };
     }
-
+    
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);

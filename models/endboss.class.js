@@ -60,7 +60,6 @@ class Endboss extends MovableObject {
     ];
 
     hitSound = new Audio('audio/chicken.mp3');
-    deathSound = new Audio('audio/deathsound.mp3');
 
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
@@ -125,7 +124,6 @@ class Endboss extends MovableObject {
     die() {
         if (!this.isDead) {  
             this.isDead = true;
-            this.deathSound.play(); 
             this.playDeathAnimation();
         }
     }
@@ -141,6 +139,7 @@ class Endboss extends MovableObject {
             } else {
                 this.clearCurrentAnimation();
                 this.moving = false; 
+                this.world.showVictoryScreen(); // Endscreen für den Sieg anzeigen
             }
         }, 200);
     }
