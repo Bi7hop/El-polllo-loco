@@ -111,10 +111,14 @@ class Endboss extends MovableObject {
     }
 
     die() {
-        this.isDead = true;
-        this.deathSound.play(); 
-        this.playDeathAnimation();
+        if (!this.isDead) {  
+            this.isDead = true;
+            this.deathSound.play(); 
+            this.playDeathAnimation();
+        }
     }
+    
+    
 
     playDeathAnimation() {
         let animationIndex = 0;
@@ -123,10 +127,13 @@ class Endboss extends MovableObject {
                 this.img = this.imageCache[this.IMAGES_DEAD[animationIndex]];
                 animationIndex++;
             } else {
-                clearInterval(deathAnimationInterval);
+                clearInterval(deathAnimationInterval); 
+                this.moving = false; 
             }
         }, 200);
     }
+    
+    
 
     isHitBy(throwableObject) {
         return this.hitboxes.some(box => {
@@ -161,7 +168,8 @@ class Endboss extends MovableObject {
 
     animate() {
         setInterval(() => {
-            if (!this.isDead && this.world) { 
+            if (this.isDead) {
+            } else if (this.world) { 
                 switch (this.currentState) {
                     case 'walking':
                         this.playAnimation(this.IMAGES_WALKING);
@@ -175,6 +183,8 @@ class Endboss extends MovableObject {
             }
         }, 150);
     }
+    
+    
 
     moveLeftAtEndOfMap() {
         if (this.x > this.initialX - this.moveDistance) {

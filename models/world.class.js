@@ -222,7 +222,7 @@ class World {
             while (!validPosition && attempts < maxAttempts) {
                 const enemyType = Math.random() < 0.5 ? Chicken : SmallChicken;
                 newEnemy = new enemyType();
-                newEnemy.x = characterX + 300 + Math.random() * (endbossX - characterX - 600); // Spawn rechts vom Charakter, links vom Endboss
+                newEnemy.x = characterX + 300 + Math.random() * (endbossX - characterX - 600); 
                 validPosition = this.isValidSpawnPosition(newEnemy, this.level.enemies);
                 attempts++;
             }
