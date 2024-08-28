@@ -11,6 +11,7 @@ class Endboss extends MovableObject {
     speedIncrease = 5;
 
     currentState = 'walking'; 
+    currentAnimationInterval = null; // Neue Variable zum Speichern des aktuellen Animationsintervalls
 
     hitboxes = [
         { xOffset: 100, yOffset: 0, width: 100, height: 100 },
@@ -83,14 +84,23 @@ class Endboss extends MovableObject {
         }
     }
 
+    clearCurrentAnimation() {
+        if (this.currentAnimationInterval) {
+            clearInterval(this.currentAnimationInterval);
+            this.currentAnimationInterval = null;
+        }
+    }
+
     playHurtAnimation() {
+        this.clearCurrentAnimation(); // Beendet die aktuelle Animation
+
         let animationIndex = 0;
-        const hurtAnimationInterval = setInterval(() => {
+        this.currentAnimationInterval = setInterval(() => {
             if (animationIndex < this.IMAGES_HURT.length) {
                 this.img = this.imageCache[this.IMAGES_HURT[animationIndex]];
                 animationIndex++;
             } else {
-                clearInterval(hurtAnimationInterval);
+                this.clearCurrentAnimation();
                 this.currentState = 'attack'; 
                 this.playAttackAnimation();
             }
@@ -98,13 +108,15 @@ class Endboss extends MovableObject {
     }
 
     playAttackAnimation() {
+        this.clearCurrentAnimation(); // Beendet die aktuelle Animation
+
         let animationIndex = 0;
-        const attackAnimationInterval = setInterval(() => {
+        this.currentAnimationInterval = setInterval(() => {
             if (animationIndex < this.IMAGES_ATTACK.length) {
                 this.img = this.imageCache[this.IMAGES_ATTACK[animationIndex]];
                 animationIndex++;
             } else {
-                clearInterval(attackAnimationInterval);
+                this.clearCurrentAnimation();
                 this.currentState = 'walking';
             }
         }, 100);
@@ -117,23 +129,21 @@ class Endboss extends MovableObject {
             this.playDeathAnimation();
         }
     }
-    
-    
 
     playDeathAnimation() {
+        this.clearCurrentAnimation(); // Beendet die aktuelle Animation
+
         let animationIndex = 0;
-        const deathAnimationInterval = setInterval(() => {
+        this.currentAnimationInterval = setInterval(() => {
             if (animationIndex < this.IMAGES_DEAD.length) {
                 this.img = this.imageCache[this.IMAGES_DEAD[animationIndex]];
                 animationIndex++;
             } else {
-                clearInterval(deathAnimationInterval); 
+                this.clearCurrentAnimation();
                 this.moving = false; 
             }
         }, 200);
     }
-    
-    
 
     isHitBy(throwableObject) {
         return this.hitboxes.some(box => {
@@ -183,8 +193,6 @@ class Endboss extends MovableObject {
             }
         }, 150);
     }
-    
-    
 
     moveLeftAtEndOfMap() {
         if (this.x > this.initialX - this.moveDistance) {
