@@ -53,7 +53,7 @@ class SmallChicken extends MovableObject {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
-                this.speedY -= this.acceleration;
+                this.speedY -= this.acceleration * 0.5;  
             }
             if (this.y > 370) {
                 this.y = 370;
