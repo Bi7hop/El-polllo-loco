@@ -181,6 +181,9 @@ class World {
             if (this.character.isColliding(coin)) {
                 this.coins.splice(index, 1);
                 this.collectedCoins++; 
+    
+                const coinPickupSound = new Audio('audio/coinpick.mp3');
+                coinPickupSound.play();  
             }
         });
     
@@ -189,9 +192,13 @@ class World {
                 bottle.collect();
                 this.collectedBottles++; 
                 this.respawnBottle(bottle);
+
+                const bottlePickupSound = new Audio('audio/bottlepick.mp3');
+                bottlePickupSound.play();
             }
         });
     }
+    
     
     removeDeadEnemies() {
         const initialEnemyCount = this.level.enemies.length;
