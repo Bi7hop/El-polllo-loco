@@ -59,3 +59,14 @@
         justify-content: space-evenly;
     }
 }
+
+
+@media only screen and (min-width: 930px) and (max-width: 950px) and (orientation: landscape) {
+    .game-button {
+        padding: 0 30px;
+    }
+
+    h1 {
+        margin-bottom: 0;
+    }
+}

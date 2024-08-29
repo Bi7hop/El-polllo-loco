@@ -82,3 +82,40 @@ h1 {
 .hidden-buttons {
     display: none;
 }
+
+#rotateMessage {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+@media (max-width: 600px) {
+    #rotateMessage {
+        display: flex;
+    }
+
+    #rotateMessage img {
+        max-width: 70%;
+        max-height: 80%;
+        border-radius: 25px;
+        animation: rotateImage 2s infinite alternate ease-in-out;
+    }
+}
+
+@keyframes rotateImage {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-45deg);
+    }
+}
+
+
