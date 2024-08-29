@@ -58,6 +58,18 @@
         flex-wrap: wrap; 
         justify-content: space-evenly;
     }
+
+    .mobile-buttons-left {
+        left: 30px;
+    }
+
+    .mobile-buttons-right {
+        right: 30px;
+    }
+
+    label, input, span {
+        display: none;
+    }
 }
 
 
@@ -69,6 +81,19 @@
     h1 {
         margin-bottom: 0;
     }
+
+    .mobile-buttons-left {
+        left: 40px;
+    }
+    
+    .mobile-buttons-right {
+        right: 40px;
+    }
+
+    label, input, span {
+        display: none;
+    }
+
 }
 
 @media only screen and (max-width: 768px) and (orientation: landscape) {
