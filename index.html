@@ -41,6 +41,7 @@
 
     <!-- Spiel-Initialisierung -->
      <script src="./js/orientation.js"></script>
+     <script src="./js/mobileToggleButtons.js"></script>
      <script src="./js/toggleButtons.js"></script>
     <script src="./js/game.js"></script>
     <script src="./js/startscreen.js"></script>
@@ -65,9 +66,30 @@
         <canvas id="canvas" width="720" height="480"></canvas>
         <button id="backToStartButton" class="game-button">Back to Start</button>
         <button id="musicToggleButtonGame" class="game-button">Music On</button>
-        <!-- Fullscreen Button -->
         <button id="fullscreenButton" class="game-button">Fullscreen Modus</button>
+        
+        <!-- Mobile Buttons -->
+        <div id="mobileButtons" class="mobile-buttons" style="display: none;">
+            <!-- Linke Buttons -->
+            <div id="leftButtons" class="mobile-buttons-group mobile-buttons-left">
+                <img src="img/mobileButtons/back.png" class="mobile-button" id="mobileButtonBack" alt="Back">
+                <img src="img/mobileButtons/forward.png" class="mobile-button" id="mobileButtonForward" alt="Forward">
+            </div>
+        
+            <!-- Mittige Buttons -->
+            <div id="centerButtons" class="mobile-buttons-group mobile-buttons-center">
+                <img src="img/mobileButtons/musik.png" class="mobile-button" id="mobileButtonMusik" alt="Musik">
+                <img src="img/mobileButtons/pause.png" class="mobile-button" id="mobileButtonPause" alt="Pause">
+            </div>
+        
+            <!-- Rechte Buttons -->
+            <div id="rightButtons" class="mobile-buttons-group mobile-buttons-right">
+                <img src="img/mobileButtons/jump.png" class="mobile-button" id="mobileButtonJump" alt="Jump">
+                <img src="img/mobileButtons/throw.png" class="mobile-button" id="mobileButtonThrow" alt="Throw">
+            </div>
+        </div>
     </div>
+    
     <div id="instructions" class="container" style="display:none;">
         <h2>Instructions</h2>
             <p>Use the arrow keys to move your character.</p>

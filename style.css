@@ -119,3 +119,52 @@ h1 {
 }
 
 
+#gameContainer {
+    position: relative;
+    width: 700px; 
+    height: 460px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-buttons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none; 
+}
+
+.mobile-buttons-group {
+    display: flex;
+    gap: 10px; 
+    pointer-events: auto; 
+}
+
+.mobile-buttons-left {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+.mobile-buttons-right {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.mobile-buttons-center {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.mobile-button {
+    width: 50px;
+    height: 50px;
+}
+
