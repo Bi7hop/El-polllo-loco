@@ -12,6 +12,7 @@ body {
     height: 100vh;
     margin: 0;
     font-family: 'Bangers';
+    padding: 0;
 }
 
 .container {
@@ -28,6 +29,7 @@ body {
 
 canvas {
     background-color: black;
+    display: block;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
@@ -75,4 +77,8 @@ h1 {
 
 .game-button:hover {
     background-color: rgb(255, 50, 30);
+}
+
+.hidden-buttons {
+    display: none;
 }
