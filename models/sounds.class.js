@@ -20,7 +20,7 @@ class SoundManager {
             this.sounds[key].volume = 0.5; 
         }
 
-        this.sounds.endboss.loop = true;
+        this.sounds.endboss.loop = false;
         this.sounds.backgroundMusic.loop = true; 
         this.sounds.backgroundMusic.volume = 0.2; 
     }
