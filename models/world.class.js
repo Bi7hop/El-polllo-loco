@@ -39,6 +39,8 @@ class World {
                 enemy.world = this; 
             }
         });
+
+        soundManager.play('backgroundMusic');
     }
 
     reset() {

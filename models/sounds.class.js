@@ -10,16 +10,19 @@ class SoundManager {
             coinPickup: new Audio('audio/coinpick.mp3'),
             bottlePickup: new Audio('audio/bottlepick.mp3'),
             endboss: new Audio('audio/round1.mp3'),
-            victory: new Audio('audio/win.mp3')
+            victory: new Audio('audio/win.mp3'),
+            backgroundMusic: new Audio('audio/Cultura en Cada Verso.mp3') 
         };
 
         this.muted = false;
 
         for (let key in this.sounds) {
-            this.sounds[key].volume = 0.5;
+            this.sounds[key].volume = 0.5; 
         }
 
         this.sounds.endboss.loop = true;
+        this.sounds.backgroundMusic.loop = true; 
+        this.sounds.backgroundMusic.volume = 0.2; 
     }
 
     play(soundName) {
@@ -55,4 +58,16 @@ class SoundManager {
     }
 }
 
+
 const soundManager = new SoundManager();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const musicToggleButton = document.getElementById('musicToggleButtonStart');
+
+    musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
+
+    musicToggleButton.addEventListener('click', () => {
+        soundManager.toggleMute();
+        musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
+    });
+});
