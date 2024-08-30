@@ -17,3 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', toggleMobileButtons);
     window.addEventListener('orientationchange', toggleMobileButtons);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const musikButton = document.getElementById('mobileButtonMusik');
+    const pauseButton = document.getElementById('mobileButtonPause');
+
+    musikButton.addEventListener('click', () => {
+        musikButton.style.display = 'none';
+        pauseButton.style.display = 'block';
+    });
+
+    pauseButton.addEventListener('click', () => {
+        pauseButton.style.display = 'none';
+        musikButton.style.display = 'block';
+    });
+});
