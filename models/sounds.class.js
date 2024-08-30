@@ -41,20 +41,20 @@ class SoundManager {
     stop(soundName) {
         if (this.sounds[soundName]) {
             this.sounds[soundName].pause();
-            this.sounds[soundName].currentTime = 0; 
+            this.sounds[soundName].currentTime = 0;
         }
     }
 
     stopAll() {
         for (let key in this.sounds) {
-            this.stop(key); 
+            this.stop(key);
         }
     }
 
     toggleMute() {
-        this.muted = !this.muted; 
+        this.muted = !this.muted;
         for (let key in this.sounds) {
-            this.sounds[key].muted = this.muted; 
+            this.sounds[key].muted = this.muted;
         }
     }
 }
@@ -64,12 +64,14 @@ const soundManager = new SoundManager();
 document.addEventListener('DOMContentLoaded', () => {
     const musicToggleButton = document.getElementById('musicToggleButtonStart');
 
-    musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
-
-    musicToggleButton.addEventListener('click', () => {
-        soundManager.toggleMute();
+    if (musicToggleButton) {
         musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
-    });
 
-    soundManager.play('backgroundMusic');
+        musicToggleButton.addEventListener('click', () => {
+            soundManager.toggleMute();
+            musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
+        });
+    } else {
+        console.error('Element with ID "musicToggleButtonStart" not found.');
+    }
 });

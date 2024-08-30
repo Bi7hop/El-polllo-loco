@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function init() {
         const keyboard = new Keyboard();
         world = new World(document.getElementById('canvas'), keyboard);
+        soundManager.play('backgroundMusic');
     }
 
     function toggleMusic(button) {
@@ -14,14 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const musicToggleButtonStart = document.getElementById('musicToggleButtonStart');
-    musicToggleButtonStart.addEventListener('click', function() {
-        toggleMusic(musicToggleButtonStart);
-    });
+    if (musicToggleButtonStart) {
+        musicToggleButtonStart.addEventListener('click', function() {
+            toggleMusic(musicToggleButtonStart);
+        });
+    } else {
+        console.error('Element with ID "musicToggleButtonStart" not found.');
+    }
 
     const musicToggleButtonGame = document.getElementById('musicToggleButtonGame');
-    musicToggleButtonGame.addEventListener('click', function() {
-        toggleMusic(musicToggleButtonGame);
-    });
+    if (musicToggleButtonGame) {
+        musicToggleButtonGame.addEventListener('click', function() {
+            toggleMusic(musicToggleButtonGame);
+        });
+    } else {
+        console.error('Element with ID "musicToggleButtonGame" not found.');
+    }
 
     document.getElementById('startButton').addEventListener('click', function() {
         document.getElementById('startscreen').style.display = 'none';
@@ -62,27 +71,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
-    const musicSlider = document.getElementById('musicSlider');
-    const musicLabel = document.getElementById('musicLabel');
-    
-    musicSlider.addEventListener('input', function() {
-        soundManager.pause('backgroundMusic'); 
-
-        if (musicSlider.value == 1) {
-            soundManager.sounds.backgroundMusic.src = 'audio/Cultura en Cada Verso.mp3';
-            musicLabel.textContent = 'Cultura en Cada Verso';
-        } else {
-            soundManager.sounds.backgroundMusic.src = 'audio/Cruisin\' the Barrio.mp3';
-            musicLabel.textContent = 'Cruisin Down the Barrio';
-        }
-
-        soundManager.sounds.backgroundMusic.loop = true;  
-        
-        if (musicPlaying) {
-            soundManager.play('backgroundMusic');
-        }
-    });
-
-    soundManager.play('backgroundMusic');
 });
