@@ -27,6 +27,7 @@ class SoundManager {
 
     play(soundName) {
         if (this.sounds[soundName] && !this.muted) {
+            this.sounds[soundName].currentTime = 0;
             this.sounds[soundName].play();
         }
     }
@@ -40,24 +41,23 @@ class SoundManager {
     stop(soundName) {
         if (this.sounds[soundName]) {
             this.sounds[soundName].pause();
-            this.sounds[soundName].currentTime = 0;
+            this.sounds[soundName].currentTime = 0; 
         }
     }
 
     stopAll() {
         for (let key in this.sounds) {
-            this.stop(key);
+            this.stop(key); 
         }
     }
 
     toggleMute() {
-        this.muted = !this.muted;
+        this.muted = !this.muted; 
         for (let key in this.sounds) {
-            this.sounds[key].muted = this.muted;
+            this.sounds[key].muted = this.muted; 
         }
     }
 }
-
 
 const soundManager = new SoundManager();
 
@@ -70,4 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
         soundManager.toggleMute();
         musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
     });
+
+    soundManager.play('backgroundMusic');
 });
