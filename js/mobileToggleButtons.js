@@ -25,10 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
     musikButton.addEventListener('click', () => {
         musikButton.style.display = 'none';
         pauseButton.style.display = 'block';
+        soundManager.toggleMute(); // Musik stummschalten
     });
 
     pauseButton.addEventListener('click', () => {
         pauseButton.style.display = 'none';
         musikButton.style.display = 'block';
+        soundManager.toggleMute(); // Musik aktivieren
     });
 });
+

@@ -15,11 +15,11 @@ class ThrowableObject extends MovableObject {
         this.loadImage(this.imagesRotation[this.currentImageIndex]);
         this.animateRotation();
 
-        this.throwSound = new Audio('audio/bottle2.mp3');
+        this.throwSound = 'bottleThrow';
     }
 
     throw(direction) {
-        this.throwSound.play();
+        soundManager.play(this.throwSound);
         
         this.speedY = 30;
         this.applyGravity();

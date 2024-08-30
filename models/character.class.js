@@ -66,8 +66,7 @@ class Character extends MovableObject {
     idleFrameCounter = 0;  
     deathAnimationPlayed = false; 
     gameOverImage = 'img/9_intro_outro_screens/game_over/you lost.png'; 
-    gameOverSound = new Audio('audio/gameover.mp3');
-
+    gameOverSound = 'gameOver';
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -145,39 +144,35 @@ class Character extends MovableObject {
     }
 
     playWalkingSound() {
-        if (this.walking_sound.paused) {
-            this.walking_sound.play();
+        if (soundManager.sounds.walking.paused) {
+            soundManager.play('walking');
         }
     }
 
     stopWalkingSound() {
-        this.walking_sound.pause();
-        this.walking_sound.currentTime = 0;
-    }
-
-    playIdleAnimation() {
-        if (!this.idleSoundPlayed && !this.isDead()) {
-            this.snoring_sound.play(); 
-            this.idleSoundPlayed = true; 
-        }
-    
-        this.idleFrameCounter++;
-        if (this.idleFrameCounter % 10 === 0) {  
-            this.playAnimation(this.IMAGES_IDLE);
-        }
+        soundManager.pause('walking');
+        soundManager.sounds.walking.currentTime = 0;
     }
 
     jump() {
         this.speedY = 30;
-        this.jump_sound.play(); 
+        soundManager.play('jump'); 
+    }
+
+    playIdleAnimation() {
+        if (!this.idleSoundPlayed && !this.isDead()) {
+            soundManager.play('snoring'); 
+            this.idleSoundPlayed = true;
+        }
+    
+        this.idleFrameCounter++;
+        if (this.idleFrameCounter % 10 === 0) {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
     }
 
     stopAllSounds() {
-        this.stopWalkingSound();
-        this.jump_sound.pause();
-        this.jump_sound.currentTime = 0;
-        this.snoring_sound.pause(); 
-        this.snoring_sound.currentTime = 0; 
+        soundManager.stopAll(); 
     }
 
     updateLastActionTime() {

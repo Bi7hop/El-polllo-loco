@@ -43,7 +43,7 @@ class SmallChicken extends MovableObject {
     
         SmallChicken.SPAWNED_POSITIONS.push(this.x);
         this.speed = 0.2 + Math.random() * 0.3;
-        this.deathSound = new Audio('audio/chicken.mp3');
+        this.deathSound = 'chickenDeath'; 
         this.applyGravity();
         this.animate();
     }
@@ -70,7 +70,7 @@ class SmallChicken extends MovableObject {
         this.energy = 0;
         this.speed = 0;
         this.loadImage(this.IMAGE_DEAD);
-        this.deathSound.play();
+        soundManager.play(this.deathSound);
         this.scheduleRemoval();  
     }
 

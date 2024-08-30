@@ -13,6 +13,8 @@ class SoundManager {
             victory: new Audio('audio/win.mp3')
         };
 
+        this.muted = false;
+
         for (let key in this.sounds) {
             this.sounds[key].volume = 0.5;
         }
@@ -21,7 +23,7 @@ class SoundManager {
     }
 
     play(soundName) {
-        if (this.sounds[soundName]) {
+        if (this.sounds[soundName] && !this.muted) {
             this.sounds[soundName].play();
         }
     }
@@ -44,4 +46,13 @@ class SoundManager {
             this.stop(key);
         }
     }
+
+    toggleMute() {
+        this.muted = !this.muted;
+        for (let key in this.sounds) {
+            this.sounds[key].muted = this.muted;
+        }
+    }
 }
+
+const soundManager = new SoundManager();

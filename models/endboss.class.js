@@ -59,7 +59,7 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-    hitSound = new Audio('audio/chicken.mp3');
+    hitSound = 'chickenDeath';
 
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
@@ -74,7 +74,7 @@ class Endboss extends MovableObject {
 
     hit() {
         this.energy -= 20;
-        this.hitSound.play(); 
+        soundManager.play(this.hitSound);
         if (this.energy <= 0 && !this.isDead) {
             this.die();
         } else {

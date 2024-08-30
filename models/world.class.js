@@ -182,8 +182,7 @@ class World {
                 this.coins.splice(index, 1);
                 this.collectedCoins++; 
     
-                const coinPickupSound = new Audio('audio/coinpick.mp3');
-                coinPickupSound.play();  
+                soundManager.play('coinPickup');
             }
         });
     
@@ -193,8 +192,7 @@ class World {
                 this.collectedBottles++; 
                 this.respawnBottle(bottle);
 
-                const bottlePickupSound = new Audio('audio/bottlepick.mp3');
-                bottlePickupSound.play();
+                soundManager.play('bottlePickup');
             }
         });
     }
@@ -332,8 +330,7 @@ class World {
     }
 
     playEndbossSound() {
-        const endbossSound = new Audio('audio/round1.mp3');
-        endbossSound.play();
+        soundManager.play('endboss');
     }
 
     isEndbossVisible() {
@@ -377,15 +374,14 @@ class World {
     }
 
     playVictorySound() {
-        const victorySound = new Audio('audio/win.mp3'); 
-        victorySound.play();
+        soundManager.play('victory');
     }
 
     gameOver() {
         this.gameIsOver = true;
         clearInterval(this.gameLoop);
 
-        this.character.gameOverSound.play();
+        soundManager.play(this.character.gameOverSound);
 
         const img = new Image();
         img.src = this.character.gameOverImage;
