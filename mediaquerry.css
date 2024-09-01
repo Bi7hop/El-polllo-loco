@@ -105,3 +105,40 @@
         justify-content: center;
     }
 }
+
+#restartButton:hover {
+    transform: scale(1.05);
+}
+
+@media only screen and (orientation: landscape) and (max-width: 768px) {
+    #restartButton {
+        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
+        color: #ffffff;
+        position: absolute;
+        bottom: 8%; 
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 24px; 
+    }
+
+    #restartButton:hover {
+        transform: scale(1.05);
+    }
+}
+
+@media only screen and (orientation: landscape) and (max-width: 932px) and (min-width: 820px) {
+    #restartButton {
+        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
+        color: #ffffff;
+        position: absolute;
+        bottom: 10%; 
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 24px; 
+    }
+
+    #restartButton:hover {
+        transform: scale(1.05);
+    }
+}
+

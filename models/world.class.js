@@ -373,6 +373,7 @@ class World {
         };
 
         this.playVictorySound(); 
+        this.showRestartButton();  // Zeige den Restart-Button nach einem Sieg an
     }
 
     playVictorySound() {
@@ -398,6 +399,17 @@ class World {
             const yPosition = (this.canvas.height - desiredHeight) / 2;
 
             this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
+        };
+
+        this.showRestartButton();  // Zeige den Restart-Button nach einem Game Over an
+    }
+
+    showRestartButton() {
+        const restartButton = document.getElementById('restartButton');
+        restartButton.style.display = 'block';
+        restartButton.onclick = () => {
+            this.reset();
+            restartButton.style.display = 'none';
         };
     }
     
