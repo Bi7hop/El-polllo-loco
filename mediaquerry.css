@@ -1,8 +1,15 @@
+@media (max-width: 1920px) {
+    canvas {
+        position: relative;
+    }
+}
+
 @media (max-width: 750px) {
     h1 {
         text-wrap: nowrap;
         font-size: 115px;
     }
+
 }
 
 @media (max-width: 580px) {
@@ -83,11 +90,11 @@
     }
 
     .mobile-buttons-left {
-        left: 40px;
+        left: 169px;
     }
     
     .mobile-buttons-right {
-        right: 40px;
+        right: 169px;
     }
 
     label, input, span {

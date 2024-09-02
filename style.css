@@ -30,6 +30,7 @@ body {
 canvas {
     background-color: black;
     display: block;
+    position: fixed;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
@@ -145,19 +146,19 @@ h1 {
 }
 
 .mobile-buttons-left {
-    position: absolute;
+    position: fixed;
     left: 10px;
     bottom: 10px;
 }
 
 .mobile-buttons-right {
-    position: absolute;
+    position: fixed;
     right: 10px;
     bottom: 10px;
 }
 
 .mobile-buttons-center {
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
