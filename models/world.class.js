@@ -1,6 +1,6 @@
 class World {
     character = new Character();
-    level = level1;
+    level = createLevel1();
     canvas;
     ctx;
     keyboard;
@@ -44,24 +44,27 @@ class World {
     }
 
     reset() {
-        this.character = new Character();
-        this.level = level1;
-        this.camera_x = 0;
-        this.statusBar = new StatusBar();
-        this.endbossStatusBar = new EndbossStatusBar();
-        this.throwableObjects = [];
-        this.splashAnimations = []; 
-        this.coins = [];
-        this.bottles = [];
-        this.collectedBottles = 0; 
-        this.collectedCoins = 0; 
-        this.generateCoins(this.coinCount);
-        this.generateBottles(this.bottleCount);
-        this.setWorld();
-        this.endbossStatusBar.setWorld(this);
-        this.draw();
-        this.run();
-    }
+    this.character = new Character();
+    this.level = createLevel1();  
+    this.camera_x = 0;
+    this.statusBar = new StatusBar();
+    this.endbossStatusBar = new EndbossStatusBar();
+    this.throwableObjects = [];
+    this.splashAnimations = []; 
+    this.coins = [];
+    this.bottles = [];
+    this.collectedBottles = 0; 
+    this.collectedCoins = 0;
+
+    this.generateCoins(this.coinCount);
+    this.generateBottles(this.bottleCount);
+    this.setWorld();
+    this.endbossStatusBar.setWorld(this);
+    this.draw();
+    this.run();
+
+}
+
 
     setWorld() {
         this.character.world = this;
@@ -373,7 +376,7 @@ class World {
         };
 
         this.playVictorySound(); 
-        this.showRestartButton();  // Zeige den Restart-Button nach einem Sieg an
+        this.showRestartButton();  
     }
 
     playVictorySound() {
@@ -401,17 +404,28 @@ class World {
             this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
         };
 
-        this.showRestartButton();  // Zeige den Restart-Button nach einem Game Over an
+        this.showRestartButton();  
     }
 
     showRestartButton() {
         const restartButton = document.getElementById('restartButton');
         restartButton.style.display = 'block';
+    
         restartButton.onclick = () => {
-            this.reset();
+            soundManager.stopAll();  
+    
+            if (this.gameLoop) {
+                clearInterval(this.gameLoop);
+            }
+    
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+            const newWorld = new World(this.canvas, this.keyboard);
+            
             restartButton.style.display = 'none';
         };
     }
+    
     
     addObjectsToMap(objects) {
         objects.forEach(o => {

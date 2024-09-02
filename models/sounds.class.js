@@ -25,10 +25,16 @@ class SoundManager {
         this.sounds.backgroundMusic.volume = 0.2; 
     }
 
-    play(soundName) {
+    async play(soundName) {
         if (this.sounds[soundName] && !this.muted) {
-            this.sounds[soundName].currentTime = 0;
-            this.sounds[soundName].play();
+            if (this.sounds[soundName].paused) {
+                try {
+                    this.sounds[soundName].currentTime = 0;
+                    await this.sounds[soundName].play();
+                } catch (error) {
+                    console.error(`Error playing sound ${soundName}:`, error);
+                }
+            }
         }
     }
 
