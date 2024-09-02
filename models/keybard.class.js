@@ -8,6 +8,11 @@ class Keyboard {
     D_PRESSED_ONCE = false;  
 
     constructor() {
+        this.addKeyboardListeners();
+        this.addMobileListeners(); 
+    }
+
+    addKeyboardListeners() {
         window.addEventListener('keydown', (event) => {
             if (event.code === 'ArrowLeft') this.LEFT = true;
             if (event.code === 'ArrowRight') this.RIGHT = true;
@@ -34,4 +39,58 @@ class Keyboard {
             }
         });
     }
-}
+
+    addMobileListeners() {
+        const mobileButtonBack = document.getElementById('mobileButtonBack');
+        const mobileButtonForward = document.getElementById('mobileButtonForward');
+        const mobileButtonJump = document.getElementById('mobileButtonJump');
+        const mobileButtonThrow = document.getElementById('mobileButtonThrow');
+    
+        const options = { passive: true };
+    
+        if (mobileButtonBack) {
+            mobileButtonBack.addEventListener('touchstart', () => {
+                this.LEFT = true;
+            }, options);
+    
+            mobileButtonBack.addEventListener('touchend', () => {
+                this.LEFT = false;
+            }, options);
+        }
+    
+        if (mobileButtonForward) {
+            mobileButtonForward.addEventListener('touchstart', () => {
+                this.RIGHT = true;
+            }, options);
+    
+            mobileButtonForward.addEventListener('touchend', () => {
+                this.RIGHT = false;
+            }, options);
+        }
+    
+        if (mobileButtonJump) {
+            mobileButtonJump.addEventListener('touchstart', () => {
+                this.SPACE = true;
+            }, options);
+    
+            mobileButtonJump.addEventListener('touchend', () => {
+                this.SPACE = false;
+            }, options);
+        }
+    
+        if (mobileButtonThrow) {
+            mobileButtonThrow.addEventListener('touchstart', () => {
+                if (!this.D_PRESSED_ONCE) {
+                    this.D = true;
+                    this.D_PRESSED_ONCE = true;
+                }
+            }, options);
+    
+            mobileButtonThrow.addEventListener('touchend', () => {
+                this.D = false;
+                this.D_PRESSED_ONCE = false;
+            }, options);
+        }
+    }
+    
+}    
