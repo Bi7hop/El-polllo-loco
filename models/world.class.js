@@ -25,7 +25,7 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.setWorld();
-        this.coins = Coins.generateCoins(this.coinCount, this); 
+        this.coins = Coins.generateCoins(this.coinCount, this);
         this.bottles = Bottle.generateBottles(this.bottleCount, this); 
         this.endbossStatusBar.setWorld(this);
         this.bottleImage.src = 'img/6_salsa_bottle/salsa_bottle.png'; 
@@ -169,7 +169,7 @@ class World {
             if (this.character.isColliding(bottle) && !bottle.collected) {
                 bottle.collect();
                 this.collectedBottles++; 
-                this.respawnBottle(bottle);
+                Bottle.respawnBottle(bottle); 
     
                 soundManager.play('bottlePickup');
             }
@@ -224,18 +224,6 @@ class World {
             }
         }
         return true;
-    }
-
-    respawnBottle(bottle) {
-        const respawnChance = Math.random(); 
-
-        if (respawnChance < 0.5) { 
-            setTimeout(() => {
-                bottle.x = Math.random() * 2000; 
-                bottle.y = 370; 
-                bottle.collected = false; 
-            }, Math.random() * 5000 + 5000); 
-        }
     }
 
     draw() {

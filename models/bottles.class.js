@@ -62,4 +62,16 @@ class Bottle extends Collectable {
         }
         return true;
     }
+
+    static respawnBottle(bottle) {
+        const respawnChance = Math.random(); 
+
+        if (respawnChance < 0.5) { 
+            setTimeout(() => {
+                bottle.x = Math.random() * 2000; 
+                bottle.y = 370; 
+                bottle.collected = false; 
+            }, Math.random() * 5000 + 5000); 
+        }
+    }
 }
