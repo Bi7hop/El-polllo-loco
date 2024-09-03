@@ -1,8 +1,21 @@
+/**
+ * Class responsible for managing the spawning and positioning of enemies in the game.
+ */
 class EnemyManager {
+
+    /**
+     * Creates a new EnemyManager instance.
+     * @param {Object} world - The game world object containing the level and character information.
+     */
     constructor(world) {
         this.world = world;
     }
 
+    /**
+     * Spawns a specified number of new enemies in valid positions within the game world.
+     * Ensures that enemies are not spawned too close to existing enemies or the endboss.
+     * @param {number} count - The number of enemies to spawn.
+     */
     spawnNewEnemies(count) {
         const characterX = this.world.character.x;
         const endboss = this.world.level.enemies.find(enemy => enemy instanceof Endboss);
@@ -28,6 +41,12 @@ class EnemyManager {
         }
     }
 
+    /**
+     * Checks if the position for spawning a new enemy is valid by ensuring it's not too close to existing enemies.
+     * @param {MovableObject} newEnemy - The new enemy object to check the spawn position for.
+     * @param {MovableObject[]} existingEnemies - The array of existing enemies in the level.
+     * @returns {boolean} True if the spawn position is valid, false otherwise.
+     */
     isValidSpawnPosition(newEnemy, existingEnemies) {
         for (let enemy of existingEnemies) {
             const distance = Math.abs(newEnemy.x - enemy.x);
