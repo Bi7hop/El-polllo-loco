@@ -1,3 +1,8 @@
+/**
+ * Class representing a small chicken enemy in the game.
+ * Extends the MovableObject class and provides additional functionalities specific to small chickens,
+ * such as random jumping behavior and custom gravity.
+ */
 class SmallChicken extends MovableObject {
     static SPAWNED_POSITIONS = [];
     y = 370;
@@ -13,6 +18,9 @@ class SmallChicken extends MovableObject {
     acceleration = 5;
     removeAfterDeath = false;
 
+    /**
+     * Creates a new SmallChicken instance, initializes its position, speed, and animations.
+     */
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
@@ -48,7 +56,10 @@ class SmallChicken extends MovableObject {
         this.animate();
     }
     
-
+    /**
+     * Applies custom gravity to the small chicken, continuously decreasing the vertical position (y) based on speedY and acceleration.
+     * Prevents the small chicken from falling below its initial position.
+     */
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -62,10 +73,18 @@ class SmallChicken extends MovableObject {
         }, 1000 / 25);
     }
 
+    /**
+     * Checks if the small chicken is hit by a throwable object.
+     * @param {ThrowableObject} throwableObject - The object to check for collision with.
+     * @returns {boolean} True if the small chicken is hit, false otherwise.
+     */
     isHitBy(throwableObject) {
         return throwableObject instanceof ThrowableObject && this.isColliding(throwableObject);
     }
 
+    /**
+     * Handles the logic for when the small chicken dies. Stops movement, changes image, and plays death sound.
+     */
     die() {
         this.energy = 0;
         this.speed = 0;
@@ -74,20 +93,34 @@ class SmallChicken extends MovableObject {
         this.scheduleRemoval();  
     }
 
+    /**
+     * Checks if the small chicken is dead.
+     * @returns {boolean} True if the small chicken is dead, false otherwise.
+     */
     isDead() {
         return this.energy === 0;
     }
 
+    /**
+     * Checks if the small chicken is ready to be removed from the game after death.
+     * @returns {boolean} True if the small chicken is removable, false otherwise.
+     */
     isRemovable() {
         return this.removeAfterDeath;
     }
 
+    /**
+     * Schedules the small chicken to be removed from the game after a delay.
+     */
     scheduleRemoval() {
         setTimeout(() => {
             this.removeAfterDeath = true;
         }, 3000); 
     }
 
+    /**
+     * Starts the animation loops for moving, playing walking animations, and possibly jumping.
+     */
     animate() {
         setInterval(() => {
             if (!this.isDead()) {
@@ -110,12 +143,19 @@ class SmallChicken extends MovableObject {
         }
     }
 
+    /**
+     * Makes the small chicken jump by setting the vertical speed to a positive value.
+     */
     jump() {
         if (!this.isDead()) {  
             this.speedY = 20;  
         }
     }
 
+    /**
+     * Checks if the small chicken is above the ground.
+     * @returns {boolean} True if the small chicken is above ground, false otherwise.
+     */
     isAboveGround() {
         return this.y < 370; 
     }
