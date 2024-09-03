@@ -209,3 +209,7 @@ footer {
 #gameContainer #footer {
     display: none;
 }
+
+.hidden-buttons {
+    display: none !important;
+}

@@ -1,10 +1,10 @@
 /**
- * Event listener for DOMContentLoaded. Initializes the game world and sets up event listeners
- * for UI interactions, such as music toggling and screen navigation.
+ * Initializes the game once the DOM is fully loaded.
+ * Handles the initialization of the game world, music control, and screen transitions.
  */
 document.addEventListener('DOMContentLoaded', function() {
     let world;
-    let musicPlaying = !soundManager.muted; 
+    let musicPlaying = !soundManager.muted;
 
     /**
      * Initializes the game world and starts playing background music.
@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Toggles the background music on and off. Updates the button text to reflect the current state.
-     * @param {HTMLElement} button - The button element that triggers the music toggle.
+     * Toggles the background music on or off.
+     * Updates the button text to reflect the current state of the music.
+     * @param {HTMLElement} button - The button that was clicked to toggle the music.
      */
     function toggleMusic(button) {
         soundManager.toggleMute();
@@ -26,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const musicToggleButtonStart = document.getElementById('musicToggleButtonStart');
+    const musicToggleButtonGame = document.getElementById('musicToggleButtonGame');
+
     if (musicToggleButtonStart) {
         musicToggleButtonStart.addEventListener('click', function() {
             toggleMusic(musicToggleButtonStart);
@@ -34,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Element with ID "musicToggleButtonStart" not found.');
     }
 
-    const musicToggleButtonGame = document.getElementById('musicToggleButtonGame');
     if (musicToggleButtonGame) {
         musicToggleButtonGame.addEventListener('click', function() {
             toggleMusic(musicToggleButtonGame);
@@ -46,7 +48,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('startButton').addEventListener('click', function() {
         document.getElementById('startscreen').style.display = 'none';
         document.getElementById('gameContainer').style.display = 'flex';
-        setTimeout(init, 100); 
+
+        if (musicToggleButtonStart) musicToggleButtonStart.classList.add('hidden');
+        if (musicToggleButtonGame) musicToggleButtonGame.classList.remove('hidden');
+
+        setTimeout(init, 100);
     });
 
     document.getElementById('instructionsButton').addEventListener('click', function() {
@@ -59,37 +65,35 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('startscreen').style.display = 'flex';
     });
 
-    /**
-     * Event listener for the "Back to Start" button to reset the game and return to the start screen.
-     * Stops all sounds and resets the game state.
-     */
     document.getElementById('backToStartButton').addEventListener('click', function() {
         if (world && world.character) {
-            world.character.stopAllSounds();  
-            
+            world.character.stopAllSounds();
+
             if (world.character.gameOverSound && typeof world.character.gameOverSound.pause === 'function') {
                 if (!world.character.gameOverSound.paused) {
-                    world.character.gameOverSound.pause(); 
-                    world.character.gameOverSound.currentTime = 0; 
+                    world.character.gameOverSound.pause();
+                    world.character.gameOverSound.currentTime = 0;
                 }
             }
         }
-        
-        soundManager.stop('backgroundMusic');  
-    
+
+        soundManager.stop('backgroundMusic');
+
         document.getElementById('gameContainer').style.display = 'none';
         document.getElementById('startscreen').style.display = 'flex';
-    });    
-    
-    /**
-     * Event listener for the spacebar key to trigger a jump action if the character is on the ground.
-     * @param {KeyboardEvent} event - The keyboard event triggered by the user.
-     */
+
+        if (musicToggleButtonStart) musicToggleButtonStart.classList.remove('hidden');
+        if (musicToggleButtonGame) musicToggleButtonGame.classList.add('hidden');
+    });
+
     document.addEventListener('keydown', function(event) {
         if (event.code === 'Space') {
-            if (world && world.character.isOnGround()) { 
-                world.character.jump(); 
+            if (world && world.character.isOnGround()) {
+                world.character.jump();
             }
         }
     });
+
+    if (musicToggleButtonStart) musicToggleButtonStart.classList.add('hidden');
+    if (musicToggleButtonGame) musicToggleButtonGame.classList.add('hidden');
 });
