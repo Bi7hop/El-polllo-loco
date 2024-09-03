@@ -1,5 +1,11 @@
+/**
+ * Class representing the main character in the game.
+ * Extends the MovableObject class and provides various animations, sound management,
+ * and movement handling based on keyboard input.
+ */
 class Character extends MovableObject {
 
+    /** @type {number} Number of bottles collected by the character. */
     bottlesCollected = 0;
     otherDirection = false;
     height = 300;
@@ -67,6 +73,10 @@ class Character extends MovableObject {
     deathAnimationPlayed = false; 
     gameOverImage = 'img/9_intro_outro_screens/game_over/you lost.png'; 
     gameOverSound = 'gameOver';
+    
+    /**
+     * Creates a new Character instance, initializes images, applies gravity, and starts animation.
+     */
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -79,6 +89,9 @@ class Character extends MovableObject {
         this.updateLastActionTime(); 
     }
 
+    /**
+     * Starts the animation intervals for handling movement, sounds, and visual updates.
+     */
     animate() {
         this.animationInterval = setInterval(() => {
             this.handleMovementAndSounds();
@@ -89,6 +102,10 @@ class Character extends MovableObject {
         }, 50);
     }
 
+    /**
+     * Handles character movement based on keyboard input, plays corresponding sounds,
+     * and updates the camera position.
+     */
     handleMovementAndSounds() {
         let currentTime = new Date().getTime();
         let timeSinceLastAction = currentTime - this.lastActionTime;
@@ -125,6 +142,9 @@ class Character extends MovableObject {
     }
     
 
+    /**
+     * Updates the character's animation based on its state (e.g., dead, hurt, jumping, or walking).
+     */
     updateAnimations() {
         if (this.isDead()) {
             if (!this.deathAnimationPlayed) { 
@@ -143,22 +163,34 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Plays the walking sound if it is not already playing.
+     */
     playWalkingSound() {
         if (soundManager.sounds.walking.paused) {
             soundManager.play('walking');
         }
     }
 
+    /**
+     * Stops the walking sound and resets its playback position.
+     */
     stopWalkingSound() {
         soundManager.pause('walking');
         soundManager.sounds.walking.currentTime = 0;
     }
 
+    /**
+     * Initiates the jump action and plays the jump sound.
+     */
     jump() {
         this.speedY = 30;
         soundManager.play('jump'); 
     }
 
+    /**
+     * Plays the idle animation and snoring sound if the character has been idle for too long.
+     */
     playIdleAnimation() {
         if (!this.idleSoundPlayed && !this.isDead()) {
             soundManager.play('snoring'); 
@@ -171,10 +203,16 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Stops all sounds associated with the character.
+     */
     stopAllSounds() {
         soundManager.stopAll(); 
     }
 
+     /**
+     * Updates the last action time to the current time and resets idle sound flags.
+     */
     updateLastActionTime() {
         this.lastActionTime = new Date().getTime();
         this.idleSoundPlayed = false; 
