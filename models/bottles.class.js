@@ -100,7 +100,7 @@ class Bottle extends Collectable {
 
         if (respawnChance < 0.5) { 
             setTimeout(() => {
-                bottle.x = Math.random() * 2000; 
+                bottle.x = Math.random() * 3000; 
                 bottle.y = 370; 
                 bottle.collected = false; 
             }, Math.random() * 5000 + 5000); 

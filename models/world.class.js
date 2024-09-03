@@ -15,8 +15,8 @@ class World {
     splashAnimations = []; 
     coins = [];
     bottles = [];
-    coinCount = 7;
-    bottleCount = 5;
+    coinCount = 12;
+    bottleCount = 7;
     gameIsOver = false;
 
     statusBottle; 
