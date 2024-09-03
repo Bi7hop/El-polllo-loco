@@ -87,9 +87,6 @@ class Character extends MovableObject {
     gameOverImage = 'img/9_intro_outro_screens/game_over/you lost.png'; 
     gameOverSound = 'gameOver';
     
-    /**
-     * Creates a new Character instance, initializes images, applies gravity, and starts animation.
-     */
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -97,15 +94,12 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_IDLE);
-        this.loadImages(this.STAY_IMAGES); 
+        this.loadImages(this.STAY_IMAGES);
         this.applyGravity();
         this.animate();
         this.updateLastActionTime(); 
     }
 
-    /**
-     * Starts the animation intervals for handling movement, sounds, and visual updates.
-     */
     animate() {
         this.animationInterval = setInterval(() => {
             this.handleMovementAndSounds();
@@ -113,53 +107,105 @@ class Character extends MovableObject {
 
         this.animationInterval2 = setInterval(() => {
             this.updateAnimations();
-        }, 50); 
+        }, 50);
     }
 
-    /**
-     * Handles character movement based on keyboard input, plays corresponding sounds,
-     * and updates the camera position.
-     */
     handleMovementAndSounds() {
-        let currentTime = new Date().getTime();
-        let timeSinceLastAction = currentTime - this.lastActionTime;
-        let isMoving = false;
-    
+        this.handleMovement();
+        this.handleJumping();
+        this.handleIdleAndStay();
+        this.updateCameraPosition();
+    }
+
+    handleMovement() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();
             this.otherDirection = false;
             this.playWalkingSound();
-            isMoving = true;
         } else if (this.world.keyboard.LEFT && this.x > 0) {
             this.moveLeft();
             this.otherDirection = true;
             this.playWalkingSound();
-            isMoving = true;
         } else {
-            this.stopWalkingSound(); 
+            this.stopWalkingSound();
         }
-    
+    }
+
+    handleJumping() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-            this.jump(); 
-            isMoving = true;
+            this.jump();
         }
-    
-        if (isMoving) {
-            this.updateLastActionTime(); 
-        }
-    
-        if (timeSinceLastAction > this.idleTimeout && !isMoving && !this.isDead()) {
+    }
+
+    handleIdleAndStay() {
+        const currentTime = new Date().getTime();
+        const timeSinceLastAction = currentTime - this.lastActionTime;
+
+        if (timeSinceLastAction > this.idleTimeout && !this.isMoving() && !this.isDead()) {
             this.playIdleAnimation();
-        } else if (!isMoving && timeSinceLastAction <= this.idleTimeout) {
-            this.playStayAnimation(); 
+        } else if (!this.isMoving() && timeSinceLastAction <= this.idleTimeout) {
+            this.playStayAnimation();
         }
-    
+
+        if (this.isMoving()) {
+            this.updateLastActionTime();
+        }
+    }
+
+    updateCameraPosition() {
         this.world.camera_x = -this.x + 100;
     }
 
-    /**
-     * Updates the character's animation based on its state (e.g., dead, hurt, jumping, or walking).
-     */
+    isMoving() {
+        return this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE;
+    }
+
+    playWalkingSound() {
+        if (soundManager.sounds.walking.paused) {
+            soundManager.play('walking');
+        }
+    }
+
+    stopWalkingSound() {
+        soundManager.pause('walking');
+        soundManager.sounds.walking.currentTime = 0;
+    }
+
+    jump() {
+        this.speedY = 30;
+        soundManager.play('jump');
+    }
+
+    playIdleAnimation() {
+        if (!this.idleSoundPlayed && !this.isDead()) {
+            soundManager.play('snoring'); 
+            this.idleSoundPlayed = true;
+        }
+    
+        this.idleFrameCounter++;
+        if (this.idleFrameCounter % 10 === 0) {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
+    }
+
+    playStayAnimation() {
+        this.stayFrameCounter++;
+        if (this.stayFrameCounter % 10 === 0) {
+            this.playAnimation(this.STAY_IMAGES);
+        }
+    }
+
+    stopAllSounds() {
+        soundManager.stopAll();
+    }
+
+    updateLastActionTime() {
+        this.lastActionTime = new Date().getTime();
+        this.idleSoundPlayed = false;
+        this.snoring_sound.pause();
+        this.snoring_sound.currentTime = 0;
+    }
+
     updateAnimations() {
         if (this.isDead()) {
             if (!this.deathAnimationPlayed) { 
@@ -176,72 +222,5 @@ class Character extends MovableObject {
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.playAnimation(this.IMAGES_WALKING);
         }
-    }
-
-    /**
-     * Plays the walking sound if it is not already playing.
-     */
-    playWalkingSound() {
-        if (soundManager.sounds.walking.paused) {
-            soundManager.play('walking');
-        }
-    }
-
-    /**
-     * Stops the walking sound and resets its playback position.
-     */
-    stopWalkingSound() {
-        soundManager.pause('walking');
-        soundManager.sounds.walking.currentTime = 0;
-    }
-
-    /**
-     * Initiates the jump action and plays the jump sound.
-     */
-    jump() {
-        this.speedY = 30;
-        soundManager.play('jump'); 
-    }
-
-    /**
-     * Plays the idle animation and snoring sound if the character has been idle for too long.
-     */
-    playIdleAnimation() {
-        if (!this.idleSoundPlayed && !this.isDead()) {
-            soundManager.play('snoring'); 
-            this.idleSoundPlayed = true;
-        }
-    
-        this.idleFrameCounter++;
-        if (this.idleFrameCounter % 10 === 0) {
-            this.playAnimation(this.IMAGES_IDLE);
-        }
-    }
-
-    /**
-     * Plays the stay animation when the character is not moving and not jumping.
-     */
-    playStayAnimation() {
-        this.stayFrameCounter++;
-        if (this.stayFrameCounter % 10 === 0) {
-            this.playAnimation(this.STAY_IMAGES);
-        }
-    }
-
-    /**
-     * Stops all sounds associated with the character.
-     */
-    stopAllSounds() {
-        soundManager.stopAll(); 
-    }
-
-     /**
-     * Updates the last action time to the current time and resets idle sound flags.
-     */
-    updateLastActionTime() {
-        this.lastActionTime = new Date().getTime();
-        this.idleSoundPlayed = false; 
-        this.snoring_sound.pause(); 
-        this.snoring_sound.currentTime = 0; 
     }
 }
