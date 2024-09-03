@@ -15,7 +15,7 @@ class World {
     bottleCount = 5;
     gameIsOver = false;
 
-    bottleImage = new Image();
+    statusBottle;
     coinImage = new Image();
     collectedBottles = 0; 
     collectedCoins = 0;
@@ -26,9 +26,9 @@ class World {
         this.keyboard = keyboard;
         this.setWorld();
         this.coins = Coins.generateCoins(this.coinCount, this);
-        this.bottles = Bottle.generateBottles(this.bottleCount, this); 
+        this.bottles = Bottle.generateBottles(this.bottleCount, this);
         this.endbossStatusBar.setWorld(this);
-        this.bottleImage.src = 'img/6_salsa_bottle/salsa_bottle.png'; 
+        this.statusBottle = new StatusBottle(this); 
         this.coinImage.src = 'img/8_coin/coin_1.png'; 
         this.draw();
         this.run();
@@ -265,23 +265,13 @@ class World {
     
             this.ctx.translate(-this.camera_x, 0);
     
-            this.drawCollectedBottles(); 
+            this.statusBottle.drawCollectedBottles(this.ctx, this.collectedBottles); // Verwendung der neuen Methode
             this.drawCollectedCoins(); 
     
             let self = this;
             requestAnimationFrame(function () {
                 self.draw();
             });
-        }
-    }
-
-    drawCollectedBottles() {
-        const startX = 38; 
-        const startY = 80;
-        const spacing = 20; 
-
-        for (let i = 0; i < this.collectedBottles; i++) {
-            this.ctx.drawImage(this.bottleImage, startX + i * spacing, startY, 30, 50);
         }
     }
 
