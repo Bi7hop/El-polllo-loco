@@ -20,6 +20,7 @@ class World {
     collectedBottles = 0; 
     collectedCoins = 0;
     endbossEncountered = false;
+    enemyManager;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -31,14 +32,15 @@ class World {
         this.endbossStatusBar.setWorld(this);
         this.statusBottle = new StatusBottle(this); 
         this.statusCoin = new StatusCoin(this); 
-        this.draw();
-        this.run();
-
+        this.enemyManager = new EnemyManager(this); 
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss) {
-                enemy.world = this; 
+                enemy.world = this;  
             }
         });
+        this.character.world = this; 
+        this.draw();
+        this.run();
 
         soundManager.play('backgroundMusic');
     }
@@ -60,6 +62,8 @@ class World {
         this.bottles = Bottle.generateBottles(this.bottleCount, this); 
         this.setWorld();
         this.endbossStatusBar.setWorld(this);
+        this.enemyManager = new EnemyManager(this); 
+        this.character.world = this; 
         this.draw();
         this.run();
     }
@@ -187,43 +191,8 @@ class World {
         });
 
         if (this.level.enemies.length < initialEnemyCount) {
-            this.spawnNewEnemies(initialEnemyCount - this.level.enemies.length);
+            this.enemyManager.spawnNewEnemies(initialEnemyCount - this.level.enemies.length);
         }
-    }
-
-    spawnNewEnemies(count) {
-        const characterX = this.character.x;
-        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
-        const endbossX = endboss ? endboss.x : this.character.x + 2000; 
-
-        for (let i = 0; i < count; i++) {
-            let newEnemy;
-            let validPosition = false;
-            let attempts = 0;
-            const maxAttempts = 100;
-
-            while (!validPosition && attempts < maxAttempts) {
-                const enemyType = Math.random() < 0.5 ? Chicken : SmallChicken;
-                newEnemy = new enemyType();
-                newEnemy.x = characterX + 300 + Math.random() * (endbossX - characterX - 600); 
-                validPosition = this.isValidSpawnPosition(newEnemy, this.level.enemies);
-                attempts++;
-            }
-
-            if (validPosition) {
-                this.level.enemies.push(newEnemy);
-            }
-        }
-    }
-
-    isValidSpawnPosition(newEnemy, existingEnemies) {
-        for (let enemy of existingEnemies) {
-            const distance = Math.abs(newEnemy.x - enemy.x);
-            if (distance < 150) {
-                return false;
-            }
-        }
-        return true;
     }
 
     draw() {
@@ -233,24 +202,24 @@ class World {
             this.drawStatusBars();
             this.drawGameObjects();
             this.drawHUD();
-    
+
             let self = this;
             requestAnimationFrame(function () {
                 self.draw();
             });
         }
     }
-    
+
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    
+
     drawBackground() {
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.ctx.translate(-this.camera_x, 0);
     }
-    
+
     drawStatusBars() {
         this.addToMap(this.statusBar);
         
@@ -263,21 +232,21 @@ class World {
             this.addToMap(this.endbossStatusBar);
         }
     }
-    
+
     drawGameObjects() {
         this.ctx.translate(this.camera_x, 0);
-    
+
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.coins);
-    
+
         this.bottles.forEach(bottle => {
             bottle.animate();
             this.addToMap(bottle);
         });
-    
+
         this.splashAnimations = this.splashAnimations.filter(splash => {
             if (splash.isFinished) {
                 return false; 
@@ -287,15 +256,46 @@ class World {
                 return true;
             }
         });
-    
+
         this.ctx.translate(-this.camera_x, 0);
     }
-    
+
     drawHUD() {
         this.statusBottle.drawCollectedBottles(this.ctx, this.collectedBottles);
         this.statusCoin.drawCollectedCoins(this.ctx, this.collectedCoins);
     }
-    
+
+    addObjectsToMap(objects) {
+        objects.forEach(o => {
+            this.addToMap(o);
+        });
+    }
+
+    addToMap(mo) {
+        if (mo.otherDirection) {
+            this.flipImage(mo);
+        }
+
+        mo.draw(this.ctx);
+        mo.drawFrame(this.ctx);
+
+        if (mo.otherDirection) {
+            this.flipImageBack(mo);
+        }
+    }
+
+    flipImage(mo) {
+        this.ctx.save();
+        this.ctx.translate(mo.width, 0);
+        this.ctx.scale(-1, 1);
+        mo.x = mo.x * -1;
+    }
+
+    flipImageBack(mo) {
+        mo.x = mo.x * -1;
+        this.ctx.restore();
+    }
+
     showVictoryScreen() {  
         this.gameIsOver = true; 
         clearInterval(this.gameLoop);
@@ -318,10 +318,6 @@ class World {
 
         soundManager.playVictorySound(); 
         this.showRestartButton();  
-    }
-
-    playVictorySound() {
-        soundManager.play('victory');
     }
 
     gameOver() {
@@ -365,36 +361,5 @@ class World {
             
             restartButton.style.display = 'none';
         };
-    }
-    
-    addObjectsToMap(objects) {
-        objects.forEach(o => {
-            this.addToMap(o);
-        });
-    }
-
-    addToMap(mo) {
-        if (mo.otherDirection) {
-            this.flipImage(mo);
-        }
-
-        mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);
-
-        if (mo.otherDirection) {
-            this.flipImageBack(mo);
-        }
-    }
-
-    flipImage(mo) {
-        this.ctx.save();
-        this.ctx.translate(mo.width, 0);
-        this.ctx.scale(-1, 1);
-        mo.x = mo.x * -1;
-    }
-
-    flipImageBack(mo) {
-        mo.x = mo.x * -1;
-        this.ctx.restore();
     }
 }

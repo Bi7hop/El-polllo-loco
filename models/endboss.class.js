@@ -61,7 +61,7 @@ class Endboss extends MovableObject {
 
     hitSound = 'chickenDeath';
 
-    constructor() {
+    constructor(world) {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_ALERT);
@@ -69,6 +69,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
         this.x = this.initialX;
+        this.world = world; 
         this.animate();
     }
 
