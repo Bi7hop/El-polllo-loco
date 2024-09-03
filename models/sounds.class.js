@@ -1,4 +1,12 @@
+/**
+ * Class responsible for managing game sounds, including playing, pausing, stopping, and muting sounds.
+ */
 class SoundManager {
+
+    /**
+     * Creates a new SoundManager instance and initializes all the game sounds.
+     * Sets default volume levels and looping settings for specific sounds.
+     */
     constructor() {
         this.sounds = {
             walking: new Audio('audio/walking.mp3'),
@@ -26,6 +34,11 @@ class SoundManager {
         this.sounds.backgroundMusic.volume = 0.2; 
     }
 
+    /**
+     * Plays the specified sound if it is not muted and not already playing.
+     * @param {string} soundName - The name of the sound to play.
+     * @returns {Promise<void>} A promise that resolves when the sound starts playing.
+     */
     async play(soundName) {
         if (this.sounds[soundName] && !this.muted) {
             if (this.sounds[soundName].paused) {
@@ -39,12 +52,20 @@ class SoundManager {
         }
     }
 
+    /**
+     * Pauses the specified sound.
+     * @param {string} soundName - The name of the sound to pause.
+     */
     pause(soundName) {
         if (this.sounds[soundName]) {
             this.sounds[soundName].pause();
         }
     }
 
+    /**
+     * Stops the specified sound, resetting its playback position to the beginning.
+     * @param {string} soundName - The name of the sound to stop.
+     */
     stop(soundName) {
         if (this.sounds[soundName]) {
             this.sounds[soundName].pause();
@@ -52,12 +73,19 @@ class SoundManager {
         }
     }
 
+    /**
+     * Stops all sounds currently managed by the SoundManager.
+     */
     stopAll() {
         for (let key in this.sounds) {
             this.stop(key);
         }
     }
 
+    /**
+     * Toggles the mute state for all sounds.
+     * When muted, all sounds will be silenced without stopping them.
+     */
     toggleMute() {
         this.muted = !this.muted;
         for (let key in this.sounds) {
@@ -65,10 +93,16 @@ class SoundManager {
         }
     }
 
+     /**
+     * Plays the endboss sound specifically.
+     */
     playEndbossSound() {
         this.play('endboss');
     }
 
+    /**
+     * Plays the victory sound specifically.
+     */
     playVictorySound() {
         this.play('victory');
     }
