@@ -223,7 +223,7 @@ class Character extends MovableObject {
      */
     playStayAnimation() {
         this.stayFrameCounter++;
-        if (this.stayFrameCounter % 10 === 0) { // Slow down the stay animation similarly
+        if (this.stayFrameCounter % 10 === 0) {
             this.playAnimation(this.STAY_IMAGES);
         }
     }
