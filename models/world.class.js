@@ -25,7 +25,7 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.setWorld();
-        this.generateCoins(this.coinCount);
+        this.coins = Coins.generateCoins(this.coinCount, this); 
         this.generateBottles(this.bottleCount);
         this.endbossStatusBar.setWorld(this);
         this.bottleImage.src = 'img/6_salsa_bottle/salsa_bottle.png'; 
@@ -44,44 +44,28 @@ class World {
     }
 
     reset() {
-    this.character = new Character();
-    this.level = createLevel1();  
-    this.camera_x = 0;
-    this.statusBar = new StatusBar();
-    this.endbossStatusBar = new EndbossStatusBar();
-    this.throwableObjects = [];
-    this.splashAnimations = []; 
-    this.coins = [];
-    this.bottles = [];
-    this.collectedBottles = 0; 
-    this.collectedCoins = 0;
+        this.character = new Character();
+        this.level = createLevel1();  
+        this.camera_x = 0;
+        this.statusBar = new StatusBar();
+        this.endbossStatusBar = new EndbossStatusBar();
+        this.throwableObjects = [];
+        this.splashAnimations = []; 
+        this.coins = [];
+        this.bottles = [];
+        this.collectedBottles = 0; 
+        this.collectedCoins = 0;
 
-    this.generateCoins(this.coinCount);
-    this.generateBottles(this.bottleCount);
-    this.setWorld();
-    this.endbossStatusBar.setWorld(this);
-    this.draw();
-    this.run();
-
-}
-
+        this.coins = Coins.generateCoins(this.coinCount, this); 
+        this.generateBottles(this.bottleCount);
+        this.setWorld();
+        this.endbossStatusBar.setWorld(this);
+        this.draw();
+        this.run();
+    }
 
     setWorld() {
         this.character.world = this;
-    }
-
-    generateCoins(count) {
-        for (let i = 0; i < count; i++) {
-            let coin;
-            let validPosition = false;
-
-            while (!validPosition) {
-                coin = new Coins();
-                validPosition = this.isValidPosition(coin, this.coins);
-            }
-
-            this.coins.push(coin);
-        }
     }
 
     generateBottles(count) {
@@ -205,8 +189,6 @@ class World {
             }
         });
     }
-    
-    
     
     removeDeadEnemies() {
         const initialEnemyCount = this.level.enemies.length;
@@ -430,7 +412,6 @@ class World {
             restartButton.style.display = 'none';
         };
     }
-    
     
     addObjectsToMap(objects) {
         objects.forEach(o => {
