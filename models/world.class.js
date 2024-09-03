@@ -16,9 +16,10 @@ class World {
     gameIsOver = false;
 
     statusBottle; 
-    statusCoin;
+    statusCoin; 
     collectedBottles = 0; 
     collectedCoins = 0;
+    endbossEncountered = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -26,13 +27,12 @@ class World {
         this.keyboard = keyboard;
         this.setWorld();
         this.coins = Coins.generateCoins(this.coinCount, this); 
-        this.bottles = Bottle.generateBottles(this.bottleCount, this);
+        this.bottles = Bottle.generateBottles(this.bottleCount, this); 
         this.endbossStatusBar.setWorld(this);
         this.statusBottle = new StatusBottle(this); 
         this.statusCoin = new StatusCoin(this); 
         this.draw();
         this.run();
-        this.endbossEncountered = false;
 
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss) {
@@ -169,7 +169,7 @@ class World {
             if (this.character.isColliding(bottle) && !bottle.collected) {
                 bottle.collect();
                 this.collectedBottles++; 
-                Bottle.respawnBottle(bottle); 
+                Bottle.respawnBottle(bottle);
     
                 soundManager.play('bottlePickup');
             }
@@ -236,7 +236,12 @@ class World {
             this.ctx.translate(-this.camera_x, 0);
             this.addToMap(this.statusBar);
     
-            if (this.isEndbossVisible()) {
+            const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
+            if (endboss && endboss.isEndbossVisible(this.camera_x, this.canvas.width)) {
+                if (!this.endbossEncountered) {
+                    endboss.world.playEndbossSound();
+                    this.endbossEncountered = true;
+                }
                 this.addToMap(this.endbossStatusBar);
             }
     
@@ -265,8 +270,8 @@ class World {
     
             this.ctx.translate(-this.camera_x, 0);
     
-            this.statusBottle.drawCollectedBottles(this.ctx, this.collectedBottles); 
-            this.statusCoin.drawCollectedCoins(this.ctx, this.collectedCoins); 
+            this.statusBottle.drawCollectedBottles(this.ctx, this.collectedBottles);
+            this.statusCoin.drawCollectedCoins(this.ctx, this.collectedCoins);
     
             let self = this;
             requestAnimationFrame(function () {
@@ -277,23 +282,6 @@ class World {
 
     playEndbossSound() {
         soundManager.play('endboss');
-    }
-
-    isEndbossVisible() {
-        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
-        if (endboss) {
-            const endbossX = endboss.x;
-            const cameraStart = -this.camera_x;
-            const cameraEnd = -this.camera_x + this.canvas.width;
-            if (endbossX >= cameraStart && endbossX <= cameraEnd) {
-                if (!this.endbossEncountered) {
-                    this.playEndbossSound();
-                    this.endbossEncountered = true;
-                }
-                return true;
-            }
-        }
-        return false;
     }
 
     showVictoryScreen() {  

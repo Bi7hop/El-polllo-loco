@@ -198,4 +198,11 @@ class Endboss extends MovableObject {
             this.moveLeft();
         }
     }
+
+    isEndbossVisible(camera_x, canvas_width) {
+        const endbossX = this.x;
+        const cameraStart = -camera_x;
+        const cameraEnd = -camera_x + canvas_width;
+        return endbossX >= cameraStart && endbossX <= cameraEnd;
+    }
 }
