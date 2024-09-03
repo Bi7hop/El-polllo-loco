@@ -5,7 +5,6 @@
  */
 class Character extends MovableObject {
 
-    /** @type {number} Number of bottles collected by the character. */
     bottlesCollected = 0;
     otherDirection = false;
     height = 300;
@@ -62,6 +61,19 @@ class Character extends MovableObject {
         'img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
 
+    STAY_IMAGES = [
+        'img/2_character_pepe/1_idle/idle/I-1.png',
+        'img/2_character_pepe/1_idle/idle/I-2.png',
+        'img/2_character_pepe/1_idle/idle/I-3.png',
+        'img/2_character_pepe/1_idle/idle/I-4.png',
+        'img/2_character_pepe/1_idle/idle/I-5.png',
+        'img/2_character_pepe/1_idle/idle/I-6.png',
+        'img/2_character_pepe/1_idle/idle/I-7.png',
+        'img/2_character_pepe/1_idle/idle/I-8.png',
+        'img/2_character_pepe/1_idle/idle/I-9.png',
+        'img/2_character_pepe/1_idle/idle/I-10.png'
+    ];
+
     world;
     walking_sound = new Audio('audio/walking.mp3');
     jump_sound = new Audio('audio/jump.mp3');
@@ -70,6 +82,7 @@ class Character extends MovableObject {
     lastActionTime = 0;
     idleSoundPlayed = false;
     idleFrameCounter = 0;  
+    stayFrameCounter = 0;  
     deathAnimationPlayed = false; 
     gameOverImage = 'img/9_intro_outro_screens/game_over/you lost.png'; 
     gameOverSound = 'gameOver';
@@ -84,6 +97,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.STAY_IMAGES); 
         this.applyGravity();
         this.animate();
         this.updateLastActionTime(); 
@@ -99,7 +113,7 @@ class Character extends MovableObject {
 
         this.animationInterval2 = setInterval(() => {
             this.updateAnimations();
-        }, 50);
+        }, 50); 
     }
 
     /**
@@ -136,11 +150,12 @@ class Character extends MovableObject {
     
         if (timeSinceLastAction > this.idleTimeout && !isMoving && !this.isDead()) {
             this.playIdleAnimation();
+        } else if (!isMoving && timeSinceLastAction <= this.idleTimeout) {
+            this.playStayAnimation(); 
         }
     
         this.world.camera_x = -this.x + 100;
     }
-    
 
     /**
      * Updates the character's animation based on its state (e.g., dead, hurt, jumping, or walking).
@@ -200,6 +215,16 @@ class Character extends MovableObject {
         this.idleFrameCounter++;
         if (this.idleFrameCounter % 10 === 0) {
             this.playAnimation(this.IMAGES_IDLE);
+        }
+    }
+
+    /**
+     * Plays the stay animation when the character is not moving and not jumping.
+     */
+    playStayAnimation() {
+        this.stayFrameCounter++;
+        if (this.stayFrameCounter % 10 === 0) { // Slow down the stay animation similarly
+            this.playAnimation(this.STAY_IMAGES);
         }
     }
 
