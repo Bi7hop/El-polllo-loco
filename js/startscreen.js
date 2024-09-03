@@ -67,9 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (world && world.character) {
             world.character.stopAllSounds();  
             
-            if (world.character.gameOverSound && !world.character.gameOverSound.paused) {
-                world.character.gameOverSound.pause(); 
-                world.character.gameOverSound.currentTime = 0; 
+            if (world.character.gameOverSound && typeof world.character.gameOverSound.pause === 'function') {
+                if (!world.character.gameOverSound.paused) {
+                    world.character.gameOverSound.pause(); 
+                    world.character.gameOverSound.currentTime = 0; 
+                }
             }
         }
         
@@ -77,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         document.getElementById('gameContainer').style.display = 'none';
         document.getElementById('startscreen').style.display = 'flex';
-    });
+    });    
     
     /**
      * Event listener for the spacebar key to trigger a jump action if the character is on the ground.
