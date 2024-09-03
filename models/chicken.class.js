@@ -1,7 +1,3 @@
-/**
- * Class representing a chicken enemy in the game.
- * Extends the MovableObject class and provides movement, animation, and collision handling.
- */
 class Chicken extends MovableObject {
     static SPAWNED_POSITIONS = [];
     y = 355;
@@ -21,38 +17,66 @@ class Chicken extends MovableObject {
     constructor() {
         super().loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
         this.loadImages(this.IMAGES_WALKING);
-    
-        const minDistance = 100;
-        const maxDistance = 300;
-        const maxAttempts = 100; 
-        let attempts = 0;
-        let validPosition = false;
-    
-        while (!validPosition && attempts < maxAttempts) {
-            this.x = 1000 + Math.random() * 500;
-            validPosition = true;
-    
-            for (let pos of Chicken.SPAWNED_POSITIONS) {
-                let randomDistance = minDistance + Math.random() * (maxDistance - minDistance);
-                if (Math.abs(this.x - pos) < randomDistance) {
-                    validPosition = false;
-                    break;
-                }
-            }
-            attempts++;
-        }
-    
-        if (!validPosition) {
-            this.x = 1000 + Math.random() * 500;
-        }
-    
+        
+        this.x = this.calculateValidPosition();
         Chicken.SPAWNED_POSITIONS.push(this.x);
-        this.speed = 0.175 + Math.random() * 0.25;
+        
+        this.speed = this.calculateSpeed();
         this.deathSound = 'chickenDeath';
         this.animate();
     }
-    
-    
+
+    /**
+     * Calculates a valid spawn position for the chicken, ensuring it's not too close to other chickens.
+     * @returns {number} - The calculated x-position.
+     */
+    calculateValidPosition() {
+        const maxAttempts = 100; 
+        let attempts = 0;
+        let position;
+
+        do {
+            position = this.generateRandomPosition();
+            attempts++;
+        } while (!this.isPositionValid(position) && attempts < maxAttempts);
+
+        return position;
+    }
+
+    /**
+     * Generates a random x-position for the chicken.
+     * @returns {number} - The generated x-position.
+     */
+    generateRandomPosition() {
+        return 1000 + Math.random() * 500;
+    }
+
+    /**
+     * Checks if the given position is valid by ensuring it's not too close to other chickens.
+     * @param {number} position - The position to validate.
+     * @returns {boolean} - True if the position is valid, false otherwise.
+     */
+    isPositionValid(position) {
+        const minDistance = 100;
+        const maxDistance = 300;
+
+        for (let pos of Chicken.SPAWNED_POSITIONS) {
+            let randomDistance = minDistance + Math.random() * (maxDistance - minDistance);
+            if (Math.abs(position - pos) < randomDistance) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Calculates the speed of the chicken.
+     * @returns {number} - The calculated speed.
+     */
+    calculateSpeed() {
+        return 0.175 + Math.random() * 0.25;
+    }
+
     /**
      * Checks if the chicken is hit by a throwable object.
      * @param {ThrowableObject} throwableObject - The object to check for collision with.
@@ -73,7 +97,7 @@ class Chicken extends MovableObject {
         this.scheduleRemoval();  
     }
 
-     /**
+    /**
      * Checks if the chicken is dead.
      * @returns {boolean} True if the chicken is dead, false otherwise.
      */

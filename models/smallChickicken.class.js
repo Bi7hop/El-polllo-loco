@@ -24,38 +24,67 @@ class SmallChicken extends MovableObject {
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
-    
-        const minDistance = 80;
-        const maxDistance = 250;
-        const maxAttempts = 100; 
-        let attempts = 0;
-        let validPosition = false;
-    
-        while (!validPosition && attempts < maxAttempts) {
-            this.x = 900 + Math.random() * 400;
-            validPosition = true;
-    
-            for (let pos of SmallChicken.SPAWNED_POSITIONS) {
-                let randomDistance = minDistance + Math.random() * (maxDistance - minDistance);
-                if (Math.abs(this.x - pos) < randomDistance) {
-                    validPosition = false;
-                    break;
-                }
-            }
-            attempts++;
-        }
-    
-        if (!validPosition) {
-            this.x = 900 + Math.random() * 400;
-        }
-    
+
+        this.x = this.calculateValidPosition();
         SmallChicken.SPAWNED_POSITIONS.push(this.x);
-        this.speed = 0.2 + Math.random() * 0.3;
+
+        this.speed = this.calculateSpeed();
         this.deathSound = 'chickenDeath'; 
         this.applyGravity();
         this.animate();
     }
-    
+
+    /**
+     * Calculates a valid spawn position for the small chicken, ensuring it's not too close to other small chickens.
+     * @returns {number} - The calculated x-position.
+     */
+    calculateValidPosition() {
+        const maxAttempts = 100; 
+        let attempts = 0;
+        let position;
+
+        do {
+            position = this.generateRandomPosition();
+            attempts++;
+        } while (!this.isPositionValid(position) && attempts < maxAttempts);
+
+        return position;
+    }
+
+    /**
+     * Generates a random x-position for the small chicken.
+     * @returns {number} - The generated x-position.
+     */
+    generateRandomPosition() {
+        return 900 + Math.random() * 400;
+    }
+
+    /**
+     * Checks if the given position is valid by ensuring it's not too close to other small chickens.
+     * @param {number} position - The position to validate.
+     * @returns {boolean} - True if the position is valid, false otherwise.
+     */
+    isPositionValid(position) {
+        const minDistance = 80;
+        const maxDistance = 250;
+
+        for (let pos of SmallChicken.SPAWNED_POSITIONS) {
+            let randomDistance = minDistance + Math.random() * (maxDistance - minDistance);
+            if (Math.abs(position - pos) < randomDistance) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Calculates the speed of the small chicken.
+     * @returns {number} - The calculated speed.
+     */
+    calculateSpeed() {
+        return 0.2 + Math.random() * 0.3;
+    }
+
     /**
      * Applies custom gravity to the small chicken, continuously decreasing the vertical position (y) based on speedY and acceleration.
      * Prevents the small chicken from falling below its initial position.
