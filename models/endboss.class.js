@@ -13,7 +13,7 @@ class Endboss extends MovableObject {
     moveDistance = 400;
     initialX = 3500;
     moving = true;
-    speedIncrease = 5;
+    speedIncrease = 10;
 
     currentState = 'walking'; 
     currentAnimationInterval = null; 
@@ -83,8 +83,7 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Reduces the endboss's energy and plays the hurt animation.
-     * If the energy reaches 0, triggers the death sequence.
+     * Reduziert die Energie des Endbosses und erhöht seine Geschwindigkeit nach jedem Treffer.
      */
     hit() {
         this.energy -= 20;
@@ -94,6 +93,7 @@ class Endboss extends MovableObject {
         } else {
             this.currentState = 'hurt'; 
             this.playHurtAnimation(); 
+            this.speed += this.speedIncrease;  
         }
     }
 
