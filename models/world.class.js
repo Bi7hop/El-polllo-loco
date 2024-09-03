@@ -228,50 +228,11 @@ class World {
 
     draw() {
         if (!this.gameIsOver) {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
-            this.ctx.translate(this.camera_x, 0);
-            this.addObjectsToMap(this.level.backgroundObjects);
-    
-            this.ctx.translate(-this.camera_x, 0);
-            this.addToMap(this.statusBar);
-    
-            const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
-            if (endboss && endboss.isEndbossVisible(this.camera_x, this.canvas.width)) {
-                if (!this.endbossEncountered) {
-                    soundManager.playEndbossSound(); 
-                    this.endbossEncountered = true;
-                }
-                this.addToMap(this.endbossStatusBar);
-            }
-    
-            this.ctx.translate(this.camera_x, 0);
-    
-            this.addToMap(this.character);
-            this.addObjectsToMap(this.level.enemies);
-            this.addObjectsToMap(this.level.clouds);
-            this.addObjectsToMap(this.throwableObjects);
-            this.addObjectsToMap(this.coins);
-    
-            this.bottles.forEach(bottle => {
-                bottle.animate();
-                this.addToMap(bottle);
-            });
-    
-            this.splashAnimations = this.splashAnimations.filter(splash => {
-                if (splash.isFinished) {
-                    return false; 
-                } else {
-                    splash.animate();
-                    this.addToMap(splash);
-                    return true;
-                }
-            });
-    
-            this.ctx.translate(-this.camera_x, 0);
-    
-            this.statusBottle.drawCollectedBottles(this.ctx, this.collectedBottles);
-            this.statusCoin.drawCollectedCoins(this.ctx, this.collectedCoins);
+            this.clearCanvas();
+            this.drawBackground();
+            this.drawStatusBars();
+            this.drawGameObjects();
+            this.drawHUD();
     
             let self = this;
             requestAnimationFrame(function () {
@@ -279,7 +240,62 @@ class World {
             });
         }
     }
-
+    
+    clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    
+    drawBackground() {
+        this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.ctx.translate(-this.camera_x, 0);
+    }
+    
+    drawStatusBars() {
+        this.addToMap(this.statusBar);
+        
+        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
+        if (endboss && endboss.isEndbossVisible(this.camera_x, this.canvas.width)) {
+            if (!this.endbossEncountered) {
+                soundManager.playEndbossSound(); 
+                this.endbossEncountered = true;
+            }
+            this.addToMap(this.endbossStatusBar);
+        }
+    }
+    
+    drawGameObjects() {
+        this.ctx.translate(this.camera_x, 0);
+    
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.throwableObjects);
+        this.addObjectsToMap(this.coins);
+    
+        this.bottles.forEach(bottle => {
+            bottle.animate();
+            this.addToMap(bottle);
+        });
+    
+        this.splashAnimations = this.splashAnimations.filter(splash => {
+            if (splash.isFinished) {
+                return false; 
+            } else {
+                splash.animate();
+                this.addToMap(splash);
+                return true;
+            }
+        });
+    
+        this.ctx.translate(-this.camera_x, 0);
+    }
+    
+    drawHUD() {
+        this.statusBottle.drawCollectedBottles(this.ctx, this.collectedBottles);
+        this.statusCoin.drawCollectedCoins(this.ctx, this.collectedCoins);
+    }
+    
     showVictoryScreen() {  
         this.gameIsOver = true; 
         clearInterval(this.gameLoop);
