@@ -1,13 +1,24 @@
+/**
+ * Event listener for DOMContentLoaded. Initializes the game world and sets up event listeners
+ * for UI interactions, such as music toggling and screen navigation.
+ */
 document.addEventListener('DOMContentLoaded', function() {
     let world;
     let musicPlaying = !soundManager.muted; 
 
+    /**
+     * Initializes the game world and starts playing background music.
+     */
     function init() {
         const keyboard = new Keyboard();
         world = new World(document.getElementById('canvas'), keyboard);
         soundManager.play('backgroundMusic');
     }
 
+    /**
+     * Toggles the background music on and off. Updates the button text to reflect the current state.
+     * @param {HTMLElement} button - The button element that triggers the music toggle.
+     */
     function toggleMusic(button) {
         soundManager.toggleMute();
         button.textContent = soundManager.muted ? 'Music On' : 'Music Off';
@@ -48,6 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('startscreen').style.display = 'flex';
     });
 
+    /**
+     * Event listener for the "Back to Start" button to reset the game and return to the start screen.
+     * Stops all sounds and resets the game state.
+     */
     document.getElementById('backToStartButton').addEventListener('click', function() {
         if (world && world.character) {
             world.character.stopAllSounds();  
@@ -64,6 +79,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('startscreen').style.display = 'flex';
     });
     
+    /**
+     * Event listener for the spacebar key to trigger a jump action if the character is on the ground.
+     * @param {KeyboardEvent} event - The keyboard event triggered by the user.
+     */
     document.addEventListener('keydown', function(event) {
         if (event.code === 'Space') {
             if (world && world.character.isOnGround()) { 
