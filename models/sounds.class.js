@@ -11,7 +11,8 @@ class SoundManager {
             bottlePickup: new Audio('audio/bottlepick.mp3'),
             endboss: new Audio('audio/round1.mp3'),
             victory: new Audio('audio/win.mp3'),
-            backgroundMusic: new Audio('audio/Cultura en Cada Verso.mp3') 
+            backgroundMusic: new Audio('audio/Cultura en Cada Verso.mp3'),
+            playerhurt: new Audio('audio/playerhurt.mp3') 
         };
 
         this.muted = false;

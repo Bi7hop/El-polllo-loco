@@ -179,6 +179,10 @@ class World {
                     this.statusBar.setPercentage(this.character.energy);
                     this.endbossStatusBar.setPercentage(enemy.energy);
                 }
+    
+                if (enemy instanceof Chicken || enemy instanceof SmallChicken || enemy instanceof Endboss) {
+                    soundManager.play('playerhurt');
+                }
             }
         });
     
@@ -196,11 +200,12 @@ class World {
                 bottle.collect();
                 this.collectedBottles++; 
                 this.respawnBottle(bottle);
-
+    
                 soundManager.play('bottlePickup');
             }
         });
     }
+    
     
     
     removeDeadEnemies() {
