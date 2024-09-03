@@ -103,6 +103,68 @@ class SmallChicken extends MovableObject {
     }
 
     /**
+     * Starts the animation loops for moving, playing walking animations, and possibly jumping.
+     */
+    animate() {
+        this.startMovementAnimation();
+        this.startWalkingAnimation();
+
+        if (this.canJump) {
+            this.startJumpingAnimation();
+        }
+    }
+
+    /**
+     * Starts the animation loop for moving the small chicken left.
+     */
+    startMovementAnimation() {
+        setInterval(() => {
+            if (!this.isDead()) {
+                this.moveLeft();
+            }
+        }, 1000 / 60);
+    }
+
+    /**
+     * Starts the animation loop for playing the walking animation.
+     */
+    startWalkingAnimation() {
+        setInterval(() => {
+            if (!this.isDead()) {
+                this.playAnimation(this.IMAGES_WALKING);
+            }
+        }, 150);
+    }
+
+    /**
+     * Starts the animation loop for making the small chicken jump randomly.
+     */
+    startJumpingAnimation() {
+        setInterval(() => {
+            if (!this.isDead() && Math.random() < 0.05 && !this.isAboveGround()) {
+                this.jump();
+            }
+        }, 1000 / 60);
+    }
+
+    /**
+     * Makes the small chicken jump by setting the vertical speed to a positive value.
+     */
+    jump() {
+        if (!this.isDead()) {  
+            this.speedY = 20;  
+        }
+    }
+
+    /**
+     * Checks if the small chicken is above the ground.
+     * @returns {boolean} True if the small chicken is above ground, false otherwise.
+     */
+    isAboveGround() {
+        return this.y < 370; 
+    }
+
+    /**
      * Checks if the small chicken is hit by a throwable object.
      * @param {ThrowableObject} throwableObject - The object to check for collision with.
      * @returns {boolean} True if the small chicken is hit, false otherwise.
@@ -145,47 +207,5 @@ class SmallChicken extends MovableObject {
         setTimeout(() => {
             this.removeAfterDeath = true;
         }, 3000); 
-    }
-
-    /**
-     * Starts the animation loops for moving, playing walking animations, and possibly jumping.
-     */
-    animate() {
-        setInterval(() => {
-            if (!this.isDead()) {
-                this.moveLeft();
-            }
-        }, 1000 / 60);
-
-        setInterval(() => {
-            if (!this.isDead()) {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
-        }, 150);
-
-        if (this.canJump) {
-            setInterval(() => {
-                if (!this.isDead() && Math.random() < 0.05 && !this.isAboveGround()) {
-                    this.jump();
-                }
-            }, 1000 / 60);
-        }
-    }
-
-    /**
-     * Makes the small chicken jump by setting the vertical speed to a positive value.
-     */
-    jump() {
-        if (!this.isDead()) {  
-            this.speedY = 20;  
-        }
-    }
-
-    /**
-     * Checks if the small chicken is above the ground.
-     * @returns {boolean} True if the small chicken is above ground, false otherwise.
-     */
-    isAboveGround() {
-        return this.y < 370; 
     }
 }
