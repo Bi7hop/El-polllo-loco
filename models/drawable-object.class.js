@@ -33,22 +33,6 @@ class DrawableObject {
     }
 
     /**
-     * Draws a red frame around the object on the provided canvas context.
-     * This method is typically used for debugging purposes to visualize the object's bounding box.
-     * Only certain types of objects (e.g., Character, Chicken, SmallChicken, Endboss) have this frame drawn.
-     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context on which to draw the frame.
-     */
-    drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof SmallChicken || this instanceof Endboss) {
-            ctx.beginPath();
-            ctx.lineWidth = "4";
-            ctx.strokeStyle = "red";
-            ctx.rect(this.x, this.y, this.width, this.height);
-            ctx.stroke();
-        }
-    }
-
-    /**
      * Loads multiple images from the specified array of paths and stores them in the image cache.
      * @param {string[]} arr - An array of image paths to be loaded.
      */
