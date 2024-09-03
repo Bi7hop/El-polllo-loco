@@ -1,3 +1,7 @@
+/**
+ * Class representing the keyboard and touch controls for the game.
+ * Manages the state of key presses and touch events to control the character.
+ */
 class Keyboard {
     LEFT = false;
     RIGHT = false;
@@ -7,11 +11,19 @@ class Keyboard {
     D = false;
     D_PRESSED_ONCE = false;  
 
+     /**
+     * Creates a new Keyboard instance and initializes event listeners for both
+     * keyboard and mobile touch controls.
+     */
     constructor() {
         this.addKeyboardListeners();
         this.addMobileListeners(); 
     }
 
+    /**
+     * Adds event listeners for keyboard controls. Updates the state of the
+     * keyboard properties based on keydown and keyup events.
+     */
     addKeyboardListeners() {
         window.addEventListener('keydown', (event) => {
             if (event.code === 'ArrowLeft') this.LEFT = true;
@@ -40,6 +52,10 @@ class Keyboard {
         });
     }
 
+    /**
+     * Adds event listeners for mobile touch controls. Maps touch events to the
+     * corresponding keyboard properties to enable character control on mobile devices.
+     */
     addMobileListeners() {
         const mobileButtonBack = document.getElementById('mobileButtonBack');
         const mobileButtonForward = document.getElementById('mobileButtonForward');
