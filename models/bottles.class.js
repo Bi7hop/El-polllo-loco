@@ -36,4 +36,30 @@ class Bottle extends Collectable {
         this.x = -100; 
         this.y = -100;
     }
+
+    static generateBottles(count, world) {
+        const bottles = [];
+        for (let i = 0; i < count; i++) {
+            let bottle;
+            let validPosition = false;
+
+            while (!validPosition) {
+                bottle = new Bottle();
+                validPosition = Bottle.isValidPosition(bottle, bottles, world);
+            }
+
+            bottles.push(bottle);
+        }
+        return bottles;
+    }
+
+    static isValidPosition(newBottle, existingBottles, world) {
+        for (let bottle of existingBottles) {
+            const distance = Math.abs(newBottle.x - bottle.x);
+            if (distance < 100) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

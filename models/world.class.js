@@ -26,7 +26,7 @@ class World {
         this.keyboard = keyboard;
         this.setWorld();
         this.coins = Coins.generateCoins(this.coinCount, this); 
-        this.generateBottles(this.bottleCount);
+        this.bottles = Bottle.generateBottles(this.bottleCount, this); 
         this.endbossStatusBar.setWorld(this);
         this.bottleImage.src = 'img/6_salsa_bottle/salsa_bottle.png'; 
         this.coinImage.src = 'img/8_coin/coin_1.png'; 
@@ -57,7 +57,7 @@ class World {
         this.collectedCoins = 0;
 
         this.coins = Coins.generateCoins(this.coinCount, this); 
-        this.generateBottles(this.bottleCount);
+        this.bottles = Bottle.generateBottles(this.bottleCount, this); 
         this.setWorld();
         this.endbossStatusBar.setWorld(this);
         this.draw();
@@ -66,20 +66,6 @@ class World {
 
     setWorld() {
         this.character.world = this;
-    }
-
-    generateBottles(count) {
-        for (let i = 0; i < count; i++) {
-            let bottle;
-            let validPosition = false;
-
-            while (!validPosition) {
-                bottle = new Bottle();
-                validPosition = this.isValidPosition(bottle, this.bottles);
-            }
-
-            this.bottles.push(bottle);
-        }
     }
 
     isValidPosition(newItem, existingItems) {
