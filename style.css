@@ -197,3 +197,15 @@ footer {
         margin: 0 10px;
     }
 }
+
+#footer {
+    display: none;
+}
+
+#startscreen #footer {
+    display: block;
+}
+
+#gameContainer #footer {
+    display: none;
+}
