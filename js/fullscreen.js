@@ -1,6 +1,13 @@
+/**
+ * Retrieves the game canvas and fullscreen button elements from the DOM.
+ */
 const gameCanvas = document.getElementById('canvas');
 const fullscreenButton = document.getElementById('fullscreenButton');
 
+/**
+ * Adds an event listener to the fullscreen button to toggle fullscreen mode
+ * for the game canvas. The function uses different methods depending on the browser.
+ */
 fullscreenButton.addEventListener('click', () => {
     if (gameCanvas.requestFullscreen) {
         gameCanvas.requestFullscreen();
@@ -13,7 +20,9 @@ fullscreenButton.addEventListener('click', () => {
     }
 });
 
-
+/**
+ * Adds an event listener to the document that logs a message when the fullscreen mode changes.
+ */
 document.addEventListener('fullscreenchange', () => {
     console.log('Fullscreen mode changed');
 });
