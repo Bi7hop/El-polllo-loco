@@ -1,3 +1,10 @@
+/**
+ * Creates and returns a Level 1 instance with predefined enemies, clouds, and background objects.
+ * The level consists of several chickens, small chickens, an endboss, and multiple layers of background
+ * images that create a parallax effect.
+ * 
+ * @returns {Level} A new Level object representing Level 1.
+ */
 function createLevel1() {
     return new Level(
         [
