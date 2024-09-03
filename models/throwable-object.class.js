@@ -1,4 +1,15 @@
+/**
+ * Class representing a throwable object in the game, such as a salsa bottle.
+ * Extends the MovableObject class and provides functionality for throwing and animating the object.
+ */
 class ThrowableObject extends MovableObject {
+
+    /**
+     * Creates a new ThrowableObject instance.
+     * Initializes the object's position, size, rotation images, and sound effect.
+     * @param {number} x - The initial x-coordinate of the throwable object.
+     * @param {number} y - The initial y-coordinate of the throwable object.
+     */
     constructor(x, y) {
         super().loadImage('img/6_salsa_bottle/salsa_bottle.png');
         this.x = x;
@@ -18,6 +29,10 @@ class ThrowableObject extends MovableObject {
         this.throwSound = 'bottleThrow';
     }
 
+    /**
+     * Throws the object in a specified direction, applying gravity and horizontal movement.
+     * @param {number} direction - The direction and speed of the throw (positive for right, negative for left).
+     */
     throw(direction) {
         soundManager.play(this.throwSound);
         
@@ -28,6 +43,9 @@ class ThrowableObject extends MovableObject {
         }, 25);
     }
 
+    /**
+     * Animates the rotation of the throwable object by cycling through the rotation images.
+     */
     animateRotation() {
         setInterval(() => {
             this.currentImageIndex++;
