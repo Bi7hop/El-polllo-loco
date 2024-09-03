@@ -24,5 +24,4 @@ fullscreenButton.addEventListener('click', () => {
  * Adds an event listener to the document that logs a message when the fullscreen mode changes.
  */
 document.addEventListener('fullscreenchange', () => {
-    console.log('Fullscreen mode changed');
 });
