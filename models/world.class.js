@@ -1,3 +1,7 @@
+/**
+ * Class representing the game world.
+ * Manages all aspects of the game, including the character, enemies, objects, and game state.
+ */
 class World {
     character = new Character();
     level = createLevel1();
@@ -22,6 +26,12 @@ class World {
     endbossEncountered = false;
     enemyManager;
 
+    /**
+     * Creates a new World instance.
+     * Initializes the game world, including the character, level, and status bars.
+     * @param {HTMLCanvasElement} canvas - The canvas element where the game will be rendered.
+     * @param {Keyboard} keyboard - The keyboard input handler.
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -45,6 +55,9 @@ class World {
         soundManager.play('backgroundMusic');
     }
 
+    /**
+     * Resets the world to its initial state, reloading the level and resetting the character and objects.
+     */
     reset() {
         this.character = new Character();
         this.level = createLevel1();  
@@ -68,10 +81,18 @@ class World {
         this.run();
     }
 
+    /**
+     * Links the character and other objects to the current world context.
+     */
     setWorld() {
         this.character.world = this;
     }
-
+/**
+     * Checks if a new item is being spawned too close to existing items.
+     * @param {MovableObject} newItem - The new item to check.
+     * @param {MovableObject[]} existingItems - The existing items to check against.
+     * @returns {boolean} True if the position is valid, false otherwise.
+     */
     isValidPosition(newItem, existingItems) {
         for (let item of existingItems) {
             const distance = Math.abs(newItem.x - item.x);
@@ -82,6 +103,9 @@ class World {
         return true;
     }
 
+    /**
+     * Starts the game loop, which continuously checks for collisions and updates the game state.
+     */
     run() {
         this.gameLoop = setInterval(() => {
             if (!this.gameIsOver) {
@@ -92,6 +116,9 @@ class World {
         }, 50);
     }
 
+    /**
+     * Handles the logic for throwing objects in the game.
+     */
     checkThrowObjects() {
         if (this.keyboard.D && this.collectedBottles > 0) { 
             let bottleX = this.character.x + 100;
@@ -112,6 +139,10 @@ class World {
         }
     }
 
+    /**
+     * Checks for collisions between the character, enemies, and other objects in the world.
+     * Updates the game state based on these collisions.
+     */
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (typeof enemy.isDead === 'function' && enemy.isDead()) {
@@ -180,6 +211,10 @@ class World {
         });
     }
     
+    /**
+     * Removes dead enemies from the game world.
+     * Spawns new enemies if necessary to maintain the enemy count.
+     */
     removeDeadEnemies() {
         const initialEnemyCount = this.level.enemies.length;
 
@@ -195,6 +230,10 @@ class World {
         }
     }
 
+    /**
+     * Continuously draws the game world, including background, characters, and status bars.
+     * Uses `requestAnimationFrame` for smooth rendering.
+     */
     draw() {
         if (!this.gameIsOver) {
             this.clearCanvas();
@@ -210,16 +249,25 @@ class World {
         }
     }
 
+    /**
+     * Clears the canvas before redrawing the game world.
+     */
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+     /**
+     * Draws the background of the game world.
+     */
     drawBackground() {
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.ctx.translate(-this.camera_x, 0);
     }
 
+    /**
+     * Draws the status bars, including the endboss's health bar if the endboss is visible.
+     */
     drawStatusBars() {
         this.addToMap(this.statusBar);
         
@@ -233,6 +281,9 @@ class World {
         }
     }
 
+    /**
+     * Draws the game objects, such as the character, enemies, and items.
+     */
     drawGameObjects() {
         this.ctx.translate(this.camera_x, 0);
 
@@ -260,17 +311,28 @@ class World {
         this.ctx.translate(-this.camera_x, 0);
     }
 
+    /**
+     * Draws the Heads-Up Display (HUD), including collected bottles and coins.
+     */
     drawHUD() {
         this.statusBottle.drawCollectedBottles(this.ctx, this.collectedBottles);
         this.statusCoin.drawCollectedCoins(this.ctx, this.collectedCoins);
     }
 
+      /**
+     * Adds an array of objects to the map by drawing them on the canvas.
+     * @param {MovableObject[]} objects - The objects to be added to the map.
+     */
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
         });
     }
 
+    /**
+     * Draws a movable object on the canvas, including flipping the image if needed.
+     * @param {MovableObject} mo - The movable object to be drawn.
+     */
     addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);
@@ -284,6 +346,10 @@ class World {
         }
     }
 
+     /**
+     * Flips an image horizontally before drawing it, used for characters facing left.
+     * @param {MovableObject} mo - The movable object whose image needs to be flipped.
+     */
     flipImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
@@ -291,11 +357,19 @@ class World {
         mo.x = mo.x * -1;
     }
 
+    /**
+     * Flips the image back to its original orientation after drawing it.
+     * @param {MovableObject} mo - The movable object whose image was flipped.
+     */
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
 
+     /**
+     * Displays the victory screen when the player wins the game.
+     * Stops the game loop and plays the victory sound.
+     */
     showVictoryScreen() {  
         this.gameIsOver = true; 
         clearInterval(this.gameLoop);
@@ -320,6 +394,10 @@ class World {
         this.showRestartButton();  
     }
 
+    /**
+     * Displays the game over screen when the player loses the game.
+     * Stops the game loop and plays the game over sound.
+     */
     gameOver() {
         this.gameIsOver = true;
         clearInterval(this.gameLoop);
@@ -344,6 +422,10 @@ class World {
         this.showRestartButton();  
     }
 
+    /**
+     * Shows the restart button, allowing the player to reset the game.
+     * Resets the world and stops all currently playing sounds.
+     */
     showRestartButton() {
         const restartButton = document.getElementById('restartButton');
         restartButton.style.display = 'block';
