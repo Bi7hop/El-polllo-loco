@@ -64,6 +64,14 @@ class SoundManager {
             this.sounds[key].muted = this.muted;
         }
     }
+
+    playEndbossSound() {
+        this.play('endboss');
+    }
+
+    playVictorySound() {
+        this.play('victory');
+    }
 }
 
 const soundManager = new SoundManager();

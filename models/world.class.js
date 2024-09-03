@@ -239,7 +239,7 @@ class World {
             const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
             if (endboss && endboss.isEndbossVisible(this.camera_x, this.canvas.width)) {
                 if (!this.endbossEncountered) {
-                    endboss.world.playEndbossSound();
+                    soundManager.playEndbossSound(); 
                     this.endbossEncountered = true;
                 }
                 this.addToMap(this.endbossStatusBar);
@@ -280,10 +280,6 @@ class World {
         }
     }
 
-    playEndbossSound() {
-        soundManager.play('endboss');
-    }
-
     showVictoryScreen() {  
         this.gameIsOver = true; 
         clearInterval(this.gameLoop);
@@ -304,7 +300,7 @@ class World {
             this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
         };
 
-        this.playVictorySound(); 
+        soundManager.playVictorySound(); 
         this.showRestartButton();  
     }
 
