@@ -1,3 +1,8 @@
+/**
+ * Class representing the endboss in the game.
+ * Extends the MovableObject class and provides specific behaviors, animations,
+ * and interactions related to the endboss.
+ */
 class Endboss extends MovableObject {
     height = 450;
     width = 300;
@@ -61,6 +66,10 @@ class Endboss extends MovableObject {
 
     hitSound = 'chickenDeath';
 
+    /**
+     * Creates a new Endboss instance, initializes its animations, and sets its position.
+     * @param {Object} world - The game world object.
+     */
     constructor(world) {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
@@ -73,6 +82,10 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Reduces the endboss's energy and plays the hurt animation.
+     * If the energy reaches 0, triggers the death sequence.
+     */
     hit() {
         this.energy -= 20;
         soundManager.play(this.hitSound);
@@ -84,6 +97,9 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Clears the current animation interval to stop the current animation.
+     */
     clearCurrentAnimation() {
         if (this.currentAnimationInterval) {
             clearInterval(this.currentAnimationInterval);
@@ -91,6 +107,9 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Plays the hurt animation and then transitions to the attack animation.
+     */
     playHurtAnimation() {
         this.clearCurrentAnimation(); 
 
@@ -107,6 +126,9 @@ class Endboss extends MovableObject {
         }, 100);
     }
 
+    /**
+     * Plays the attack animation and then transitions back to the walking animation.
+     */
     playAttackAnimation() {
         this.clearCurrentAnimation(); 
 
@@ -122,6 +144,9 @@ class Endboss extends MovableObject {
         }, 100);
     }
 
+    /**
+     * Triggers the death sequence for the endboss, including playing the death animation.
+     */
     die() {
         if (!this.isDead) {  
             this.isDead = true;
@@ -129,6 +154,9 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Plays the death animation and then triggers the victory screen.
+     */
     playDeathAnimation() {
         this.clearCurrentAnimation(); 
 
@@ -145,6 +173,11 @@ class Endboss extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Checks if the endboss is hit by a throwable object, using defined hitboxes for collision detection.
+     * @param {ThrowableObject} throwableObject - The object to check for collision with.
+     * @returns {boolean} True if the endboss is hit, false otherwise.
+     */
     isHitBy(throwableObject) {
         return this.hitboxes.some(box => {
             const hitboxX = this.x + box.xOffset;
@@ -158,6 +191,9 @@ class Endboss extends MovableObject {
         });
     }
 
+    /**
+     * Makes the endboss follow the character based on their relative positions.
+     */
     followCharacter() {
         const characterX = this.world.character.x;
 
@@ -168,14 +204,23 @@ class Endboss extends MovableObject {
         }
     }
 
+     /**
+     * Moves the endboss to the right.
+     */
     moveRight() {
         this.x += this.speed;
     }
 
+    /**
+     * Moves the endboss to the left.
+     */
     moveLeft() {
         this.x -= this.speed;
     }
 
+    /**
+     * Starts the animation loop for the endboss, handling different states like walking and attacking.
+     */
     animate() {
         setInterval(() => {
             if (this.isDead) {
@@ -194,12 +239,21 @@ class Endboss extends MovableObject {
         }, 150);
     }
 
+    /**
+     * Moves the endboss left until it reaches a specific distance from its initial position.
+     */
     moveLeftAtEndOfMap() {
         if (this.x > this.initialX - this.moveDistance) {
             this.moveLeft();
         }
     }
 
+    /**
+     * Checks if the endboss is currently visible within the camera's view.
+     * @param {number} camera_x - The x-coordinate of the camera.
+     * @param {number} canvas_width - The width of the canvas.
+     * @returns {boolean} True if the endboss is visible, false otherwise.
+     */
     isEndbossVisible(camera_x, canvas_width) {
         const endbossX = this.x;
         const cameraStart = -camera_x;
