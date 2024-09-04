@@ -34,7 +34,7 @@ class SoundManager {
         this.sounds.backgroundMusic.volume = 0.2; 
     }
 
-    /**
+     /**
      * Plays the specified sound if it is not muted and not already playing.
      * @param {string} soundName - The name of the sound to play.
      * @returns {Promise<void>} A promise that resolves when the sound starts playing.
@@ -42,12 +42,8 @@ class SoundManager {
     async play(soundName) {
         if (this.sounds[soundName] && !this.muted) {
             if (this.sounds[soundName].paused) {
-                try {
-                    this.sounds[soundName].currentTime = 0;
-                    await this.sounds[soundName].play();
-                } catch (error) {
-                    // Errorhandling is silent now, removed console.error
-                }
+                this.sounds[soundName].currentTime = 0;
+                await this.sounds[soundName].play();
             }
         }
     }
