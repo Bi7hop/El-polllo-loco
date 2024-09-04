@@ -49,26 +49,29 @@ class MovableObject extends DrawableObject {
      */
     hitFromAbove(mo) {
         const overlapX = this.x + this.width * 0.8 > mo.x && this.x + this.width * 0.2 < mo.x + mo.width;
-        const hitY = this.y + this.height <= mo.y + mo.height * 0.5;
+        const hitY = this.y + this.height <= mo.y + mo.height * 0.5; 
         const withinFallRange = this.y + this.height >= mo.y;
-    
         return this.speedY < 0 && overlapX && hitY && withinFallRange;
-    }    
-
-    /**
-     * Checks if the object is colliding with another object.
-     * @param {MovableObject} mo - The other movable object to check collision with.
-     * @returns {boolean} True if the object is colliding with the other object, false otherwise.
-     */
+    }
+    
     isColliding(mo) {
         let buffer = 10;
         if (mo instanceof SmallChicken) {
-            buffer = 5;  
+            buffer = 5;
         }
-        const overlapX = this.x + this.width - buffer > mo.x && this.x + buffer < mo.x + mo.width;
-        const overlapY = this.y + this.height - buffer > mo.y && this.y + buffer < mo.y + mo.height;
+        const hitboxOffsetX = 30; 
+        const hitboxOffsetY = 110; 
+        const hitboxShrinkWidth = 40; 
+        const hitboxShrinkHeight = 100;
+        const collisionBoxX = this.x + hitboxOffsetX;
+        const collisionBoxY = this.y + hitboxOffsetY;
+        const collisionBoxWidth = this.width - hitboxShrinkWidth;
+        const collisionBoxHeight = this.height - hitboxShrinkHeight;
+        const overlapX = collisionBoxX + collisionBoxWidth - buffer > mo.x && collisionBoxX + buffer < mo.x + mo.width;
+        const overlapY = collisionBoxY + collisionBoxHeight - buffer > mo.y && collisionBoxY + buffer < mo.y + mo.height;
         return overlapX && overlapY;
     }
+    
     
      /**
      * Reduces the object's energy when hit and updates the last hit time.
