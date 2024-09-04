@@ -180,14 +180,14 @@ checkThrowableObjectCollisions(enemy) {
     this.throwableObjects.forEach((obj, index) => {
         if (enemy.isHitBy(obj)) {
             hitObjectIndex = index;
-            enemy.hit();
-    
-            this.handleEnemyHit(enemy, obj);
+            enemy.hit(); // Gegner wurde getroffen
+
+            this.handleEnemyHit(enemy, obj); // Übergibt das getroffene Objekt an die nächste Methode
         }
     });
 
     if (hitObjectIndex !== null) {
-        this.throwableObjects.splice(hitObjectIndex, 1); // Remove the throwable object
+        this.throwableObjects.splice(hitObjectIndex, 1); // Entfernt das Objekt (Flasche)
     }
 }
 
@@ -199,14 +199,15 @@ checkThrowableObjectCollisions(enemy) {
  */
 handleEnemyHit(enemy, obj) {
     if (enemy instanceof Chicken || enemy instanceof SmallChicken) {
-        enemy.die(); // Instantly kill chickens
+        enemy.die(); // Das Chicken stirbt
     } else if (enemy instanceof Endboss) {
         this.endbossStatusBar.setPercentage(enemy.energy);
     }
 
     let splash = new SplashAnimation(obj.x, obj.y);
-    this.splashAnimations.push(splash);
+    this.splashAnimations.push(splash); // Fügt die Splash-Animation hinzu
 }
+
 
 /**
  * Checks for collisions between the character and enemies.

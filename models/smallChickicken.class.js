@@ -169,9 +169,11 @@ class SmallChicken extends MovableObject {
      * @param {ThrowableObject} throwableObject - The object to check for collision with.
      * @returns {boolean} True if the small chicken is hit, false otherwise.
      */
-    isHitBy(throwableObject) {
-        return throwableObject instanceof ThrowableObject && this.isColliding(throwableObject);
+    isHitBy(obj) {
+        return this.x + this.width > obj.x && this.x < obj.x + obj.width &&
+               this.y + this.height > obj.y && this.y < obj.y + obj.height;
     }
+    
 
     /**
      * Handles the logic for when the small chicken dies. Stops movement, changes image, and plays death sound.
