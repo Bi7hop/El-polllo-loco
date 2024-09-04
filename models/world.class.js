@@ -140,76 +140,147 @@ class World {
     }
 
     /**
-     * Checks for collisions between the character, enemies, and other objects in the world.
-     * Updates the game state based on these collisions.
-     */
-    checkCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (typeof enemy.isDead === 'function' && enemy.isDead()) {
-                return; 
-            }
+ * Checks for collisions between the character, enemies, and other objects in the world.
+ * Updates the game state based on these collisions.
+ */
+checkCollisions() {
+    this.checkEnemyCollisions();
+    this.checkCoinCollisions();
+    this.checkBottleCollisions();
+}
+
+/**
+ * Checks for collisions between the character and enemies.
+ */
+checkEnemyCollisions() {
+    this.level.enemies.forEach((enemy) => {
+        if (this.isDeadEnemy(enemy)) return;
+
+        this.checkThrowableObjectCollisions(enemy);
+        this.checkCharacterEnemyCollision(enemy);
+    });
+}
+
+/**
+ * Checks if an enemy is dead.
+ * @param {MovableObject} enemy - The enemy to check.
+ * @returns {boolean} True if the enemy is dead, false otherwise.
+ */
+isDeadEnemy(enemy) {
+    return typeof enemy.isDead === 'function' && enemy.isDead();
+}
+
+/**
+ * Checks for collisions between throwable objects and enemies.
+ * Updates enemy status and removes throwable objects if necessary.
+ * @param {MovableObject} enemy - The enemy to check against throwable objects.
+ */
+checkThrowableObjectCollisions(enemy) {
+    let hitObjectIndex = null;
+    this.throwableObjects.forEach((obj, index) => {
+        if (enemy.isHitBy(obj)) {
+            hitObjectIndex = index;
+            enemy.hit();
     
-            let hitObjectIndex = null;
-            this.throwableObjects.forEach((obj, index) => {
-                if (enemy.isHitBy(obj)) {
-                    hitObjectIndex = index;
-                    enemy.hit();
-    
-                    if (enemy instanceof Chicken || enemy instanceof SmallChicken) {
-                        enemy.die(); 
-                    } else if (enemy instanceof Endboss) {
-                        this.endbossStatusBar.setPercentage(enemy.energy);
-                    }
-    
-                    let splash = new SplashAnimation(obj.x, obj.y);
-                    this.splashAnimations.push(splash);
-                }
-            });
-    
-            if (hitObjectIndex !== null) {
-                this.throwableObjects.splice(hitObjectIndex, 1);
-            }
-    
-            if (this.character.hitFromAbove(enemy)) {
-                if (typeof enemy.die === 'function') {
-                    enemy.die(); 
-                }
-                this.character.speedY = Math.max(this.character.speedY, 20);
-            } else if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
-    
-                if (enemy instanceof Endboss) {
-                    this.character.hit();
-                    this.statusBar.setPercentage(this.character.energy);
-                    this.endbossStatusBar.setPercentage(enemy.energy);
-                }
-    
-                if (enemy instanceof Chicken || enemy instanceof SmallChicken || enemy instanceof Endboss) {
-                    soundManager.play('playerhurt');
-                }
-            }
-        });
-    
-        this.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin)) {
-                this.coins.splice(index, 1);
-                this.collectedCoins++; 
-    
-                soundManager.play('coinPickup');
-            }
-        });
-    
-        this.bottles.forEach((bottle) => {
-            if (this.character.isColliding(bottle) && !bottle.collected) {
-                bottle.collect();
-                this.collectedBottles++; 
-                Bottle.respawnBottle(bottle);
-    
-                soundManager.play('bottlePickup');
-            }
-        });
+            this.handleEnemyHit(enemy, obj);
+        }
+    });
+
+    if (hitObjectIndex !== null) {
+        this.throwableObjects.splice(hitObjectIndex, 1); // Remove the throwable object
     }
+}
+
+/**
+ * Handles the logic for when an enemy is hit by a throwable object.
+ * Updates the enemy status and plays the appropriate sound and animations.
+ * @param {MovableObject} enemy - The enemy that was hit.
+ * @param {ThrowableObject} obj - The throwable object that hit the enemy.
+ */
+handleEnemyHit(enemy, obj) {
+    if (enemy instanceof Chicken || enemy instanceof SmallChicken) {
+        enemy.die(); // Instantly kill chickens
+    } else if (enemy instanceof Endboss) {
+        this.endbossStatusBar.setPercentage(enemy.energy);
+    }
+
+    let splash = new SplashAnimation(obj.x, obj.y);
+    this.splashAnimations.push(splash);
+}
+
+/**
+ * Checks for collisions between the character and enemies.
+ * Updates character status and handles enemy-specific collision behavior.
+ * @param {MovableObject} enemy - The enemy to check for collisions with the character.
+ */
+checkCharacterEnemyCollision(enemy) {
+    if (this.character.hitFromAbove(enemy)) {
+        this.handleEnemyStomp(enemy);
+    } else if (this.character.isColliding(enemy)) {
+        this.handleCharacterHitByEnemy(enemy);
+    }
+}
+
+/**
+ * Handles the logic for when the character hits an enemy from above.
+ * @param {MovableObject} enemy - The enemy that was stomped.
+ */
+handleEnemyStomp(enemy) {
+    if (typeof enemy.die === 'function') {
+        enemy.die(); // Kill the enemy
+    }
+    this.character.speedY = Math.max(this.character.speedY, 20);
+}
+
+/**
+ * Handles the logic for when the character collides with an enemy.
+ * Updates character energy and plays appropriate sound effects.
+ * @param {MovableObject} enemy - The enemy that hit the character.
+ */
+handleCharacterHitByEnemy(enemy) {
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
+
+    if (enemy instanceof Endboss) {
+        this.endbossStatusBar.setPercentage(enemy.energy);
+    }
+
+    if (enemy instanceof Chicken || enemy instanceof SmallChicken || enemy instanceof Endboss) {
+        soundManager.play('playerhurt');
+    }
+}
+
+/**
+ * Checks for collisions between the character and coins.
+ * Removes collected coins and updates the score.
+ */
+checkCoinCollisions() {
+    this.coins.forEach((coin, index) => {
+        if (this.character.isColliding(coin)) {
+            this.coins.splice(index, 1); // Remove the collected coin
+            this.collectedCoins++; 
+    
+            soundManager.play('coinPickup');
+        }
+    });
+}
+
+/**
+ * Checks for collisions between the character and bottles.
+ * Handles bottle collection and plays appropriate sound effects.
+ */
+checkBottleCollisions() {
+    this.bottles.forEach((bottle) => {
+        if (this.character.isColliding(bottle) && !bottle.collected) {
+            bottle.collect();
+            this.collectedBottles++; 
+            Bottle.respawnBottle(bottle);
+    
+            soundManager.play('bottlePickup');
+        }
+    });
+}
+
     
     /**
      * Removes dead enemies from the game world.
