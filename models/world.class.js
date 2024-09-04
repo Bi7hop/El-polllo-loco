@@ -282,34 +282,82 @@ class World {
     }
 
     /**
-     * Draws the game objects, such as the character, enemies, and items.
-     */
-    drawGameObjects() {
-        this.ctx.translate(this.camera_x, 0);
+ * Draws the game objects, such as the character, enemies, and items.
+ */
+drawGameObjects() {
+    this.ctx.translate(this.camera_x, 0);
 
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.level.enemies);
-        this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.throwableObjects);
-        this.addObjectsToMap(this.coins);
+    this.drawCharacter();
+    this.drawEnemies();
+    this.drawClouds();
+    this.drawThrowableObjects();
+    this.drawCoins();
+    this.drawBottles();
+    this.drawSplashAnimations();
 
-        this.bottles.forEach(bottle => {
-            bottle.animate();
-            this.addToMap(bottle);
-        });
+    this.ctx.translate(-this.camera_x, 0);
+}
 
-        this.splashAnimations = this.splashAnimations.filter(splash => {
-            if (splash.isFinished) {
-                return false; 
-            } else {
-                splash.animate();
-                this.addToMap(splash);
-                return true;
-            }
-        });
+/**
+ * Draws the character.
+ */
+drawCharacter() {
+    this.addToMap(this.character);
+}
 
-        this.ctx.translate(-this.camera_x, 0);
-    }
+/**
+ * Draws all enemies.
+ */
+drawEnemies() {
+    this.addObjectsToMap(this.level.enemies);
+}
+
+/**
+ * Draws all clouds.
+ */
+drawClouds() {
+    this.addObjectsToMap(this.level.clouds);
+}
+
+/**
+ * Draws all throwable objects.
+ */
+drawThrowableObjects() {
+    this.addObjectsToMap(this.throwableObjects);
+}
+
+/**
+ * Draws all coins.
+ */
+drawCoins() {
+    this.addObjectsToMap(this.coins);
+}
+
+/**
+ * Draws all bottles and animates them.
+ */
+drawBottles() {
+    this.bottles.forEach(bottle => {
+        bottle.animate();
+        this.addToMap(bottle);
+    });
+}
+
+/**
+ * Draws all splash animations and removes finished ones.
+ */
+drawSplashAnimations() {
+    this.splashAnimations = this.splashAnimations.filter(splash => {
+        if (splash.isFinished) {
+            return false; 
+        } else {
+            splash.animate();
+            this.addToMap(splash);
+            return true;
+        }
+    });
+}
+
 
     /**
      * Draws the Heads-Up Display (HUD), including collected bottles and coins.
@@ -366,32 +414,44 @@ class World {
     }
 
      /**
-     * Displays the victory screen when the player wins the game.
-     * Stops the game loop and plays the victory sound.
-     */
-    showVictoryScreen() {  
-        this.gameIsOver = true; 
-        clearInterval(this.gameLoop);
+ * Displays the victory screen when the player wins the game.
+ * Stops the game loop and plays the victory sound.
+ */
+showVictoryScreen() {  
+    this.gameIsOver = true; 
+    clearInterval(this.gameLoop);
 
-        const img = new Image();
-        img.src = 'img/9_intro_outro_screens/win/won_1.png'; 
+    this.dimBackground();
+    this.renderImageOnCanvas('img/9_intro_outro_screens/win/won_1.png', 380, 220);
 
-        img.onload = () => {
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    soundManager.playVictorySound(); 
+    this.showRestartButton();  
+}
 
-            const desiredWidth = 380; 
-            const desiredHeight = 220; 
+/**
+ * Dims the background with a semi-transparent overlay.
+ */
+dimBackground() {
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+}
 
-            const xPosition = (this.canvas.width - desiredWidth) / 2;
-            const yPosition = (this.canvas.height - desiredHeight) / 2;
+/**
+ * Renders an image on the canvas at the center of the screen.
+ * @param {string} src - The source URL of the image.
+ * @param {number} width - The desired width of the image.
+ * @param {number} height - The desired height of the image.
+ */
+renderImageOnCanvas(src, width, height) {
+    const img = new Image();
+    img.src = src;
 
-            this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
-        };
-
-        soundManager.playVictorySound(); 
-        this.showRestartButton();  
-    }
+    img.onload = () => {
+        const xPosition = (this.canvas.width - width) / 2;
+        const yPosition = (this.canvas.height - height) / 2;
+        this.ctx.drawImage(img, xPosition, yPosition, width, height);
+    };
+}
 
     /**
      * Displays the game over screen when the player loses the game.
