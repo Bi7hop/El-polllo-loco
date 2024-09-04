@@ -46,7 +46,7 @@ class SoundManager {
                     this.sounds[soundName].currentTime = 0;
                     await this.sounds[soundName].play();
                 } catch (error) {
-                    console.error(`Error playing sound ${soundName}:`, error);
+                    // Errorhandling is silent now, removed console.error
                 }
             }
         }
@@ -113,6 +113,7 @@ const soundManager = new SoundManager();
 document.addEventListener('DOMContentLoaded', () => {
     const musicToggleButton = document.getElementById('musicToggleButtonStart');
 
+    // Only proceed if the button exists
     if (musicToggleButton) {
         musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
 
@@ -120,7 +121,5 @@ document.addEventListener('DOMContentLoaded', () => {
             soundManager.toggleMute();
             musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
         });
-    } else {
-        console.error('Element with ID "musicToggleButtonStart" not found.');
     }
 });
