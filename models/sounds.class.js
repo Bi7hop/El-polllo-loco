@@ -34,7 +34,7 @@ class SoundManager {
         this.sounds.backgroundMusic.volume = 0.2; 
     }
 
-     /**
+    /**
      * Plays the specified sound if it is not muted and not already playing.
      * @param {string} soundName - The name of the sound to play.
      * @returns {Promise<void>} A promise that resolves when the sound starts playing.
@@ -89,33 +89,48 @@ class SoundManager {
         }
     }
 
-     /**
-     * Plays the endboss sound specifically.
-     */
-    playEndbossSound() {
-        this.play('endboss');
-    }
-
     /**
-     * Plays the victory sound specifically.
+     * Toggles the background music on or off.
+     * If music is playing, it will be paused; otherwise, it will start playing.
      */
-    playVictorySound() {
-        this.play('victory');
+    toggleBackgroundMusic() {
+        if (this.sounds.backgroundMusic.paused) {
+            this.sounds.backgroundMusic.play();
+        } else {
+            this.sounds.backgroundMusic.pause();
+        }
     }
 }
 
 const soundManager = new SoundManager();
 
 document.addEventListener('DOMContentLoaded', () => {
-    const musicToggleButton = document.getElementById('musicToggleButtonStart');
+    const musicToggleButtonGame = document.getElementById('musicToggleButtonGame');
+    const musicToggleButtonStart = document.getElementById('musicToggleButtonStart');
 
-    // Only proceed if the button exists
-    if (musicToggleButton) {
-        musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
+    function updateMusicButtonText(button) {
+        button.textContent = soundManager.sounds.backgroundMusic.paused ? 'Music Off' : 'Music On';
+    }
 
-        musicToggleButton.addEventListener('click', () => {
-            soundManager.toggleMute();
-            musicToggleButton.textContent = soundManager.muted ? 'Music Off' : 'Music On';
+    function handleMusicToggle(button) {
+        soundManager.toggleBackgroundMusic();
+        updateMusicButtonText(button);
+        button.blur();  
+    }
+
+    if (musicToggleButtonStart) {
+        updateMusicButtonText(musicToggleButtonStart);
+
+        musicToggleButtonStart.addEventListener('click', () => {
+            handleMusicToggle(musicToggleButtonStart);
+        });
+    }
+
+    if (musicToggleButtonGame) {
+        updateMusicButtonText(musicToggleButtonGame);
+
+        musicToggleButtonGame.addEventListener('click', () => {
+            handleMusicToggle(musicToggleButtonGame);
         });
     }
 });
