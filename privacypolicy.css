@@ -2,7 +2,7 @@ body {
     font-family: 'Bangers', Arial, sans-serif;
     line-height: 1.6;
     color: white;
-    box-sizing: border-box; /* Box-Sizing bereits hinzugefügt */
+    box-sizing: border-box; 
     margin: 0;
     padding: 0;
     background-image: url('img/background/background.jpg');
@@ -12,11 +12,11 @@ body {
     background-attachment: fixed;
     width: 100vw;
     height: 100vh;
-    overflow-x: hidden; /* Verhindert den horizontalen Scrollbalken */
+    overflow-x: hidden; 
 }
 
 .container {
-    max-width: 100%; /* Ändere dies auf 100%, um die Breite flexibel zu machen */
+    max-width: 100%; 
     margin: 0 auto;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.7);
@@ -26,8 +26,8 @@ body {
 }
 
 h1, h2, h3, h4, p {
-    margin-left: auto; /* Verhindert das Ausdehnen über den Rand hinaus */
-    margin-right: auto; /* Gleicher Ansatz für rechte Seite */
+    margin-left: auto; 
+    margin-right: auto; 
     padding-left: 12px;
     padding-right: 12px;
     box-sizing: border-box;
