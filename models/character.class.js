@@ -206,14 +206,20 @@ class Character extends MovableObject {
         this.snoring_sound.currentTime = 0;
     }
 
+    isDead() {
+        return this.world.statusBar.percentage <= 0;  
+    }
+    
+
     updateAnimations() {
-        if (this.isDead()) {
-            if (!this.deathAnimationPlayed) { 
+        if (this.isDead()) {  
+            if (!this.deathAnimationPlayed) {  
                 this.playAnimation(this.IMAGES_DEAD);
-                this.deathAnimationPlayed = true; 
+                this.deathAnimationPlayed = true;
+                this.stopAllSounds();  
                 setTimeout(() => {
-                    this.world.gameOver(); 
-                }, 500); 
+                    this.world.gameOver();  
+                }, 500);
             }
         } else if (this.isHurt()) {
             this.playAnimation(this.IMAGES_HURT);
@@ -223,4 +229,5 @@ class Character extends MovableObject {
             this.playAnimation(this.IMAGES_WALKING);
         }
     }
+    
 }
