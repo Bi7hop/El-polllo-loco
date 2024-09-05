@@ -1,7 +1,3 @@
-/**
- * Event listener for DOMContentLoaded. Initializes the mobile button display logic
- * and sets up event listeners for various UI elements.
- */
 document.addEventListener('DOMContentLoaded', () => {
     const mobileButtonsContainer = document.getElementById('mobileButtons');
     const footer = document.getElementById('footer');
@@ -9,64 +5,90 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('gameContainer');
     const musikButton = document.getElementById('mobileButtonMusik');
     const pauseButton = document.getElementById('mobileButtonPause');
+    const mobileButtons = document.querySelectorAll('.mobile-button'); // Selector for mobile buttons
 
     /**
-     * Toggles the visibility of mobile buttons and footer based on the screen orientation,
-     * device type, and screen width.
+     * Checks if the device supports touch input.
+     * @returns {boolean} True if the device is a touch device, false otherwise.
+     */
+    function isTouchDevice() {
+        return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
+    }
+
+    /**
+     * Toggles the visibility of the mobile buttons based on the device orientation, screen width, 
+     * and whether it's a touch device.
      */
     function toggleMobileButtons() {
         const isLandscape = window.matchMedia('(orientation: landscape)').matches;
         const isMobile = window.innerWidth < 1024;
-        const isSmallDevice = window.innerWidth < 600;
 
-        if (isMobile && isLandscape && !isSmallDevice) {
+        if (isTouchDevice() && isMobile && isLandscape) {
             mobileButtonsContainer.style.display = 'flex';
-            footer.style.display = 'none';  
         } else {
             mobileButtonsContainer.style.display = 'none';
-            footer.style.display = 'block';  
         }
     }
 
     /**
-     * Updates the visibility of the footer based on the screen width and the display state
-     * of the startscreen.
+     * Updates the visibility of the footer based on the screen width and 
+     * the current display state of the start screen.
      */
     function updateFooterVisibility() {
         const isMobile = window.innerWidth < 1024;
 
         if (isMobile && startscreen.style.display !== 'none') {
             footer.style.display = 'block';  
-        } else if (isMobile && startscreen.style.display === 'none') {
-            footer.style.display = 'none'; 
         } else {
-            footer.style.display = 'block'; 
+            footer.style.display = 'none'; 
         }
     }
 
     /**
-     * Event listener for the music button. Toggles the display between music and pause buttons
-     * and mutes/unmutes the sound using the soundManager.
+     * Prevents the context menu from appearing when holding down on mobile buttons.
+     * This avoids unwanted behavior on touch devices.
+     */
+    mobileButtons.forEach(button => {
+        button.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Prevents the context menu
+        });
+    });
+
+    /**
+     * Initializes the button visibility based on the mute state.
+     * Displays the pause button if muted, or the music button if not muted.
+     */
+    if (soundManager.muted) {
+        musikButton.style.display = 'none';
+        pauseButton.style.display = 'block';
+    } else {
+        musikButton.style.display = 'block';
+        pauseButton.style.display = 'none';
+    }
+
+    /**
+     * Handles the click event on the music button.
+     * Hides the music button, shows the pause button, and toggles the mute state.
      */
     musikButton.addEventListener('click', () => {
         musikButton.style.display = 'none';
         pauseButton.style.display = 'block';
-        soundManager.toggleMute();
+        soundManager.toggleMute(); // Toggle sound mute
     });
 
     /**
-     * Event listener for the pause button. Toggles the display between pause and music buttons
-     * and mutes/unmutes the sound using the soundManager.
+     * Handles the click event on the pause button.
+     * Hides the pause button, shows the music button, and toggles the mute state.
      */
     pauseButton.addEventListener('click', () => {
         pauseButton.style.display = 'none';
         musikButton.style.display = 'block';
-        soundManager.toggleMute();
+        soundManager.toggleMute(); // Toggle sound mute
     });
 
     /**
-     * Event listener for the start button. Hides the startscreen and displays the game container.
-     * Updates the footer visibility accordingly.
+     * Event listener for the start button. Hides the start screen, displays the game container,
+     * and updates the visibility of the footer.
      */
     document.getElementById('startButton').addEventListener('click', () => {
         startscreen.style.display = 'none';
@@ -75,8 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * Event listener for the back to start button. Hides the game container and displays the startscreen.
-     * Updates the footer visibility accordingly.
+     * Event listener for the back-to-start button. Hides the game container, displays the start screen,
+     * and updates the visibility of the footer.
      */
     document.getElementById('backToStartButton').addEventListener('click', () => {
         gameContainer.style.display = 'none';
@@ -84,31 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFooterVisibility();
     });
 
-    /**
-     * Disables long press context menu on touch buttons.
-     */
-    function disableLongPressOnButtons() {
-        const buttons = document.querySelectorAll('#mobileButtons button'); // Passe den Selektor an deine Button-Elemente an
-
-        buttons.forEach(button => {
-            button.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-            });
-
-            button.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-            });
-
-            button.addEventListener('touchend', (e) => {
-                e.preventDefault();
-            });
-        });
-    }
-
+    // Initialize visibility of mobile buttons and footer
     toggleMobileButtons();
     updateFooterVisibility();
-    disableLongPressOnButtons(); 
 
+    // Event listeners for screen resize and orientation changes
     window.addEventListener('resize', () => {
         toggleMobileButtons();
         updateFooterVisibility();

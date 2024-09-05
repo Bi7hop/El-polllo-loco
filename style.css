@@ -213,3 +213,16 @@ footer {
 .hidden-buttons {
     display: none !important;
 }
+
+@media (pointer: coarse) and (hover: none) {
+    #mobileButtons {
+      display: flex !important;
+    }
+  }
+  
+  @media (pointer: fine) {
+    #mobileButtons {
+      display: none !important;
+    }
+  }
+  
