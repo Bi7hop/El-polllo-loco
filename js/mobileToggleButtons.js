@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         soundManager.toggleMute();
     });
 
-      /**
+    /**
      * Event listener for the pause button. Toggles the display between pause and music buttons
      * and mutes/unmutes the sound using the soundManager.
      */
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         soundManager.toggleMute();
     });
 
-     /**
+    /**
      * Event listener for the start button. Hides the startscreen and displays the game container.
      * Updates the footer visibility accordingly.
      */
@@ -84,8 +84,30 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFooterVisibility();
     });
 
+    /**
+     * Disables long press context menu on touch buttons.
+     */
+    function disableLongPressOnButtons() {
+        const buttons = document.querySelectorAll('#mobileButtons button'); // Passe den Selektor an deine Button-Elemente an
+
+        buttons.forEach(button => {
+            button.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+
+            button.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+            });
+
+            button.addEventListener('touchend', (e) => {
+                e.preventDefault();
+            });
+        });
+    }
+
     toggleMobileButtons();
     updateFooterVisibility();
+    disableLongPressOnButtons(); 
 
     window.addEventListener('resize', () => {
         toggleMobileButtons();
