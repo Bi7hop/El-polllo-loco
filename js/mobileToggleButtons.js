@@ -42,14 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
      * the current display state of the start screen.
      */
     function updateFooterVisibility() {
-        const isMobile = window.innerWidth < 1024;
+    const isMobile = window.innerWidth < 1024;
 
-        if (isMobile && startscreen.style.display !== 'none') {
-            footer.style.display = 'block';
+    if (isMobile) {
+        if (startscreen?.style.display !== 'none') {
+            footer.style.display = 'block'; // Zeige den Footer in der mobilen Ansicht, wenn der Startbildschirm aktiv ist
         } else {
-            footer.style.display = 'none';
+            footer.style.display = 'none'; // Verstecke den Footer auf mobilen Geräten, wenn der Startbildschirm nicht sichtbar ist
         }
+    } else {
+        footer.style.display = 'block'; // Zeige den Footer in der Desktop-Ansicht immer
     }
+}
 
     /**
      * Prevents the context menu from appearing when holding down on mobile buttons.
