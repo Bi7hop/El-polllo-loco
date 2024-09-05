@@ -87,6 +87,9 @@ class Character extends MovableObject {
     gameOverImage = 'img/9_intro_outro_screens/game_over/you lost.png'; 
     gameOverSound = 'gameOver';
     
+    /**
+     * Creates an instance of the Character class.
+     */
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -100,6 +103,9 @@ class Character extends MovableObject {
         this.updateLastActionTime(); 
     }
 
+    /**
+     * Starts the animation and movement handling of the character.
+     */
     animate() {
         this.animationInterval = setInterval(() => {
             this.handleMovementAndSounds();
@@ -110,6 +116,9 @@ class Character extends MovableObject {
         }, 50);
     }
 
+    /**
+     * Handles movement and sound effects for the character.
+     */
     handleMovementAndSounds() {
         this.handleMovement();
         this.handleJumping();
@@ -117,6 +126,9 @@ class Character extends MovableObject {
         this.updateCameraPosition();
     }
 
+    /**
+     * Moves the character left or right depending on keyboard input and plays the walking sound.
+     */
     handleMovement() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();
@@ -131,12 +143,18 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Handles the jumping action based on keyboard input.
+     */
     handleJumping() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
         }
     }
 
+     /**
+     * Handles idle and stay animations when the character is not moving.
+     */
     handleIdleAndStay() {
         const currentTime = new Date().getTime();
         const timeSinceLastAction = currentTime - this.lastActionTime;
@@ -152,30 +170,49 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Updates the camera position to follow the character.
+     */
     updateCameraPosition() {
         this.world.camera_x = -this.x + 100;
     }
 
+    /**
+     * Checks if the character is currently moving.
+     * @returns {boolean} - Returns true if the character is moving, false otherwise.
+     */
     isMoving() {
         return this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE;
     }
 
+    /**
+     * Plays the walking sound effect.
+     */
     playWalkingSound() {
         if (soundManager.sounds.walking.paused) {
             soundManager.play('walking');
         }
     }
 
+    /**
+     * Stops the walking sound effect.
+     */
     stopWalkingSound() {
         soundManager.pause('walking');
         soundManager.sounds.walking.currentTime = 0;
     }
 
+    /**
+     * Makes the character jump and plays the jump sound effect.
+     */
     jump() {
         this.speedY = 30;
         soundManager.play('jump');
     }
 
+    /**
+     * Plays the idle animation if the character has been idle for long enough.
+     */
     playIdleAnimation() {
         if (!this.idleSoundPlayed && !this.isDead()) {
             soundManager.play('snoring'); 
@@ -188,6 +225,9 @@ class Character extends MovableObject {
         }
     }
 
+     /**
+     * Plays the stay animation when the character is not moving but hasn't been idle for long enough.
+     */
     playStayAnimation() {
         this.stayFrameCounter++;
         if (this.stayFrameCounter % 10 === 0) {
@@ -195,10 +235,16 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Stops all sounds currently playing in the game.
+     */
     stopAllSounds() {
         soundManager.stopAll();
     }
 
+    /**
+     * Updates the time of the last action performed by the character.
+     */
     updateLastActionTime() {
         this.lastActionTime = new Date().getTime();
         this.idleSoundPlayed = false;
@@ -206,11 +252,17 @@ class Character extends MovableObject {
         this.snoring_sound.currentTime = 0;
     }
 
+    /**
+     * Checks if the character is dead based on the status bar's health percentage.
+     * @returns {boolean} - Returns true if the character is dead, false otherwise.
+     */
     isDead() {
         return this.world.statusBar.percentage <= 0;  
     }
     
-
+     /**
+     * Updates the animations of the character based on its current state (walking, jumping, dead, etc.).
+     */
     updateAnimations() {
         if (this.isDead()) {  
             if (!this.deathAnimationPlayed) {  
