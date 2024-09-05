@@ -5,15 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('gameContainer');
     const musikButton = document.getElementById('mobileButtonMusik');
     const pauseButton = document.getElementById('mobileButtonPause');
-    const mobileButtons = document.querySelectorAll('.mobile-button'); // Selector for mobile buttons
-
-    /**
-     * Checks if the device supports touch input.
-     * @returns {boolean} True if the device is a touch device, false otherwise.
-     */
-    function isTouchDevice() {
-        return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
-    }
+    const fullscreenButton = document.getElementById('fullscreenButton');
+    const mobileButtons = document.querySelectorAll('.mobile-button');
 
     /**
      * Toggles the visibility of the mobile buttons based on the device orientation, screen width, 
@@ -23,11 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const isLandscape = window.matchMedia('(orientation: landscape)').matches;
         const isMobile = window.innerWidth < 1024;
 
-        if (isTouchDevice() && isMobile && isLandscape) {
+        if (isMobile && isLandscape) {
             mobileButtonsContainer.style.display = 'flex';
         } else {
             mobileButtonsContainer.style.display = 'none';
         }
+    }
+
+    /**
+     * Dynamically toggles the fullscreen button based on the input type.
+     * Listens for pointer events to detect whether the user is using touch or mouse.
+     */
+    function setupPointerEvents() {
+        window.addEventListener('pointerdown', (event) => {
+            if (event.pointerType === 'touch') {
+                fullscreenButton.classList.add('hidden');
+            } else if (event.pointerType === 'mouse') {
+                fullscreenButton.classList.remove('hidden');
+            }
+        });
     }
 
     /**
@@ -38,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const isMobile = window.innerWidth < 1024;
 
         if (isMobile && startscreen.style.display !== 'none') {
-            footer.style.display = 'block';  
+            footer.style.display = 'block';
         } else {
-            footer.style.display = 'none'; 
+            footer.style.display = 'none';
         }
     }
 
@@ -50,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     mobileButtons.forEach(button => {
         button.addEventListener('contextmenu', (e) => {
-            e.preventDefault(); // Prevents the context menu
+            e.preventDefault();
         });
     });
 
@@ -73,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     musikButton.addEventListener('click', () => {
         musikButton.style.display = 'none';
         pauseButton.style.display = 'block';
-        soundManager.toggleMute(); // Toggle sound mute
+        soundManager.toggleMute();
     });
 
     /**
@@ -83,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pauseButton.addEventListener('click', () => {
         pauseButton.style.display = 'none';
         musikButton.style.display = 'block';
-        soundManager.toggleMute(); // Toggle sound mute
+        soundManager.toggleMute();
     });
 
     /**
@@ -106,11 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFooterVisibility();
     });
 
-    // Initialize visibility of mobile buttons and footer
     toggleMobileButtons();
     updateFooterVisibility();
+    setupPointerEvents();
 
-    // Event listeners for screen resize and orientation changes
     window.addEventListener('resize', () => {
         toggleMobileButtons();
         updateFooterVisibility();
