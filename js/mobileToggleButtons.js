@@ -46,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (isMobile) {
         if (startscreen?.style.display !== 'none') {
-            footer.style.display = 'block'; // Zeige den Footer in der mobilen Ansicht, wenn der Startbildschirm aktiv ist
+            footer.style.display = 'block'; 
         } else {
-            footer.style.display = 'none'; // Verstecke den Footer auf mobilen Geräten, wenn der Startbildschirm nicht sichtbar ist
+            footer.style.display = 'none'; 
         }
     } else {
-        footer.style.display = 'block'; // Zeige den Footer in der Desktop-Ansicht immer
+        footer.style.display = 'block'; 
     }
 }
 
