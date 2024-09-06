@@ -5,6 +5,12 @@
 class Bottle extends Collectable {
     width = 80;
     height = 80;
+    offset = {
+        left: 25,
+        top: 15,
+        right: 20,
+        bottom: 11,
+    };
 
     /** @type {string[]} The array of image paths for the bottle's animation. */
     IMAGES_BOTTLE = [

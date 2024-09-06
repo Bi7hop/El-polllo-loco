@@ -6,6 +6,12 @@ class Coins extends Collectable {
 
     width = 130;
     height = 130;
+    offset = {
+        left: 45,
+        top: 45,
+        right: 45,
+        bottom: 45,
+    };
 
     IMAGES_COIN = [
         'img/8_coin/coin_1.png',

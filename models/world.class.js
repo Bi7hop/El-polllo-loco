@@ -346,7 +346,7 @@ checkBottleCollisions() {
         const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
         if (endboss && endboss.isEndbossVisible(this.camera_x, this.canvas.width)) {
             if (!this.endbossEncountered) {
-                soundManager.playEndbossSound(); 
+                soundManager.play('endboss');  
                 this.endbossEncountered = true;
             }
             this.addToMap(this.endbossStatusBar);
@@ -459,6 +459,7 @@ drawSplashAnimations() {
         }
 
         mo.draw(this.ctx);
+        // mo.drawESP2(this.ctx);
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);

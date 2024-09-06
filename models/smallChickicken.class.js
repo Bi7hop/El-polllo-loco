@@ -8,6 +8,12 @@ class SmallChicken extends MovableObject {
     y = 370;
     height = 50;
     width = 50;
+    offset = {
+        left: 2,
+        top: 1,
+        right: 2,
+        bottom: 2,
+    };
     canJump = Math.random() < 0.5; 
     IMAGES_WALKING = [
         'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',

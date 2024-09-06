@@ -55,22 +55,15 @@ class MovableObject extends DrawableObject {
     }
     
     isColliding(mo) {
-        let buffer = 10;
-        if (mo instanceof SmallChicken) {
-            buffer = 5;
-        }
-        const hitboxOffsetX = 30; 
-        const hitboxOffsetY = 110; 
-        const hitboxShrinkWidth = 40; 
-        const hitboxShrinkHeight = 100;
-        const collisionBoxX = this.x + hitboxOffsetX;
-        const collisionBoxY = this.y + hitboxOffsetY;
-        const collisionBoxWidth = this.width - hitboxShrinkWidth;
-        const collisionBoxHeight = this.height - hitboxShrinkHeight;
-        const overlapX = collisionBoxX + collisionBoxWidth - buffer > mo.x && collisionBoxX + buffer < mo.x + mo.width;
-        const overlapY = collisionBoxY + collisionBoxHeight - buffer > mo.y && collisionBoxY + buffer < mo.y + mo.height;
-        return overlapX && overlapY;
+        const moOffset = mo.offset || { left: 0, top: 0, right: 0, bottom: 0 };
+        return (
+            this.x + this.width - this.offset.right > mo.x + moOffset.left &&
+            this.y + this.height - this.offset.bottom > mo.y + moOffset.top &&
+            this.x + this.offset.left < mo.x + mo.width - moOffset.right &&
+            this.y + this.offset.top < mo.y + mo.height - moOffset.bottom
+        );
     }
+    
     
     
      /**
