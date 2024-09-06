@@ -228,7 +228,7 @@ checkCharacterEnemyCollision(enemy) {
  */
 handleEnemyStomp(enemy) {
     if (typeof enemy.die === 'function') {
-        enemy.die(); // Kill the enemy
+        enemy.die(); 
     }
     this.character.speedY = Math.max(this.character.speedY, 20);
 }
@@ -258,7 +258,7 @@ handleCharacterHitByEnemy(enemy) {
 checkCoinCollisions() {
     this.coins.forEach((coin, index) => {
         if (this.character.isColliding(coin)) {
-            this.coins.splice(index, 1); // Remove the collected coin
+            this.coins.splice(index, 1); 
             this.collectedCoins++; 
     
             soundManager.play('coinPickup');
@@ -493,13 +493,20 @@ drawSplashAnimations() {
      showVictoryScreen() {  
         this.gameIsOver = true; 
         clearInterval(this.gameLoop);
-    
+        
         this.dimBackground();
         this.renderImageOnCanvas('img/9_intro_outro_screens/win/won_1.png', 380, 220);
-    
+        
         soundManager.play('victory');  
         this.showRestartButton();  
+        if (window.innerWidth <= 768) {
+            const footer = document.querySelector('footer');
+            if (footer) {
+                footer.style.display = 'block';  
+            }
+        }
     }
+    
     
 
 /**
@@ -534,27 +541,47 @@ renderImageOnCanvas(src, width, height) {
     gameOver() {
         this.gameIsOver = true;
         clearInterval(this.gameLoop);
-
+    
         soundManager.play(this.character.gameOverSound);
-
+    
         const img = new Image();
         img.src = this.character.gameOverImage;
         img.onload = () => {
             this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
+    
             const desiredWidth = 720;
             const desiredHeight = 480;
-
+    
             const xPosition = (this.canvas.width - desiredWidth) / 2;
             const yPosition = (this.canvas.height - desiredHeight) / 2;
-
+    
             this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
         };
-
-        this.showRestartButton();  
+    
+        this.showRestartButton();
+        if (window.innerWidth <= 768) {
+            const footer = document.querySelector('footer');
+            if (footer) {
+                footer.style.display = 'block';
+            }
+        }
     }
-
+    
+    /**
+ * Hides the footer on mobile devices (screen width less than or equal to 768px).
+ * This function checks the screen width and hides the footer element
+ * by setting its display property to 'none' if the screen is detected to be mobile-sized.
+ */
+    hideFooterOnMobile() {
+        if (window.innerWidth <= 768) {  
+            const footer = document.querySelector('footer');
+            if (footer) {
+                footer.style.display = 'none';  
+            }
+        }
+    }
+    
     /**
      * Shows the restart button, allowing the player to reset the game.
      * Resets the world and stops all currently playing sounds.
@@ -575,6 +602,8 @@ renderImageOnCanvas(src, width, height) {
             const newWorld = new World(this.canvas, this.keyboard);
             
             restartButton.style.display = 'none';
+
+            this.hideFooterOnMobile();
         };
     }
 }
