@@ -4,6 +4,35 @@
     }
 }
 
+@media (min-width: 1024px) and (orientation: portrait) {
+    .mobile-buttons-left {
+        position: fixed;
+        left: 10px;
+        bottom: 50%;
+    }
+
+    .mobile-buttons-right {
+        position: fixed;
+        right: 10px;
+        bottom: 50%;
+    }
+}
+
+@media (min-width: 1180px) and (orientation: landscape) {
+    .mobile-buttons-left {
+        position: fixed;
+        left: 10px;
+        bottom: 50%; 
+    }
+
+    .mobile-buttons-right {
+        position: fixed;
+        right: 10px;
+        bottom: 50%;
+    }
+}
+
+
 @media (max-width: 750px) {
     h1 {
         text-wrap: nowrap;
