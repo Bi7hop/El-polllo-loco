@@ -180,14 +180,14 @@ checkThrowableObjectCollisions(enemy) {
     this.throwableObjects.forEach((obj, index) => {
         if (enemy.isHitBy(obj)) {
             hitObjectIndex = index;
-            enemy.hit(); // Gegner wurde getroffen
+            enemy.hit(); 
 
-            this.handleEnemyHit(enemy, obj); // Übergibt das getroffene Objekt an die nächste Methode
+            this.handleEnemyHit(enemy, obj); 
         }
     });
 
     if (hitObjectIndex !== null) {
-        this.throwableObjects.splice(hitObjectIndex, 1); // Entfernt das Objekt (Flasche)
+        this.throwableObjects.splice(hitObjectIndex, 1); 
     }
 }
 
@@ -205,7 +205,7 @@ handleEnemyHit(enemy, obj) {
     }
 
     let splash = new SplashAnimation(obj.x, obj.y);
-    this.splashAnimations.push(splash); // Fügt die Splash-Animation hinzu
+    this.splashAnimations.push(splash); 
 }
 
 
