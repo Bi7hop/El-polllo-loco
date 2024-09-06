@@ -241,6 +241,17 @@ class Character extends MovableObject {
         }
     }
 
+    playDeathAnimation() {
+        if (!this.deathAnimationPlayed) {
+            this.playAnimation(this.IMAGES_DEAD);
+            this.deathAnimationPlayed = true;
+            this.stopAllSounds();  
+            setTimeout(() => {
+                this.world.gameOver();  
+            }, 500);
+        }
+    }
+
     /**
      * Stops all sounds currently playing in the game.
      */
