@@ -199,7 +199,7 @@ checkThrowableObjectCollisions(enemy) {
  */
 handleEnemyHit(enemy, obj) {
     if (enemy instanceof Chicken || enemy instanceof SmallChicken) {
-        enemy.die(); // Das Chicken stirbt
+        enemy.die(); 
     } else if (enemy instanceof Endboss) {
         this.endbossStatusBar.setPercentage(enemy.energy);
     }
@@ -239,8 +239,8 @@ handleEnemyStomp(enemy) {
  * @param {MovableObject} enemy - The enemy that hit the character.
  */
 handleCharacterHitByEnemy(enemy) {
-    this.character.hit();
-    this.statusBar.setPercentage(this.character.energy);
+    this.character.hit(2);  
+    this.statusBar.setPercentage(this.character.energy);  
 
     if (enemy instanceof Endboss) {
         this.endbossStatusBar.setPercentage(enemy.energy);
@@ -249,7 +249,12 @@ handleCharacterHitByEnemy(enemy) {
     if (enemy instanceof Chicken || enemy instanceof SmallChicken || enemy instanceof Endboss) {
         soundManager.play('playerhurt');
     }
+
+    if (this.character.isDead()) {
+        this.character.playDeathAnimation();  
+    }
 }
+
 
 /**
  * Checks for collisions between the character and coins.

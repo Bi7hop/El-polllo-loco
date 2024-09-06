@@ -269,7 +269,7 @@ class Character extends MovableObject {
      /**
      * Updates the animations of the character based on its current state (walking, jumping, dead, etc.).
      */
-    updateAnimations() {
+     updateAnimations() {
         if (this.isDead()) {  
             if (!this.deathAnimationPlayed) {  
                 this.playAnimation(this.IMAGES_DEAD);
@@ -286,6 +286,6 @@ class Character extends MovableObject {
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.playAnimation(this.IMAGES_WALKING);
         }
-    }
+    }    
     
 }

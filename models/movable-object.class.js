@@ -69,14 +69,14 @@ class MovableObject extends DrawableObject {
      /**
      * Reduces the object's energy when hit and updates the last hit time.
      */
-    hit() {
-        this.energy -= 2;
+     hit(damage = 2) {
+        this.energy -= damage;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
             this.lastHit = new Date().getTime();
         }
-    }
+    }    
 
      /**
      * Checks if the object is currently hurt (recently hit).
