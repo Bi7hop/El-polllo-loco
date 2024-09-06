@@ -83,19 +83,23 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Reduziert die Energie des Endbosses und erhöht seine Geschwindigkeit nach jedem Treffer.
+     * Reduces the endboss's energy and increases its speed after each hit.
      */
     hit() {
-        this.energy -= 20;
-        soundManager.play(this.hitSound);
+        if (this.energy > 0) {
+            this.energy -= 20;
+            soundManager.play(this.hitSound);
+        }
+    
         if (this.energy <= 0 && !this.isDead) {
-            this.die();
-        } else {
+            this.die(); 
+        } else if (!this.isDead) {
             this.currentState = 'hurt'; 
-            this.playHurtAnimation(); 
+            this.playHurtAnimation();
             this.speed += this.speedIncrease;  
         }
     }
+    
 
     /**
      * Clears the current animation interval to stop the current animation.
@@ -111,8 +115,10 @@ class Endboss extends MovableObject {
      * Plays the hurt animation and then transitions to the attack animation.
      */
     playHurtAnimation() {
-        this.clearCurrentAnimation(); 
-
+        this.clearCurrentAnimation();
+    
+        if (this.isDead) return;
+    
         let animationIndex = 0;
         this.currentAnimationInterval = setInterval(() => {
             if (animationIndex < this.IMAGES_HURT.length) {
@@ -120,11 +126,14 @@ class Endboss extends MovableObject {
                 animationIndex++;
             } else {
                 this.clearCurrentAnimation();
-                this.currentState = 'attack'; 
-                this.playAttackAnimation();
+                if (!this.isDead) { 
+                    this.currentState = 'attack';
+                    this.playAttackAnimation();
+                }
             }
         }, 100);
     }
+    
 
     /**
      * Plays the attack animation and then transitions back to the walking animation.
@@ -148,18 +157,20 @@ class Endboss extends MovableObject {
      * Triggers the death sequence for the endboss, including playing the death animation.
      */
     die() {
-        if (!this.isDead) {  
+        if (!this.isDead) {
             this.isDead = true;
+            this.clearCurrentAnimation(); 
             this.playDeathAnimation();
         }
     }
+    
 
     /**
      * Plays the death animation and then triggers the victory screen.
      */
     playDeathAnimation() {
-        this.clearCurrentAnimation(); 
-
+        this.clearCurrentAnimation();
+    
         let animationIndex = 0;
         this.currentAnimationInterval = setInterval(() => {
             if (animationIndex < this.IMAGES_DEAD.length) {
@@ -172,6 +183,7 @@ class Endboss extends MovableObject {
             }
         }, 200);
     }
+    
 
     /**
      * Checks if the endboss is hit by a throwable object, using defined hitboxes for collision detection.

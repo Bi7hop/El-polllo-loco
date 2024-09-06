@@ -490,16 +490,17 @@ drawSplashAnimations() {
  * Displays the victory screen when the player wins the game.
  * Stops the game loop and plays the victory sound.
  */
-showVictoryScreen() {  
-    this.gameIsOver = true; 
-    clearInterval(this.gameLoop);
-
-    this.dimBackground();
-    this.renderImageOnCanvas('img/9_intro_outro_screens/win/won_1.png', 380, 220);
-
-    soundManager.playVictorySound(); 
-    this.showRestartButton();  
-}
+     showVictoryScreen() {  
+        this.gameIsOver = true; 
+        clearInterval(this.gameLoop);
+    
+        this.dimBackground();
+        this.renderImageOnCanvas('img/9_intro_outro_screens/win/won_1.png', 380, 220);
+    
+        soundManager.play('victory');  
+        this.showRestartButton();  
+    }
+    
 
 /**
  * Dims the background with a semi-transparent overlay.
