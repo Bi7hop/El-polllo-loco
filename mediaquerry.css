@@ -4,20 +4,6 @@
     }
 }
 
-@media (min-width: 1024px) and (orientation: portrait) {
-    .mobile-buttons-left {
-        position: fixed;
-        left: 10px;
-        bottom: 50%;
-    }
-
-    .mobile-buttons-right {
-        position: fixed;
-        right: 10px;
-        bottom: 50%;
-    }
-}
-
 @media (min-width: 1180px) and (orientation: landscape) {
     .mobile-buttons-left {
         position: fixed;
@@ -32,58 +18,86 @@
     }
 }
 
+@media (min-width: 1024px) and (orientation: portrait) {
+    .mobile-buttons-left {
+        position: fixed;
+        left: 10px;
+        bottom: 50%;
+    }
 
-@media (max-width: 750px) {
+    .mobile-buttons-right {
+        position: fixed;
+        right: 10px;
+        bottom: 50%;
+    }
+}
+
+@media only screen and (min-width: 930px) and (max-width: 950px) and (orientation: landscape) {
+    .game-button {
+        padding: 0 30px;
+    }
+
+    h1 {
+        margin-bottom: 0;
+    }
+
+    .mobile-buttons-left {
+        left: 169px;
+    }
+
+    .mobile-buttons-right {
+        right: 169px;
+    }
+
+    label, input, span {
+        display: none;
+    }
+}
+
+@media only screen and (orientation: landscape) and (max-width: 932px) and (min-width: 820px) {
+    #restartButton {
+        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
+        color: #ffffff;
+        position: absolute;
+        bottom: 8%; 
+        left: 38%;
+        padding: 12px 24px; 
+    }
+
+    #restartButton:hover {
+        transform: scale(1.05);
+    }
+}
+
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+    .game-button {
+        display: none;
+    }
+
+    .container {
+        justify-content: center;
+    }
+}
+
+@media only screen and (orientation: landscape) and (max-width: 768px) {
+    #restartButton {
+        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
+        color: #ffffff;
+        position: absolute;
+        bottom: 8%; 
+        left: 35%;
+        padding: 12px 24px; 
+    }
+
+    #restartButton:hover {
+        transform: scale(1.05);
+    }
+}
+
+@media only screen and (max-width: 750px) {
     h1 {
         text-wrap: nowrap;
         font-size: 115px;
-    }
-
-}
-
-@media (max-width: 580px) {
-    h1 {
-        text-wrap: nowrap;
-        font-size: 85px;
-    }
-}
-
-@media (max-width: 430px) {
-    h1 {
-        text-wrap: nowrap;
-        font-size: 65px;
-    }
-}
-
-@media (max-width: 370px) {
-    h1 {
-        text-wrap: nowrap;
-        font-size: 65px;
-    }
-}
-
-@media (max-width: 340px) {
-    h1 {
-        text-wrap: nowrap;
-        font-size: 55px;
-    }
-}
-
-@media only screen and (max-width: 720px) {
-    canvas {
-        width: 100%;
-    }
-}
-
-@media only screen and (max-height: 480px) {
-    canvas {
-        height: 100vh;
-        position: fixed;
-    }
-
-    #gameContainer {
-        width: 100%;
-        height: 100vh;
     }
 }
 
@@ -114,73 +128,48 @@
     }
 }
 
+@media only screen and (max-width: 720px) {
+    canvas {
+        width: 100%;
+    }
+}
 
-@media only screen and (min-width: 930px) and (max-width: 950px) and (orientation: landscape) {
-    .game-button {
-        padding: 0 30px;
+@media only screen and (max-height: 480px) {
+    canvas {
+        height: 100vh;
+        position: fixed;
     }
 
+    #gameContainer {
+        width: 100%;
+        height: 100vh;
+    }
+}
+
+@media (max-width: 580px) {
     h1 {
-        margin-bottom: 0;
-    }
-
-    .mobile-buttons-left {
-        left: 169px;
-    }
-    
-    .mobile-buttons-right {
-        right: 169px;
-    }
-
-    label, input, span {
-        display: none;
-    }
-
-}
-
-@media only screen and (max-width: 768px) and (orientation: landscape) {
-    .game-button {
-        display: none;
-    }
-
-    .container {
-        justify-content: center;
+        text-wrap: nowrap;
+        font-size: 85px;
     }
 }
 
-#restartButton:hover {
-    transform: scale(1.05);
-}
-
-@media only screen and (orientation: landscape) and (max-width: 768px) {
-    #restartButton {
-        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
-        color: #ffffff;
-        position: absolute;
-        bottom: 8%; 
-        left: 35%;
-        /* transform: translateX(-50%); */
-        padding: 12px 24px; 
-    }
-
-    #restartButton:hover {
-        transform: scale(1.05);
+@media (max-width: 430px) {
+    h1 {
+        text-wrap: nowrap;
+        font-size: 65px;
     }
 }
 
-@media only screen and (orientation: landscape) and (max-width: 932px) and (min-width: 820px) {
-    #restartButton {
-        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
-        color: #ffffff;
-        position: absolute;
-        bottom: 8%; 
-        left: 38%;
-        /* transform: translateX(-50%); */
-        padding: 12px 24px; 
-    }
-
-    #restartButton:hover {
-        transform: scale(1.05);
+@media (max-width: 370px) {
+    h1 {
+        text-wrap: nowrap;
+        font-size: 65px;
     }
 }
 
+@media (max-width: 340px) {
+    h1 {
+        text-wrap: nowrap;
+        font-size: 55px;
+    }
+}
