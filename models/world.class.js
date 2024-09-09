@@ -442,7 +442,6 @@ drawSplashAnimations() {
     });
 }
 
-
     /**
      * Draws the Heads-Up Display (HUD), including collected bottles and coins.
      */
@@ -510,6 +509,7 @@ drawSplashAnimations() {
         soundManager.play('victory');  
         this.showRestartButton();  
         if (window.innerWidth <= 768) {
+            this.showBackToStartButton();
             const footer = document.querySelector('footer');
             if (footer) {
                 footer.style.display = 'block';  
@@ -517,8 +517,6 @@ drawSplashAnimations() {
         }
     }
     
-    
-
 /**
  * Dims the background with a semi-transparent overlay.
  */
@@ -548,14 +546,23 @@ renderImageOnCanvas(src, width, height) {
  * Displays the game over screen when the player loses the game.
  * Stops the game loop and plays the game over sound.
  */
-gameOver() {
-    this.gameIsOver = true;
-    this.stopGameLoop();
-    this.playGameOverSound();
-    this.renderGameOverScreen();
-    this.showRestartButton();
-    this.showFooterOnMobile();
-}
+    gameOver() {
+        this.gameIsOver = true;
+        this.stopGameLoop();
+        this.playGameOverSound();
+        this.renderGameOverScreen();
+        this.showRestartButton();
+        
+        // Back to Start Button nur auf Mobilgeräten anzeigen
+        if (window.innerWidth <= 1024) {
+            this.showBackToStartButton();
+            const footer = document.querySelector('footer');
+            if (footer) {
+                footer.style.display = 'block';
+            }
+        }
+    }
+    
 
 /**
  * Stops the game loop.
@@ -597,8 +604,7 @@ showFooterOnMobile() {
         }
     }
 }
-
-    
+  
     /**
  * Hides the footer on mobile devices (screen width less than or equal to 768px).
  * This function checks the screen width and hides the footer element
@@ -621,6 +627,14 @@ showRestartButton() {
     this.displayRestartButton();
     this.setupRestartButtonListener();
     this.hideFooterOnMobile();
+}
+
+showBackToStartButton() {
+    const backToStartButton = document.getElementById('backToStartButton');
+    backToStartButton.style.display = 'block'; 
+    backToStartButton.onclick = () => {
+        window.location.reload();  
+    };
 }
 
 /**
@@ -662,8 +676,12 @@ clearCanvas() {
  */
 restartGame() {
     const restartButton = document.getElementById('restartButton');
+    const backToStartButton = document.getElementById('backToStartButton');
+    
     new World(this.canvas, this.keyboard);
+    
     restartButton.style.display = 'none';
+    backToStartButton.style.display = 'none';  
 }
 
 }

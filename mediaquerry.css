@@ -60,12 +60,31 @@
         color: #ffffff;
         position: absolute;
         bottom: 8%; 
-        left: 38%;
+        left: 25%;
+        padding: 12px 24px; 
+    }
+
+    #backToStartButton {
+        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
+        color: #ffffff;
+        position: absolute;
+        bottom: 8%; 
+        left: 50%;
         padding: 12px 24px; 
     }
 
     #restartButton:hover {
         transform: scale(1.05);
+    }
+
+    .mobile-buttons-left {
+        bottom: 2px;
+        left: 147px;
+    }
+
+    .mobile-buttons-right {
+        bottom: 2px;
+        right: 147px;
     }
 }
 
@@ -101,6 +120,19 @@
     .game-button {
         padding: 0 30px;
     }
+
+    #backToStartButton {
+        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
+        color: #ffffff;
+        position: absolute;
+        bottom: 8%; 
+        left: 50%;
+        padding: 12px 24px; 
+    }
+
+    #restartButton {
+        left: 25%;
+    }
 }
 
 
@@ -110,12 +142,21 @@
         color: #ffffff;
         position: absolute;
         bottom: 8%; 
-        left: 35%;
+        left: 25%;
         padding: 12px 24px; 
     }
 
     #restartButton:hover {
         transform: scale(1.05);
+    }
+
+    #backToStartButton {
+        background: linear-gradient(to bottom, #FFDB05, #FF4500); 
+        color: #ffffff;
+        position: absolute;
+        bottom: 8%; 
+        left: 50%;
+        padding: 12px 24px; 
     }
 }
 
