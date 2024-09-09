@@ -79,6 +79,31 @@
     }
 }
 
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 896px) 
+  and (orientation: landscape) {
+
+    .game-button {
+        padding: 0 30px;
+    }
+
+    h1 {
+        font-size: 130px;
+    }
+}
+
+@media only screen 
+  and (min-device-width: 412px) 
+  and (max-device-width: 915px) 
+  and (orientation: landscape) {  
+
+    .game-button {
+        padding: 0 30px;
+    }
+}
+
+
 @media only screen and (orientation: landscape) and (max-width: 768px) {
     #restartButton {
         background: linear-gradient(to bottom, #FFDB05, #FF4500); 
@@ -97,7 +122,8 @@
 @media only screen and (max-width: 750px) {
     h1 {
         text-wrap: nowrap;
-        font-size: 115px;
+        /* font-size: 115px; */
+        margin-top: 40px;
     }
 }
 
