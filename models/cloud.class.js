@@ -1,20 +1,24 @@
-/**
- * Class representing a cloud in the game.
- * Extends the MovableObject class and provides movement functionality.
- */
 class Cloud extends MovableObject {
-    y = 20;
-    height = 250;
-    width = 450;
-    
-
+    velocity = { xMax: 0.15 };  
+    acceleration = { x: 1 };   
     /**
-     * Creates a new Cloud instance, initializes its position, and starts its movement animation.
+     * Creates a new Cloud instance with randomized width, height, and position.
+     * @param {number} width - The base width of the cloud.
+     * @param {number} height - The base height of the cloud.
+     * @param {number} x - The initial X position of the cloud.
      */
-    constructor() {
+    constructor(width, height, x) {
         super().loadImage('img/5_background/layers/4_clouds/1.png');
+        
+        this.width = width * (Math.random() + 1);  
+        this.height = height * (Math.random() + 1); 
+        this.x = x;  
+        
+        this.y = Math.ceil(Math.random() * 3) * 25; 
 
-        this.x = Math.random() * 500; 
+        this.velocity.xMax = 0.15;  
+        this.acceleration.x = 1;    
+
         this.animate();
     }
 
@@ -22,9 +26,8 @@ class Cloud extends MovableObject {
      * Starts the cloud's movement animation, moving it to the left.
      */
     animate() {
-        this.moveLeft();
+        setInterval(() => {
+            this.moveLeft();
+        }, 25); 
     }
-
-   
-
 }

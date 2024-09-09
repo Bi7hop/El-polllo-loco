@@ -407,10 +407,9 @@ drawObjectsByType(type, objects) {
  */
 drawGameObjects() {
     this.ctx.translate(this.camera_x, 0);
-
-    this.drawObjectsByType('character', this.character);
     this.drawObjectsByType('enemies', this.level.enemies);
     this.drawObjectsByType('clouds', this.level.clouds);
+    this.drawObjectsByType('character', this.character);
     this.drawObjectsByType('throwableObjects', this.throwableObjects);
     this.drawObjectsByType('coins', this.coins);
     this.drawBottles();
