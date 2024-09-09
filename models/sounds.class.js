@@ -65,10 +65,10 @@ class SoundManager {
     stop(soundName) {
         if (this.sounds[soundName]) {
             this.sounds[soundName].pause();
-            this.sounds[soundName].currentTime = 0;
+            this.sounds[soundName].currentTime = 0;  
         }
     }
-
+    
     /**
      * Stops all sounds currently managed by the SoundManager.
      */

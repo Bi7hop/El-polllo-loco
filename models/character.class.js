@@ -84,7 +84,7 @@ class Character extends MovableObject {
     walking_sound = new Audio('audio/walking.mp3');
     jump_sound = new Audio('audio/jump.mp3');
     snoring_sound = new Audio('audio/schnarchen.mp3'); 
-    idleTimeout = 10000; 
+    idleTimeout = 7000; 
     lastActionTime = 0;
     idleSoundPlayed = false;
     idleFrameCounter = 0;  
@@ -165,7 +165,8 @@ class Character extends MovableObject {
         const currentTime = new Date().getTime();
         const timeSinceLastAction = currentTime - this.lastActionTime;
         if (this.world.keyboard.D && this.idleSoundPlayed) {
-            this.updateLastActionTime(); 
+            this.updateLastActionTime();  
+            soundManager.stop('snoring');  
         }
         if (timeSinceLastAction > this.idleTimeout && !this.isMoving() && !this.isDead()) {
             this.playIdleAnimation();
