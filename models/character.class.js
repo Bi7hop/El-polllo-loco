@@ -161,16 +161,17 @@ class Character extends MovableObject {
      /**
      * Handles idle and stay animations when the character is not moving.
      */
-    handleIdleAndStay() {
+     handleIdleAndStay() {
         const currentTime = new Date().getTime();
         const timeSinceLastAction = currentTime - this.lastActionTime;
-
+        if (this.world.keyboard.D && this.idleSoundPlayed) {
+            this.updateLastActionTime(); 
+        }
         if (timeSinceLastAction > this.idleTimeout && !this.isMoving() && !this.isDead()) {
             this.playIdleAnimation();
         } else if (!this.isMoving() && timeSinceLastAction <= this.idleTimeout) {
             this.playStayAnimation();
         }
-
         if (this.isMoving()) {
             this.updateLastActionTime();
         }
@@ -265,8 +266,8 @@ class Character extends MovableObject {
     updateLastActionTime() {
         this.lastActionTime = new Date().getTime();
         this.idleSoundPlayed = false;
-        this.snoring_sound.pause();
-        this.snoring_sound.currentTime = 0;
+        soundManager.pause('snoring');
+        soundManager.sounds.snoring.currentTime = 0;
     }
 
     /**
