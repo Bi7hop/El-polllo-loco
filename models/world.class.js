@@ -59,26 +59,64 @@ class World {
      * Resets the world to its initial state, reloading the level and resetting the character and objects.
      */
     reset() {
-        this.character = new Character();
-        this.level = createLevel1();  
-        this.camera_x = 0;
-        this.statusBar = new StatusBar();
-        this.endbossStatusBar = new EndbossStatusBar();
-        this.throwableObjects = [];
-        this.splashAnimations = []; 
-        this.coins = [];
-        this.bottles = [];
-        this.collectedBottles = 0; 
-        this.collectedCoins = 0;
+        this.resetCharacter();
+        this.resetLevel();
+        this.resetStatusBars();
+        this.resetCollectibles();
+        this.resetWorldContext();
 
-        this.coins = Coins.generateCoins(this.coinCount, this); 
-        this.bottles = Bottle.generateBottles(this.bottleCount, this); 
-        this.setWorld();
-        this.endbossStatusBar.setWorld(this);
-        this.enemyManager = new EnemyManager(this); 
-        this.character.world = this; 
         this.draw();
         this.run();
+    }
+
+    /**
+     * Resets the character to its initial state.
+     */
+    resetCharacter() {
+        this.character = new Character();
+        this.camera_x = 0;
+        this.character.world = this;
+    }
+
+    /**
+     * Resets the level and spawns new enemies.
+     */
+    resetLevel() {
+        this.level = createLevel1();
+        this.enemyManager = new EnemyManager(this); 
+    }
+
+    /**
+     * Resets the status bars, including the character's status and the endboss's status.
+     */
+    resetStatusBars() {
+        this.statusBar = new StatusBar();
+        this.endbossStatusBar = new EndbossStatusBar();
+        this.endbossStatusBar.setWorld(this);
+    }
+
+    /**
+     * Resets all collectible items like coins and bottles.
+     */
+    resetCollectibles() {
+        this.coins = Coins.generateCoins(this.coinCount, this); 
+        this.bottles = Bottle.generateBottles(this.bottleCount, this);
+        this.collectedBottles = 0; 
+        this.collectedCoins = 0;
+        this.throwableObjects = [];
+        this.splashAnimations = [];
+    }
+
+    /**
+     * Re-establishes the world context by linking objects to the current world.
+     */
+    resetWorldContext() {
+        this.setWorld();
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss) {
+                enemy.world = this;
+            }
+        });
     }
 
     /**
