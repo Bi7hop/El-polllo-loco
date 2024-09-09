@@ -162,17 +162,14 @@ class World {
             let bottleX = this.character.x + 100;
             let bottleY = this.character.y + 100;
             let throwDirection = 10;
-
             if (this.character.otherDirection) {
                 bottleX = this.character.x - 50;
                 throwDirection = -10;
             }
-
             let bottle = new ThrowableObject(bottleX, bottleY);
             bottle.throw(throwDirection);
             this.throwableObjects.push(bottle);
             this.collectedBottles--; 
-
             this.keyboard.D = false; 
         }
     }
@@ -279,15 +276,12 @@ handleEnemyStomp(enemy) {
 handleCharacterHitByEnemy(enemy) {
     this.character.hit(2);  
     this.statusBar.setPercentage(this.character.energy);  
-
     if (enemy instanceof Endboss) {
         this.endbossStatusBar.setPercentage(enemy.energy);
     }
-
     if (enemy instanceof Chicken || enemy instanceof SmallChicken || enemy instanceof Endboss) {
         soundManager.play('playerhurt');
     }
-
     if (this.character.isDead()) {
         this.character.playDeathAnimation();  
     }
@@ -356,7 +350,6 @@ checkBottleCollisions() {
             this.drawStatusBars();
             this.drawGameObjects();
             this.drawHUD();
-
             let self = this;
             requestAnimationFrame(function () {
                 self.draw();
@@ -512,10 +505,8 @@ drawSplashAnimations() {
      showVictoryScreen() {  
         this.gameIsOver = true; 
         clearInterval(this.gameLoop);
-        
         this.dimBackground();
         this.renderImageOnCanvas('img/9_intro_outro_screens/win/won_1.png', 380, 220);
-        
         soundManager.play('victory');  
         this.showRestartButton();  
         if (window.innerWidth <= 768) {
