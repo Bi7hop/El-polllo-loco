@@ -413,7 +413,7 @@ drawGameObjects() {
     this.drawObjectsByType('clouds', this.level.clouds);
     this.drawObjectsByType('throwableObjects', this.throwableObjects);
     this.drawObjectsByType('coins', this.coins);
-
+    this.drawBottles();
     this.ctx.translate(-this.camera_x, 0);
 }
 
