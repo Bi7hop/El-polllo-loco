@@ -396,56 +396,32 @@ checkBottleCollisions() {
         }
     }
 
-    /**
- * Draws the game objects, such as the character, enemies, and items.
+/**
+ * Draws all game objects by type.
+ * @param {string} type - The type of objects to draw (e.g., 'character', 'enemies', 'clouds', etc.).
+ * @param {Array|Object} objects - The array or single object to be drawn.
+ */
+drawObjectsByType(type, objects) {
+    if (Array.isArray(objects)) {
+        this.addObjectsToMap(objects);
+    } else {
+        this.addToMap(objects);
+    }
+}
+
+/**
+ * Draws all relevant game objects (character, enemies, clouds, throwable objects, coins).
  */
 drawGameObjects() {
     this.ctx.translate(this.camera_x, 0);
 
-    this.drawCharacter();
-    this.drawEnemies();
-    this.drawClouds();
-    this.drawThrowableObjects();
-    this.drawCoins();
-    this.drawBottles();
-    this.drawSplashAnimations();
+    this.drawObjectsByType('character', this.character);
+    this.drawObjectsByType('enemies', this.level.enemies);
+    this.drawObjectsByType('clouds', this.level.clouds);
+    this.drawObjectsByType('throwableObjects', this.throwableObjects);
+    this.drawObjectsByType('coins', this.coins);
 
     this.ctx.translate(-this.camera_x, 0);
-}
-
-/**
- * Draws the character.
- */
-drawCharacter() {
-    this.addToMap(this.character);
-}
-
-/**
- * Draws all enemies.
- */
-drawEnemies() {
-    this.addObjectsToMap(this.level.enemies);
-}
-
-/**
- * Draws all clouds.
- */
-drawClouds() {
-    this.addObjectsToMap(this.level.clouds);
-}
-
-/**
- * Draws all throwable objects.
- */
-drawThrowableObjects() {
-    this.addObjectsToMap(this.throwableObjects);
-}
-
-/**
- * Draws all coins.
- */
-drawCoins() {
-    this.addObjectsToMap(this.coins);
 }
 
 /**
