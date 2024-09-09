@@ -143,10 +143,12 @@
 
     .mobile-buttons-left {
         left: 30px;
+        bottom: 10px;
     }
 
     .mobile-buttons-right {
         right: 30px;
+        bottom: 10px;
     }
 
     label, input, span {
