@@ -614,27 +614,56 @@ showFooterOnMobile() {
     }
     
     /**
-     * Shows the restart button, allowing the player to reset the game.
-     * Resets the world and stops all currently playing sounds.
-     */
-    showRestartButton() {
-        const restartButton = document.getElementById('restartButton');
-        restartButton.style.display = 'block';
-    
-        restartButton.onclick = () => {
-            soundManager.stopAll();  
-    
-            if (this.gameLoop) {
-                clearInterval(this.gameLoop);
-            }
-    
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
-            const newWorld = new World(this.canvas, this.keyboard);
-            
-            restartButton.style.display = 'none';
+ * Shows the restart button, allowing the player to reset the game.
+ * Resets the world and stops all currently playing sounds.
+ */
+showRestartButton() {
+    this.displayRestartButton();
+    this.setupRestartButtonListener();
+    this.hideFooterOnMobile();
+}
 
-            this.hideFooterOnMobile();
-        };
-    }
+/**
+ * Displays the restart button by setting its display style to 'block'.
+ */
+displayRestartButton() {
+    const restartButton = document.getElementById('restartButton');
+    restartButton.style.display = 'block';
+}
+
+/**
+ * Sets up the click event listener for the restart button to reset the game.
+ */
+setupRestartButtonListener() {
+    const restartButton = document.getElementById('restartButton');
+    restartButton.onclick = () => {
+        this.handleRestartButtonClick();
+    };
+}
+
+/**
+ * Handles the logic for resetting the game when the restart button is clicked.
+ */
+handleRestartButtonClick() {
+    soundManager.stopAll();  
+    this.clearCanvas();      
+    this.restartGame();      
+}
+
+/**
+ * Clears the canvas.
+ */
+clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+}
+
+/**
+ * Restarts the game by creating a new World instance.
+ */
+restartGame() {
+    const restartButton = document.getElementById('restartButton');
+    new World(this.canvas, this.keyboard);
+    restartButton.style.display = 'none';
+}
+
 }
