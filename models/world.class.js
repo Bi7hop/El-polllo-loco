@@ -545,38 +545,59 @@ renderImageOnCanvas(src, width, height) {
 }
 
     /**
-     * Displays the game over screen when the player loses the game.
-     * Stops the game loop and plays the game over sound.
-     */
-    gameOver() {
-        this.gameIsOver = true;
+ * Displays the game over screen when the player loses the game.
+ * Stops the game loop and plays the game over sound.
+ */
+gameOver() {
+    this.gameIsOver = true;
+    this.stopGameLoop();
+    this.playGameOverSound();
+    this.renderGameOverScreen();
+    this.showRestartButton();
+    this.showFooterOnMobile();
+}
+
+/**
+ * Stops the game loop.
+ */
+stopGameLoop() {
+    if (this.gameLoop) {
         clearInterval(this.gameLoop);
+    }
+}
+
+/**
+ * Plays the game over sound effect.
+ */
+playGameOverSound() {
+    soundManager.play(this.character.gameOverSound);
+}
+
+/**
+ * Renders the game over screen with a background dim and the game over image.
+ */
+renderGameOverScreen() {
+    const img = new Image();
+    img.src = this.character.gameOverImage;
     
-        soundManager.play(this.character.gameOverSound);
-    
-        const img = new Image();
-        img.src = this.character.gameOverImage;
-        img.onload = () => {
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    
-            const desiredWidth = 720;
-            const desiredHeight = 480;
-    
-            const xPosition = (this.canvas.width - desiredWidth) / 2;
-            const yPosition = (this.canvas.height - desiredHeight) / 2;
-    
-            this.ctx.drawImage(img, xPosition, yPosition, desiredWidth, desiredHeight);
-        };
-    
-        this.showRestartButton();
-        if (window.innerWidth <= 768) {
-            const footer = document.querySelector('footer');
-            if (footer) {
-                footer.style.display = 'block';
-            }
+    img.onload = () => {
+        this.dimBackground();
+        this.renderImageOnCanvas(img.src, 720, 480);
+    };
+}
+
+/**
+ * Shows the footer if the screen width is less than or equal to 768px (mobile devices).
+ */
+showFooterOnMobile() {
+    if (window.innerWidth <= 768) {
+        const footer = document.querySelector('footer');
+        if (footer) {
+            footer.style.display = 'block';
         }
     }
+}
+
     
     /**
  * Hides the footer on mobile devices (screen width less than or equal to 768px).
