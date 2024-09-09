@@ -611,8 +611,8 @@ showFooterOnMobile() {
  * by setting its display property to 'none' if the screen is detected to be mobile-sized.
  */
     hideFooterOnMobile() {
-        if (window.innerWidth <= 768) {  
-            const footer = document.querySelector('footer');
+        const footer = document.querySelector('footer');
+        if (window.innerWidth <= 1024 || window.matchMedia('(max-width: 1024px)').matches) {
             if (footer) {
                 footer.style.display = 'none';  
             }
@@ -661,7 +661,9 @@ setupRestartButtonListener() {
 handleRestartButtonClick() {
     soundManager.stopAll();  
     this.clearCanvas();      
-    this.restartGame();      
+    this.restartGame();
+
+    this.hideFooterOnMobile();
 }
 
 /**

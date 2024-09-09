@@ -42,18 +42,20 @@ document.addEventListener('DOMContentLoaded', () => {
      * the current display state of the start screen.
      */
     function updateFooterVisibility() {
-    const isMobile = window.innerWidth < 1024;
-
-    if (isMobile) {
-        if (startscreen?.style.display !== 'none') {
-            footer.style.display = 'block'; 
+        // Set a more flexible condition for mobile screen detection (e.g., 1024px)
+        const isMobile = window.innerWidth <= 1024 || window.matchMedia('(max-width: 1024px)').matches;
+    
+        if (isMobile) {
+            if (startscreen?.style.display !== 'none') {
+                footer.style.display = 'block';  
+            } else {
+                footer.style.display = 'none';  
+            }
         } else {
-            footer.style.display = 'none'; 
+            footer.style.display = 'block';      
         }
-    } else {
-        footer.style.display = 'block'; 
     }
-}
+    
 
     /**
      * Prevents the context menu from appearing when holding down on mobile buttons.
@@ -114,9 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('backToStartButton').addEventListener('click', () => {
         gameContainer.style.display = 'none';
         startscreen.style.display = 'block';
+        
         updateFooterVisibility();
     });
-
+    
     toggleMobileButtons();
     updateFooterVisibility();
     setupPointerEvents();
