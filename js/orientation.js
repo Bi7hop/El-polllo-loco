@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('gameContainer');
     const startScreen = document.getElementById('startscreen');
 
-    let isGameActive = false; // Flag to track if the game is active
+    let isGameActive = false; 
 
     /**
      * Checks the device's orientation and screen size to determine whether to display
