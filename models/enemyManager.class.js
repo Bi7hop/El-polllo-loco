@@ -1,6 +1,3 @@
-/**
- * Class responsible for managing the spawning and positioning of enemies in the game.
- */
 class EnemyManager {
 
     /**
@@ -18,27 +15,65 @@ class EnemyManager {
      */
     spawnNewEnemies(count) {
         const characterX = this.world.character.x;
-        const endboss = this.world.level.enemies.find(enemy => enemy instanceof Endboss);
-        const endbossX = endboss ? endboss.x : this.world.character.x + 2000;
+        const endbossX = this.getEndbossX(characterX);
 
         for (let i = 0; i < count; i++) {
-            let newEnemy;
-            let validPosition = false;
-            let attempts = 0;
-            const maxAttempts = 100;
-
-            while (!validPosition && attempts < maxAttempts) {
-                const enemyType = Math.random() < 0.5 ? Chicken : SmallChicken;
-                newEnemy = new enemyType();
-                newEnemy.x = characterX + 300 + Math.random() * (endbossX - characterX - 600);
-                validPosition = this.isValidSpawnPosition(newEnemy, this.world.level.enemies);
-                attempts++;
-            }
-
-            if (validPosition) {
+            const newEnemy = this.createValidEnemy(characterX, endbossX);
+            if (newEnemy) {
                 this.world.level.enemies.push(newEnemy);
             }
         }
+    }
+
+    /**
+     * Gets the X position of the endboss or a default value if no endboss is found.
+     * @param {number} characterX - The X position of the character.
+     * @returns {number} The X position of the endboss or a default value.
+     */
+    getEndbossX(characterX) {
+        const endboss = this.world.level.enemies.find(enemy => enemy instanceof Endboss);
+        return endboss ? endboss.x : characterX + 2000;
+    }
+
+    /**
+     * Creates a new enemy and ensures it's spawned in a valid position.
+     * @param {number} characterX - The X position of the character.
+     * @param {number} endbossX - The X position of the endboss.
+     * @returns {MovableObject|null} A new valid enemy object or null if no valid position is found.
+     */
+    createValidEnemy(characterX, endbossX) {
+        let newEnemy = null;
+        let validPosition = false;
+        let attempts = 0;
+        const maxAttempts = 100;
+
+        while (!validPosition && attempts < maxAttempts) {
+            newEnemy = this.generateRandomEnemy();
+            newEnemy.x = this.calculateEnemyPosition(characterX, endbossX);
+            validPosition = this.isValidSpawnPosition(newEnemy, this.world.level.enemies);
+            attempts++;
+        }
+
+        return validPosition ? newEnemy : null;
+    }
+
+    /**
+     * Generates a random enemy (either Chicken or SmallChicken).
+     * @returns {MovableObject} A new instance of either Chicken or SmallChicken.
+     */
+    generateRandomEnemy() {
+        const enemyType = Math.random() < 0.5 ? Chicken : SmallChicken;
+        return new enemyType();
+    }
+
+    /**
+     * Calculates a random valid X position for a new enemy.
+     * @param {number} characterX - The X position of the character.
+     * @param {number} endbossX - The X position of the endboss.
+     * @returns {number} A random X position for the enemy.
+     */
+    calculateEnemyPosition(characterX, endbossX) {
+        return characterX + 300 + Math.random() * (endbossX - characterX - 600);
     }
 
     /**
