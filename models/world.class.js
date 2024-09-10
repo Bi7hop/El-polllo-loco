@@ -18,7 +18,6 @@ class World {
     coinCount = 12;
     bottleCount = 7;
     gameIsOver = false;
-
     statusBottle; 
     statusCoin; 
     collectedBottles = 0; 
@@ -51,7 +50,6 @@ class World {
         this.character.world = this; 
         this.draw();
         this.run();
-
         soundManager.play('backgroundMusic');
     }
 
@@ -59,64 +57,13 @@ class World {
      * Resets the world to its initial state, reloading the level and resetting the character and objects.
      */
     reset() {
-        this.resetCharacter();
-        this.resetLevel();
-        this.resetStatusBars();
-        this.resetCollectibles();
-        this.resetWorldContext();
-
+        resetCharacter(this);
+        resetLevel(this);
+        resetStatusBars(this);
+        resetCollectibles(this);
+        resetWorldContext(this);
         this.draw();
         this.run();
-    }
-
-    /**
-     * Resets the character to its initial state.
-     */
-    resetCharacter() {
-        this.character = new Character();
-        this.camera_x = 0;
-        this.character.world = this;
-    }
-
-    /**
-     * Resets the level and spawns new enemies.
-     */
-    resetLevel() {
-        this.level = createLevel1();
-        this.enemyManager = new EnemyManager(this); 
-    }
-
-    /**
-     * Resets the status bars, including the character's status and the endboss's status.
-     */
-    resetStatusBars() {
-        this.statusBar = new StatusBar();
-        this.endbossStatusBar = new EndbossStatusBar();
-        this.endbossStatusBar.setWorld(this);
-    }
-
-    /**
-     * Resets all collectible items like coins and bottles.
-     */
-    resetCollectibles() {
-        this.coins = Coins.generateCoins(this.coinCount, this); 
-        this.bottles = Bottle.generateBottles(this.bottleCount, this);
-        this.collectedBottles = 0; 
-        this.collectedCoins = 0;
-        this.throwableObjects = [];
-        this.splashAnimations = [];
-    }
-
-    /**
-     * Re-establishes the world context by linking objects to the current world.
-     */
-    resetWorldContext() {
-        this.setWorld();
-        this.level.enemies.forEach(enemy => {
-            if (enemy instanceof Endboss) {
-                enemy.world = this;
-            }
-        });
     }
 
     /**
@@ -200,7 +147,6 @@ class World {
         checkBottleCollisions() {
         Bottle.checkBottleCollisions(this.character, this);
     }
-
 
     /**
      * Continuously draws the game world, including background, characters, and status bars.
@@ -302,9 +248,7 @@ drawSplashAnimations() {
         if (mo.otherDirection) {
             this.flipImage(mo);
         }
-
         mo.draw(this.ctx);
-
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
@@ -367,7 +311,6 @@ drawSplashAnimations() {
     renderImageOnCanvas(src, width, height) {
         const img = new Image();
         img.src = src;
-
         img.onload = () => {
             const xPosition = (this.canvas.width - width) / 2;
             const yPosition = (this.canvas.height - height) / 2;
@@ -385,7 +328,6 @@ drawSplashAnimations() {
         this.playGameOverSound();
         this.renderGameOverScreen();
         this.showRestartButton();
-        
         if (window.innerWidth <= 1024) {
             this.showBackToStartButton();
             const footer = document.querySelector('footer');
@@ -417,7 +359,6 @@ drawSplashAnimations() {
     renderGameOverScreen() {
         const img = new Image();
         img.src = this.character.gameOverImage;
-    
         img.onload = () => {
             this.dimBackground();
             this.renderImageOnCanvas(img.src, 720, 480);
@@ -496,7 +437,6 @@ drawSplashAnimations() {
         soundManager.stopAll();  
         this.clearCanvas();      
         this.restartGame();
-
         this.hideFooterOnMobile();
     }
 
@@ -506,9 +446,7 @@ drawSplashAnimations() {
     restartGame() {
         const restartButton = document.getElementById('restartButton');
         const backToStartButton = document.getElementById('backToStartButton');
-    
         new World(this.canvas, this.keyboard);
-    
         restartButton.style.display = 'none';
         backToStartButton.style.display = 'none';  
     }
