@@ -240,16 +240,8 @@ class World {
      * Draws the status bars, including the endboss's health bar if the endboss is visible.
      */
     drawStatusBars() {
-        this.addToMap(this.statusBar);
-        
-        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
-        if (endboss && endboss.isEndbossVisible(this.camera_x, this.canvas.width)) {
-            if (!this.endbossEncountered) {
-                soundManager.play('endboss');  
-                this.endbossEncountered = true;
-            }
-            this.addToMap(this.endbossStatusBar);
-        }
+        this.addToMap(this.statusBar); 
+        this.endbossStatusBar.draw(this.ctx);  
     }
 
     /**

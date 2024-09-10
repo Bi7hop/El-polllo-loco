@@ -12,10 +12,6 @@ class EndbossStatusBar extends StatusBar {
         'img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
     ];
 
-    /**
-     * Creates a new EndbossStatusBar instance.
-     * Initializes the status bar at the top right of the screen.
-     */
     constructor() {
         super();
         this.x = 0;
@@ -34,13 +30,25 @@ class EndbossStatusBar extends StatusBar {
     }
 
     /**
-     * Draws the endboss's status bar on the canvas.
-     * Ensures that the image is fully loaded before drawing.
+     * Checks if the endboss is visible based on the camera position and the canvas width.
+     * @returns {boolean} True if the endboss should be visible, false otherwise.
+     */
+    isEndbossVisible() {
+        const endboss = this.world.level.enemies.find(enemy => enemy instanceof Endboss);
+        return endboss && endboss.isEndbossVisible(this.world.camera_x, this.world.canvas.width);
+    }
+
+    /**
+     * Draws the endboss's status bar on the canvas if the endboss is visible.
      * @param {CanvasRenderingContext2D} ctx - The canvas rendering context where the status bar is drawn.
      */
     draw(ctx) {
-        if (this.img && this.img.complete) {  
-            super.draw(ctx);
+        if (this.isEndbossVisible()) {
+            if (!this.world.endbossEncountered) {
+                soundManager.play('endboss');
+                this.world.endbossEncountered = true;
+            }
+            super.draw(ctx); 
         }
     }
 }
