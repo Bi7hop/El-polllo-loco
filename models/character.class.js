@@ -10,6 +10,10 @@ class Character extends MovableObject {
     height = 300;
     y = 30;
     speed = 10;
+    isJumpingUp = false;  
+    isAtPeak = false;     
+    isFalling = false;    
+    hasJumped = false;    
     offset = {
         left: 10,
         top: 110,
@@ -92,7 +96,7 @@ class Character extends MovableObject {
     deathAnimationPlayed = false; 
     gameOverImage = 'img/9_intro_outro_screens/game_over/you lost.png'; 
     gameOverSound = 'gameOver';
-    
+
     /**
      * Creates an instance of the Character class.
      */
@@ -153,8 +157,10 @@ class Character extends MovableObject {
      * Handles the jumping action based on keyboard input.
      */
     handleJumping() {
-        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+        if (this.world.keyboard.SPACE && !this.isAboveGround() && !this.hasJumped) {
+            this.playUpwardJumpingAnimation();  
             this.jump();
+            this.hasJumped = true;
         }
     }
 
@@ -243,6 +249,14 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Plays the death animation for the character if it hasn't been played yet.
+     * Once the animation starts, it marks the death animation as played, stops all sounds, 
+     * and triggers the game over screen after a delay.
+     * 
+     * @method playDeathAnimation
+     * @memberof Character
+     */
     playDeathAnimation() {
         if (!this.deathAnimationPlayed) {
             this.playAnimation(this.IMAGES_DEAD);
@@ -278,27 +292,68 @@ class Character extends MovableObject {
     isDead() {
         return this.world.statusBar.percentage <= 0;  
     }
-    
-     /**
-     * Updates the animations of the character based on its current state (walking, jumping, dead, etc.).
+
+    /**
+     * Updated animations based on the character's current state.
      */
-     updateAnimations() {
+    updateAnimations() {
         if (this.isDead()) {  
-            if (!this.deathAnimationPlayed) {  
-                this.playAnimation(this.IMAGES_DEAD);
-                this.deathAnimationPlayed = true;
-                this.stopAllSounds();  
-                setTimeout(() => {
-                    this.world.gameOver();  
-                }, 500);
-            }
+            this.playAnimation(this.IMAGES_DEAD);
         } else if (this.isHurt()) {
             this.playAnimation(this.IMAGES_HURT);
         } else if (this.isAboveGround()) {
-            this.playAnimation(this.IMAGES_JUMPING);
-        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-            this.playAnimation(this.IMAGES_WALKING);
+            if (this.speedY > 0) {
+                this.playUpwardJumpingAnimation();
+            } else if (this.speedY === 0) {
+                this.playPeakJumpingAnimation();
+            } else if (this.speedY < 0) {
+                this.playFallingJumpingAnimation();
+            }
+        } else {
+            this.hasJumped = false; 
+            this.isJumpingUp = false;
+            this.isAtPeak = false;
+            this.isFalling = false;
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                this.playAnimation(this.IMAGES_WALKING);
+            }
         }
-    }    
-    
+    }
+
+    /**
+    * Plays the animation for jumping up (images 31-34 once).
+     */
+
+    playUpwardJumpingAnimation() {
+        if (!this.isJumpingUp) {
+            this.isJumpingUp = true;  
+            this.isAtPeak = false;    
+            this.isFalling = false;  
+            this.playAnimation(this.IMAGES_JUMPING.slice(0, 4));  
+        }
+    }
+
+    /**
+    * Plays the animation for the highest point (image 35).
+    */
+    playPeakJumpingAnimation() {
+        if (!this.isAtPeak) {
+            this.isAtPeak = true;  
+            this.isJumpingUp = false;  
+            this.isFalling = false;  
+            this.playAnimation([this.IMAGES_JUMPING[4]]); 
+        }
+    }
+
+    /**
+    * Plays the animation for falling (images 36-39 once).
+    */
+    playFallingJumpingAnimation() {
+        if (!this.isFalling) {
+            this.isFalling = true;  
+            this.isJumpingUp = false;  
+            this.isAtPeak = false;   
+            this.playAnimation(this.IMAGES_JUMPING.slice(5));  
+        }
+    }
 }
