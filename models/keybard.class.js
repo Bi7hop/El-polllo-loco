@@ -11,7 +11,7 @@ class Keyboard {
     D = false;
     D_PRESSED_ONCE = false;  
 
-     /**
+    /**
      * Creates a new Keyboard instance and initializes event listeners for both
      * keyboard and mobile touch controls.
      */
@@ -57,56 +57,52 @@ class Keyboard {
      * corresponding keyboard properties to enable character control on mobile devices.
      */
     addMobileListeners() {
-        const mobileButtonBack = document.getElementById('mobileButtonBack');
-        const mobileButtonForward = document.getElementById('mobileButtonForward');
-        const mobileButtonJump = document.getElementById('mobileButtonJump');
-        const mobileButtonThrow = document.getElementById('mobileButtonThrow');
-    
+        this.addTouchEventListener('mobileButtonBack', 'LEFT');
+        this.addTouchEventListener('mobileButtonForward', 'RIGHT');
+        this.addTouchEventListener('mobileButtonJump', 'SPACE');
+        this.addTouchEventListenerForThrow('mobileButtonThrow');
+    }
+
+    /**
+     * Adds a touch event listener for the specified button to set the specified keyboard property.
+     * @param {string} buttonId - The ID of the button element.
+     * @param {string} direction - The direction to control (e.g., 'LEFT', 'RIGHT', 'SPACE').
+     */
+    addTouchEventListener(buttonId, direction) {
+        const button = document.getElementById(buttonId);
         const options = { passive: true };
-    
-        if (mobileButtonBack) {
-            mobileButtonBack.addEventListener('touchstart', () => {
-                this.LEFT = true;
+
+        if (button) {
+            button.addEventListener('touchstart', () => {
+                this[direction] = true;
             }, options);
-    
-            mobileButtonBack.addEventListener('touchend', () => {
-                this.LEFT = false;
-            }, options);
-        }
-    
-        if (mobileButtonForward) {
-            mobileButtonForward.addEventListener('touchstart', () => {
-                this.RIGHT = true;
-            }, options);
-    
-            mobileButtonForward.addEventListener('touchend', () => {
-                this.RIGHT = false;
+
+            button.addEventListener('touchend', () => {
+                this[direction] = false;
             }, options);
         }
-    
-        if (mobileButtonJump) {
-            mobileButtonJump.addEventListener('touchstart', () => {
-                this.SPACE = true;
-            }, options);
-    
-            mobileButtonJump.addEventListener('touchend', () => {
-                this.SPACE = false;
-            }, options);
-        }
-    
-        if (mobileButtonThrow) {
-            mobileButtonThrow.addEventListener('touchstart', () => {
+    }
+
+    /**
+     * Adds a touch event listener for the throw button (D key functionality).
+     * @param {string} buttonId - The ID of the throw button element.
+     */
+    addTouchEventListenerForThrow(buttonId) {
+        const button = document.getElementById(buttonId);
+        const options = { passive: true };
+
+        if (button) {
+            button.addEventListener('touchstart', () => {
                 if (!this.D_PRESSED_ONCE) {
                     this.D = true;
                     this.D_PRESSED_ONCE = true;
                 }
             }, options);
-    
-            mobileButtonThrow.addEventListener('touchend', () => {
+
+            button.addEventListener('touchend', () => {
                 this.D = false;
                 this.D_PRESSED_ONCE = false;
             }, options);
         }
     }
-    
-}    
+}
