@@ -278,19 +278,11 @@ class World {
     }
 
     /**
-     * Draws all splash animations and removes finished ones.
-     */
-    drawSplashAnimations() {
-        this.splashAnimations = this.splashAnimations.filter(splash => {
-            if (splash.isFinished) {
-                return false; 
-            } else {
-                splash.animate();
-                this.addToMap(splash);
-                return true;
-            }
-        });
-    }
+ * Draws all splash animations and removes finished ones.
+ */
+drawSplashAnimations() {
+    this.splashAnimations = SplashAnimation.drawSplashAnimations(this.splashAnimations, this.ctx);
+}
 
     /**
      * Draws the Heads-Up Display (HUD), including collected bottles and coins.

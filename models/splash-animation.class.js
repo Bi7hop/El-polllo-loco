@@ -45,4 +45,22 @@ class SplashAnimation extends MovableObject {
             }
         }
     }
+
+    /**
+     * Handles the splash animations by animating and checking whether they are finished.
+     * @param {SplashAnimation[]} splashAnimations - The array of splash animations.
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw the animations on.
+     * @returns {SplashAnimation[]} The filtered splash animations (removing finished ones).
+     */
+    static drawSplashAnimations(splashAnimations, ctx) {
+        return splashAnimations.filter(splash => {
+            if (splash.isFinished) {
+                return false; 
+            } else {
+                splash.animate();
+                splash.draw(ctx); 
+                return true; 
+            }
+        });
+    }
 }
