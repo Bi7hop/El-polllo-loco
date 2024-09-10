@@ -187,32 +187,20 @@ class World {
 
     /**
      * Checks for collisions between the character and coins.
-     * Removes collected coins and updates the score.
+     * Uses the checkCoinCollisions method from the Coins class.
      */
-    checkCoinCollisions() {
-        this.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin)) {
-                this.coins.splice(index, 1); 
-                this.collectedCoins++; 
-                soundManager.play('coinPickup');
-            }
-        });
+        checkCoinCollisions() {
+        Coins.checkCoinCollisions(this.character, this);
     }
 
     /**
      * Checks for collisions between the character and bottles.
-     * Handles bottle collection and plays appropriate sound effects.
+     * Uses the checkBottleCollisions method from the Bottle class.
      */
-    checkBottleCollisions() {
-        this.bottles.forEach((bottle) => {
-            if (this.character.isColliding(bottle) && !bottle.collected) {
-                bottle.collect();
-                this.collectedBottles++; 
-                Bottle.respawnBottle(bottle);
-                soundManager.play('bottlePickup');
-            }
-        });
+        checkBottleCollisions() {
+        Bottle.checkBottleCollisions(this.character, this);
     }
+
 
     /**
      * Continuously draws the game world, including background, characters, and status bars.

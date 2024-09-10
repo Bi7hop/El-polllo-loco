@@ -67,4 +67,20 @@ class Coins extends Collectable {
         }
         return true;
     }
+
+    /**
+     * Checks for collisions between the character and coins.
+     * Removes collected coins and updates the score in the world context.
+     * @param {Character} character - The character object.
+     * @param {World} world - The world object.
+     */
+    static checkCoinCollisions(character, world) {
+        world.coins.forEach((coin, index) => {
+            if (character.isColliding(coin)) {
+                world.coins.splice(index, 1);  // Remove the collected coin from the array
+                world.collectedCoins++;        // Increment the collected coins count in the world
+                soundManager.play('coinPickup');  // Play coin collection sound
+            }
+        });
+    }
 }

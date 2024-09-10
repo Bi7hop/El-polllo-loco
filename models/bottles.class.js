@@ -112,4 +112,21 @@ class Bottle extends Collectable {
             }, Math.random() * 5000 + 5000); 
         }
     }
+
+    /**
+     * Checks for collisions between the character and bottles.
+     * Handles bottle collection and plays appropriate sound effects.
+     * @param {Character} character - The character object.
+     * @param {World} world - The world object.
+     */
+    static checkBottleCollisions(character, world) {
+        world.bottles.forEach(bottle => {
+            if (character.isColliding(bottle) && !bottle.collected) {
+                bottle.collect();  
+                world.collectedBottles++;  
+                Bottle.respawnBottle(bottle); 
+                soundManager.play('bottlePickup');  
+            }
+        });
+    }
 }
