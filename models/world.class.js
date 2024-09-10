@@ -411,10 +411,11 @@ drawGameObjects() {
     this.drawObjectsByType('clouds', this.level.clouds);
     this.drawObjectsByType('character', this.character);
     this.drawObjectsByType('throwableObjects', this.throwableObjects);
-    this.drawObjectsByType('coins', this.coins);
     this.drawBottles();
+    this.drawSplashAnimations(); 
     this.ctx.translate(-this.camera_x, 0);
 }
+
 
 /**
  * Draws all bottles and animates them.
