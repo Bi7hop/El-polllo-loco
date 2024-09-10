@@ -293,30 +293,65 @@ class Character extends MovableObject {
         return this.world.statusBar.percentage <= 0;  
     }
 
-    /**
+        /**
      * Updated animations based on the character's current state.
      */
     updateAnimations() {
-        if (this.isDead()) {  
-            this.playAnimation(this.IMAGES_DEAD);
+        if (this.isDead()) {
+            this.handleDeathAnimation();
         } else if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
+            this.handleHurtAnimation();
         } else if (this.isAboveGround()) {
-            if (this.speedY > 0) {
-                this.playUpwardJumpingAnimation();
-            } else if (this.speedY === 0) {
-                this.playPeakJumpingAnimation();
-            } else if (this.speedY < 0) {
-                this.playFallingJumpingAnimation();
-            }
+            this.handleJumpingAnimation();
         } else {
-            this.hasJumped = false; 
-            this.isJumpingUp = false;
-            this.isAtPeak = false;
-            this.isFalling = false;
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
+            this.resetJumpingFlags();
+            this.handleWalkingOrIdleAnimation();
+        }
+    }
+
+    /**
+     * Handles the death animation when the character is dead.
+     */
+    handleDeathAnimation() {
+        this.playAnimation(this.IMAGES_DEAD);
+    }
+
+    /**
+     * Handles the hurt animation when the character is hurt.
+     */
+    handleHurtAnimation() {
+        this.playAnimation(this.IMAGES_HURT);
+    }
+
+    /**
+     * Handles the jumping animation when the character is above the ground.
+     */
+    handleJumpingAnimation() {
+        if (this.speedY > 0) {
+            this.playUpwardJumpingAnimation();
+        } else if (this.speedY === 0) {
+            this.playPeakJumpingAnimation();
+        } else if (this.speedY < 0) {
+            this.playFallingJumpingAnimation();
+        }
+    }
+
+    /**
+     * Resets the flags related to jumping.
+     */
+    resetJumpingFlags() {
+        this.hasJumped = false;
+        this.isJumpingUp = false;
+        this.isAtPeak = false;
+        this.isFalling = false;
+    }
+
+    /**
+     * Handles walking or idle animation depending on keyboard input.
+     */
+    handleWalkingOrIdleAnimation() {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
         }
     }
 
