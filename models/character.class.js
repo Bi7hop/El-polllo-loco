@@ -117,13 +117,55 @@ class Character extends MovableObject {
      * Starts the animation and movement handling of the character.
      */
     animate() {
-        this.animationInterval = setInterval(() => {
-            this.handleMovementAndSounds();
+        setInterval(() => {
+            this.walking_sound.pause();
+            
+            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+                this.moveRight();
+                this.otherDirection = false;
+                this.walking_sound.play();
+            }
+            if (this.world.keyboard.LEFT && this.x > 0) {
+                this.moveLeft();
+                this.otherDirection = true;
+                this.walking_sound.play();
+            }
+
+            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+                this.jump();
+                this.jump_sound.play();
+            }
+
+            this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
 
-        this.animationInterval2 = setInterval(() => {
-            this.updateAnimations();
+        setInterval(() => {
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+            } else if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            } else if (this.isAboveGround()) {
+                this.handleJumpAnimation();  
+            } else {
+                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                    this.playAnimation(this.IMAGES_WALKING);
+                }
+            }
         }, 50);
+    }
+
+    /**
+     * Handles the jumping animation when the character is above the ground.
+     */
+    handleJumpAnimation() {
+        if (this.speedY >= 0 && this.currentImage > 3) {
+            this.currentImage = 3;  
+        } else if (this.speedY < 0 && this.speedY > -20) {
+            this.currentImage = 4;  
+        } else if (this.speedY < 0) {
+            this.currentImage = this.IMAGES_JUMPING.length;  
+        }
+        this.playAnimation(this.IMAGES_JUMPING);
     }
 
     /**
@@ -293,7 +335,7 @@ class Character extends MovableObject {
         return this.world.statusBar.percentage <= 0;  
     }
 
-        /**
+    /**
      * Updated animations based on the character's current state.
      */
     updateAnimations() {
@@ -324,19 +366,6 @@ class Character extends MovableObject {
     }
 
     /**
-     * Handles the jumping animation when the character is above the ground.
-     */
-    handleJumpingAnimation() {
-        if (this.speedY > 0) {
-            this.playUpwardJumpingAnimation();
-        } else if (this.speedY === 0) {
-            this.playPeakJumpingAnimation();
-        } else if (this.speedY < 0) {
-            this.playFallingJumpingAnimation();
-        }
-    }
-
-    /**
      * Resets the flags related to jumping.
      */
     resetJumpingFlags() {
@@ -358,7 +387,6 @@ class Character extends MovableObject {
     /**
     * Plays the animation for jumping up (images 31-34 once).
      */
-
     playUpwardJumpingAnimation() {
         if (!this.isJumpingUp) {
             this.isJumpingUp = true;  
