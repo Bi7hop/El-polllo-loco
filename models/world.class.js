@@ -125,7 +125,8 @@ class World {
     setWorld() {
         this.character.world = this;
     }
-/**
+
+    /**
      * Checks if a new item is being spawned too close to existing items.
      * @param {MovableObject} newItem - The new item to check.
      * @param {MovableObject[]} existingItems - The existing items to check against.
@@ -149,9 +150,19 @@ class World {
             if (!this.gameIsOver) {
                 this.checkCollisions();
                 this.checkThrowObjects();
-                this.removeDeadEnemies();  
+                this.enemyManager.removeDeadEnemies(); 
             }
         }, 50);
+    }
+
+    /**
+     * Checks for collisions between the character, enemies, and other objects in the world.
+     * Updates the game state based on these collisions.
+     */
+    checkCollisions() {
+        this.enemyManager.checkEnemyCollisions(); 
+        this.checkCoinCollisions();
+        this.checkBottleCollisions();
     }
 
     /**
@@ -175,168 +186,32 @@ class World {
     }
 
     /**
- * Checks for collisions between the character, enemies, and other objects in the world.
- * Updates the game state based on these collisions.
- */
-checkCollisions() {
-    this.checkEnemyCollisions();
-    this.checkCoinCollisions();
-    this.checkBottleCollisions();
-}
-
-/**
- * Checks for collisions between the character and enemies.
- */
-checkEnemyCollisions() {
-    this.level.enemies.forEach((enemy) => {
-        if (this.isDeadEnemy(enemy)) return;
-
-        this.checkThrowableObjectCollisions(enemy);
-        this.checkCharacterEnemyCollision(enemy);
-    });
-}
-
-/**
- * Checks if an enemy is dead.
- * @param {MovableObject} enemy - The enemy to check.
- * @returns {boolean} True if the enemy is dead, false otherwise.
- */
-isDeadEnemy(enemy) {
-    return typeof enemy.isDead === 'function' && enemy.isDead();
-}
-
-/**
- * Checks for collisions between throwable objects and enemies.
- * Updates enemy status and removes throwable objects if necessary.
- * @param {MovableObject} enemy - The enemy to check against throwable objects.
- */
-checkThrowableObjectCollisions(enemy) {
-    let hitObjectIndex = null;
-    this.throwableObjects.forEach((obj, index) => {
-        if (enemy.isHitBy(obj)) {
-            hitObjectIndex = index;
-            enemy.hit(); 
-
-            this.handleEnemyHit(enemy, obj); 
-        }
-    });
-
-    if (hitObjectIndex !== null) {
-        this.throwableObjects.splice(hitObjectIndex, 1); 
-    }
-}
-
-/**
- * Handles the logic for when an enemy is hit by a throwable object.
- * Updates the enemy status and plays the appropriate sound and animations.
- * @param {MovableObject} enemy - The enemy that was hit.
- * @param {ThrowableObject} obj - The throwable object that hit the enemy.
- */
-handleEnemyHit(enemy, obj) {
-    if (enemy instanceof Chicken || enemy instanceof SmallChicken) {
-        enemy.die(); 
-    } else if (enemy instanceof Endboss) {
-        this.endbossStatusBar.setPercentage(enemy.energy);
-    }
-
-    let splash = new SplashAnimation(obj.x, obj.y);
-    this.splashAnimations.push(splash); 
-}
-
-
-/**
- * Checks for collisions between the character and enemies.
- * Updates character status and handles enemy-specific collision behavior.
- * @param {MovableObject} enemy - The enemy to check for collisions with the character.
- */
-checkCharacterEnemyCollision(enemy) {
-    if (this.character.hitFromAbove(enemy)) {
-        this.handleEnemyStomp(enemy);
-    } else if (this.character.isColliding(enemy)) {
-        this.handleCharacterHitByEnemy(enemy);
-    }
-}
-
-/**
- * Handles the logic for when the character hits an enemy from above.
- * @param {MovableObject} enemy - The enemy that was stomped.
- */
-handleEnemyStomp(enemy) {
-    if (typeof enemy.die === 'function') {
-        enemy.die(); 
-    }
-    this.character.speedY = Math.max(this.character.speedY, 20);
-}
-
-/**
- * Handles the logic for when the character collides with an enemy.
- * Updates character energy and plays appropriate sound effects.
- * @param {MovableObject} enemy - The enemy that hit the character.
- */
-handleCharacterHitByEnemy(enemy) {
-    this.character.hit(2);  
-    this.statusBar.setPercentage(this.character.energy);  
-    if (enemy instanceof Endboss) {
-        this.endbossStatusBar.setPercentage(enemy.energy);
-    }
-    if (enemy instanceof Chicken || enemy instanceof SmallChicken || enemy instanceof Endboss) {
-        soundManager.play('playerhurt');
-    }
-    if (this.character.isDead()) {
-        this.character.playDeathAnimation();  
-    }
-}
-
-
-/**
- * Checks for collisions between the character and coins.
- * Removes collected coins and updates the score.
- */
-checkCoinCollisions() {
-    this.coins.forEach((coin, index) => {
-        if (this.character.isColliding(coin)) {
-            this.coins.splice(index, 1); 
-            this.collectedCoins++; 
-    
-            soundManager.play('coinPickup');
-        }
-    });
-}
-
-/**
- * Checks for collisions between the character and bottles.
- * Handles bottle collection and plays appropriate sound effects.
- */
-checkBottleCollisions() {
-    this.bottles.forEach((bottle) => {
-        if (this.character.isColliding(bottle) && !bottle.collected) {
-            bottle.collect();
-            this.collectedBottles++; 
-            Bottle.respawnBottle(bottle);
-    
-            soundManager.play('bottlePickup');
-        }
-    });
-}
-
-    
-    /**
-     * Removes dead enemies from the game world.
-     * Spawns new enemies if necessary to maintain the enemy count.
+     * Checks for collisions between the character and coins.
+     * Removes collected coins and updates the score.
      */
-    removeDeadEnemies() {
-        const initialEnemyCount = this.level.enemies.length;
-
-        this.level.enemies = this.level.enemies.filter(enemy => {
-            if (typeof enemy.isDead === 'function' && enemy.isDead() && enemy.isRemovable()) {
-                return false;
+    checkCoinCollisions() {
+        this.coins.forEach((coin, index) => {
+            if (this.character.isColliding(coin)) {
+                this.coins.splice(index, 1); 
+                this.collectedCoins++; 
+                soundManager.play('coinPickup');
             }
-            return true;
         });
+    }
 
-        if (this.level.enemies.length < initialEnemyCount) {
-            this.enemyManager.spawnNewEnemies(initialEnemyCount - this.level.enemies.length);
-        }
+    /**
+     * Checks for collisions between the character and bottles.
+     * Handles bottle collection and plays appropriate sound effects.
+     */
+    checkBottleCollisions() {
+        this.bottles.forEach((bottle) => {
+            if (this.character.isColliding(bottle) && !bottle.collected) {
+                bottle.collect();
+                this.collectedBottles++; 
+                Bottle.respawnBottle(bottle);
+                soundManager.play('bottlePickup');
+            }
+        });
     }
 
     /**
@@ -364,7 +239,7 @@ checkBottleCollisions() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-     /**
+    /**
      * Draws the background of the game world.
      */
     drawBackground() {
@@ -389,59 +264,45 @@ checkBottleCollisions() {
         }
     }
 
-/**
- * Draws all game objects by type.
- * @param {string} type - The type of objects to draw (e.g., 'character', 'enemies', 'clouds', etc.).
- * @param {Array|Object} objects - The array or single object to be drawn.
- */
-drawObjectsByType(type, objects) {
-    if (Array.isArray(objects)) {
-        this.addObjectsToMap(objects);
-    } else {
-        this.addToMap(objects);
+    /**
+     * Draws all relevant game objects (character, enemies, clouds, throwable objects, coins).
+     */
+    drawGameObjects() {
+        this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.clouds);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.throwableObjects);
+        this.addObjectsToMap(this.coins);
+        this.drawBottles();
+        this.drawSplashAnimations(); 
+        this.ctx.translate(-this.camera_x, 0);
     }
-}
 
-/**
- * Draws all relevant game objects (character, enemies, clouds, throwable objects, coins).
- */
-drawGameObjects() {
-    this.ctx.translate(this.camera_x, 0);
-    this.drawObjectsByType('enemies', this.level.enemies);
-    this.drawObjectsByType('clouds', this.level.clouds);
-    this.drawObjectsByType('character', this.character);
-    this.drawObjectsByType('throwableObjects', this.throwableObjects);
-    this.drawObjectsByType('coins', this.coins);
-    this.drawBottles();
-    this.drawSplashAnimations(); 
-    this.ctx.translate(-this.camera_x, 0);
-}
+    /**
+     * Draws all bottles and animates them.
+     */
+    drawBottles() {
+        this.bottles.forEach(bottle => {
+            bottle.animate();
+            this.addToMap(bottle);
+        });
+    }
 
-
-/**
- * Draws all bottles and animates them.
- */
-drawBottles() {
-    this.bottles.forEach(bottle => {
-        bottle.animate();
-        this.addToMap(bottle);
-    });
-}
-
-/**
- * Draws all splash animations and removes finished ones.
- */
-drawSplashAnimations() {
-    this.splashAnimations = this.splashAnimations.filter(splash => {
-        if (splash.isFinished) {
-            return false; 
-        } else {
-            splash.animate();
-            this.addToMap(splash);
-            return true;
-        }
-    });
-}
+    /**
+     * Draws all splash animations and removes finished ones.
+     */
+    drawSplashAnimations() {
+        this.splashAnimations = this.splashAnimations.filter(splash => {
+            if (splash.isFinished) {
+                return false; 
+            } else {
+                splash.animate();
+                this.addToMap(splash);
+                return true;
+            }
+        });
+    }
 
     /**
      * Draws the Heads-Up Display (HUD), including collected bottles and coins.
@@ -451,7 +312,7 @@ drawSplashAnimations() {
         this.statusCoin.drawCollectedCoins(this.ctx, this.collectedCoins);
     }
 
-      /**
+    /**
      * Adds an array of objects to the map by drawing them on the canvas.
      * @param {MovableObject[]} objects - The objects to be added to the map.
      */
@@ -471,14 +332,13 @@ drawSplashAnimations() {
         }
 
         mo.draw(this.ctx);
-        // mo.drawESP2(this.ctx);
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
     }
 
-     /**
+    /**
      * Flips an image horizontally before drawing it, used for characters facing left.
      * @param {MovableObject} mo - The movable object whose image needs to be flipped.
      */
@@ -498,11 +358,11 @@ drawSplashAnimations() {
         this.ctx.restore();
     }
 
-     /**
- * Displays the victory screen when the player wins the game.
- * Stops the game loop and plays the victory sound.
- */
-     showVictoryScreen() {  
+    /**
+     * Displays the victory screen when the player wins the game.
+     * Stops the game loop and plays the victory sound.
+     */
+    showVictoryScreen() {  
         this.gameIsOver = true; 
         clearInterval(this.gameLoop);
         this.dimBackground();
@@ -517,36 +377,36 @@ drawSplashAnimations() {
             }
         }
     }
-    
-/**
- * Dims the background with a semi-transparent overlay.
- */
-dimBackground() {
-    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-}
-
-/**
- * Renders an image on the canvas at the center of the screen.
- * @param {string} src - The source URL of the image.
- * @param {number} width - The desired width of the image.
- * @param {number} height - The desired height of the image.
- */
-renderImageOnCanvas(src, width, height) {
-    const img = new Image();
-    img.src = src;
-
-    img.onload = () => {
-        const xPosition = (this.canvas.width - width) / 2;
-        const yPosition = (this.canvas.height - height) / 2;
-        this.ctx.drawImage(img, xPosition, yPosition, width, height);
-    };
-}
 
     /**
- * Displays the game over screen when the player loses the game.
- * Stops the game loop and plays the game over sound.
- */
+     * Dims the background with a semi-transparent overlay.
+     */
+    dimBackground() {
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    /**
+     * Renders an image on the canvas at the center of the screen.
+     * @param {string} src - The source URL of the image.
+     * @param {number} width - The desired width of the image.
+     * @param {number} height - The desired height of the image.
+     */
+    renderImageOnCanvas(src, width, height) {
+        const img = new Image();
+        img.src = src;
+
+        img.onload = () => {
+            const xPosition = (this.canvas.width - width) / 2;
+            const yPosition = (this.canvas.height - height) / 2;
+            this.ctx.drawImage(img, xPosition, yPosition, width, height);
+        };
+    }
+
+    /**
+     * Displays the game over screen when the player loses the game.
+     * Stops the game loop and plays the game over sound.
+     */
     gameOver() {
         this.gameIsOver = true;
         this.stopGameLoop();
@@ -554,7 +414,6 @@ renderImageOnCanvas(src, width, height) {
         this.renderGameOverScreen();
         this.showRestartButton();
         
-        // Back to Start Button nur auf Mobilgeräten anzeigen
         if (window.innerWidth <= 1024) {
             this.showBackToStartButton();
             const footer = document.querySelector('footer');
@@ -563,54 +422,53 @@ renderImageOnCanvas(src, width, height) {
             }
         }
     }
-    
 
-/**
- * Stops the game loop.
- */
-stopGameLoop() {
-    if (this.gameLoop) {
-        clearInterval(this.gameLoop);
-    }
-}
-
-/**
- * Plays the game over sound effect.
- */
-playGameOverSound() {
-    soundManager.play(this.character.gameOverSound);
-}
-
-/**
- * Renders the game over screen with a background dim and the game over image.
- */
-renderGameOverScreen() {
-    const img = new Image();
-    img.src = this.character.gameOverImage;
-    
-    img.onload = () => {
-        this.dimBackground();
-        this.renderImageOnCanvas(img.src, 720, 480);
-    };
-}
-
-/**
- * Shows the footer if the screen width is less than or equal to 768px (mobile devices).
- */
-showFooterOnMobile() {
-    if (window.innerWidth <= 768) {
-        const footer = document.querySelector('footer');
-        if (footer) {
-            footer.style.display = 'block';
+    /**
+     * Stops the game loop.
+     */
+    stopGameLoop() {
+        if (this.gameLoop) {
+            clearInterval(this.gameLoop);
         }
     }
-}
-  
+
     /**
- * Hides the footer on mobile devices (screen width less than or equal to 768px).
- * This function checks the screen width and hides the footer element
- * by setting its display property to 'none' if the screen is detected to be mobile-sized.
- */
+     * Plays the game over sound effect.
+     */
+    playGameOverSound() {
+        soundManager.play(this.character.gameOverSound);
+    }
+
+    /**
+     * Renders the game over screen with a background dim and the game over image.
+     */
+    renderGameOverScreen() {
+        const img = new Image();
+        img.src = this.character.gameOverImage;
+    
+        img.onload = () => {
+            this.dimBackground();
+            this.renderImageOnCanvas(img.src, 720, 480);
+        };
+    }
+
+    /**
+     * Shows the footer if the screen width is less than or equal to 768px (mobile devices).
+     */
+    showFooterOnMobile() {
+        if (window.innerWidth <= 768) {
+            const footer = document.querySelector('footer');
+            if (footer) {
+                footer.style.display = 'block';
+            }
+        }
+    }
+
+    /**
+     * Hides the footer on mobile devices (screen width less than or equal to 768px).
+     * This function checks the screen width and hides the footer element
+     * by setting its display property to 'none' if the screen is detected to be mobile-sized.
+     */
     hideFooterOnMobile() {
         const footer = document.querySelector('footer');
         if (window.innerWidth <= 1024 || window.matchMedia('(max-width: 1024px)').matches) {
@@ -619,72 +477,67 @@ showFooterOnMobile() {
             }
         }
     }
-    
+
     /**
- * Shows the restart button, allowing the player to reset the game.
- * Resets the world and stops all currently playing sounds.
- */
-showRestartButton() {
-    this.displayRestartButton();
-    this.setupRestartButtonListener();
-    this.hideFooterOnMobile();
-}
+     * Shows the restart button, allowing the player to reset the game.
+     * Resets the world and stops all currently playing sounds.
+     */
+    showRestartButton() {
+        this.displayRestartButton();
+        this.setupRestartButtonListener();
+        this.hideFooterOnMobile();
+    }
 
-showBackToStartButton() {
-    const backToStartButton = document.getElementById('backToStartButton');
-    backToStartButton.style.display = 'block'; 
-    backToStartButton.onclick = () => {
-        window.location.reload();  
-    };
-}
+    /**
+     * Shows the "back to start" button on mobile devices.
+     */
+    showBackToStartButton() {
+        const backToStartButton = document.getElementById('backToStartButton');
+        backToStartButton.style.display = 'block'; 
+        backToStartButton.onclick = () => {
+            window.location.reload();  
+        };
+    }
 
-/**
- * Displays the restart button by setting its display style to 'block'.
- */
-displayRestartButton() {
-    const restartButton = document.getElementById('restartButton');
-    restartButton.style.display = 'block';
-}
+    /**
+     * Displays the restart button by setting its display style to 'block'.
+     */
+    displayRestartButton() {
+        const restartButton = document.getElementById('restartButton');
+        restartButton.style.display = 'block';
+    }
 
-/**
- * Sets up the click event listener for the restart button to reset the game.
- */
-setupRestartButtonListener() {
-    const restartButton = document.getElementById('restartButton');
-    restartButton.onclick = () => {
-        this.handleRestartButtonClick();
-    };
-}
+    /**
+     * Sets up the click event listener for the restart button to reset the game.
+     */
+    setupRestartButtonListener() {
+        const restartButton = document.getElementById('restartButton');
+        restartButton.onclick = () => {
+            this.handleRestartButtonClick();
+        };
+    }
 
-/**
- * Handles the logic for resetting the game when the restart button is clicked.
- */
-handleRestartButtonClick() {
-    soundManager.stopAll();  
-    this.clearCanvas();      
-    this.restartGame();
+    /**
+     * Handles the logic for resetting the game when the restart button is clicked.
+     */
+    handleRestartButtonClick() {
+        soundManager.stopAll();  
+        this.clearCanvas();      
+        this.restartGame();
 
-    this.hideFooterOnMobile();
-}
+        this.hideFooterOnMobile();
+    }
 
-/**
- * Clears the canvas.
- */
-clearCanvas() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-}
-
-/**
- * Restarts the game by creating a new World instance.
- */
-restartGame() {
-    const restartButton = document.getElementById('restartButton');
-    const backToStartButton = document.getElementById('backToStartButton');
+    /**
+     * Restarts the game by creating a new World instance.
+     */
+    restartGame() {
+        const restartButton = document.getElementById('restartButton');
+        const backToStartButton = document.getElementById('backToStartButton');
     
-    new World(this.canvas, this.keyboard);
+        new World(this.canvas, this.keyboard);
     
-    restartButton.style.display = 'none';
-    backToStartButton.style.display = 'none';  
-}
-
+        restartButton.style.display = 'none';
+        backToStartButton.style.display = 'none';  
+    }
 }

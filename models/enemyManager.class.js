@@ -1,5 +1,4 @@
 class EnemyManager {
-
     /**
      * Creates a new EnemyManager instance.
      * @param {Object} world - The game world object containing the level and character information.
@@ -90,5 +89,125 @@ class EnemyManager {
             }
         }
         return true;
+    }
+
+    /**
+     * Checks for collisions between the character and enemies.
+     */
+    checkEnemyCollisions() {
+        this.world.level.enemies.forEach((enemy) => {
+            if (this.isDeadEnemy(enemy)) return;
+
+            this.checkThrowableObjectCollisions(enemy);
+            this.checkCharacterEnemyCollision(enemy);
+        });
+    }
+
+    /**
+     * Checks if an enemy is dead.
+     * @param {MovableObject} enemy - The enemy to check.
+     * @returns {boolean} True if the enemy is dead, false otherwise.
+     */
+    isDeadEnemy(enemy) {
+        return typeof enemy.isDead === 'function' && enemy.isDead();
+    }
+
+    /**
+     * Checks for collisions between throwable objects and enemies.
+     * Updates enemy status and removes throwable objects if necessary.
+     * @param {MovableObject} enemy - The enemy to check against throwable objects.
+     */
+    checkThrowableObjectCollisions(enemy) {
+        let hitObjectIndex = null;
+        this.world.throwableObjects.forEach((obj, index) => {
+            if (enemy.isHitBy(obj)) {
+                hitObjectIndex = index;
+                enemy.hit(); 
+                this.handleEnemyHit(enemy, obj); 
+            }
+        });
+
+        if (hitObjectIndex !== null) {
+            this.world.throwableObjects.splice(hitObjectIndex, 1); 
+        }
+    }
+
+    /**
+     * Handles the logic for when an enemy is hit by a throwable object.
+     * Updates the enemy status and plays the appropriate sound and animations.
+     * @param {MovableObject} enemy - The enemy that was hit.
+     * @param {ThrowableObject} obj - The throwable object that hit the enemy.
+     */
+    handleEnemyHit(enemy, obj) {
+        if (enemy instanceof Chicken || enemy instanceof SmallChicken) {
+            enemy.die(); 
+        } else if (enemy instanceof Endboss) {
+            this.world.endbossStatusBar.setPercentage(enemy.energy);
+        }
+
+        let splash = new SplashAnimation(obj.x, obj.y);
+        this.world.splashAnimations.push(splash); 
+    }
+
+    /**
+     * Checks for collisions between the character and enemies.
+     * Updates character status and handles enemy-specific collision behavior.
+     * @param {MovableObject} enemy - The enemy to check for collisions with the character.
+     */
+    checkCharacterEnemyCollision(enemy) {
+        if (this.world.character.hitFromAbove(enemy)) {
+            this.handleEnemyStomp(enemy);
+        } else if (this.world.character.isColliding(enemy)) {
+            this.handleCharacterHitByEnemy(enemy);
+        }
+    }
+
+    /**
+     * Handles the logic for when the character hits an enemy from above.
+     * @param {MovableObject} enemy - The enemy that was stomped.
+     */
+    handleEnemyStomp(enemy) {
+        if (typeof enemy.die === 'function') {
+            enemy.die(); 
+        }
+        this.world.character.speedY = Math.max(this.world.character.speedY, 20);
+    }
+
+    /**
+     * Handles the logic for when the character collides with an enemy.
+     * Updates character energy and plays appropriate sound effects.
+     * @param {MovableObject} enemy - The enemy that hit the character.
+     */
+    handleCharacterHitByEnemy(enemy) {
+        this.world.character.hit(2);  
+        this.world.statusBar.setPercentage(this.world.character.energy);  
+        if (enemy instanceof Endboss) {
+            this.world.endbossStatusBar.setPercentage(enemy.energy);
+        }
+        if (enemy instanceof Chicken || enemy instanceof SmallChicken || enemy instanceof Endboss) {
+            soundManager.play('playerhurt');
+        }
+        if (this.world.character.isDead()) {
+            this.world.character.playDeathAnimation();  
+        }
+    }
+
+    /**
+     * Removes dead enemies from the game world.
+     * Spawns new enemies if necessary to maintain the enemy count.
+     */
+    removeDeadEnemies() {
+        const initialEnemyCount = this.world.level.enemies.length;
+
+        this.world.level.enemies = this.world.level.enemies.filter(enemy => {
+            if (typeof enemy.isDead === 'function' && enemy.isDead() && enemy.isRemovable()) {
+                return false;
+            }
+            return true;
+        });
+
+        if (this.world.level.enemies.length < initialEnemyCount) {
+            this.spawnNewEnemies(initialEnemyCount - this.world.level.enemies.length);
+        }
     }
 }
