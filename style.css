@@ -142,6 +142,7 @@ h1 {
 .mobile-buttons-group {
     display: flex;
     gap: 10px; 
+    filter: brightness(3.5);
     pointer-events: auto; 
 }
 
